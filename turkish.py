@@ -34,19 +34,20 @@ class turkish:
     
     
     
-    EXCEPTION_WORDS = [u"kontrol", u"bandrol", u"banal", u"alpul", u"ametal", u"anormal", u"amiral"
+    EXCEPTION_WORDS = [u"kontrol", u"bandrol", u"alpul", u"ametal", u"anormal", u"amiral"
                        , u"sadakat", u"santral", u"şefkat", u"usul", u"normal", u"oryantal", u"hakikat"
                        , u"hayal", u"saat", u"kemal", u"gol", u"kalp", u"metal", u"faul", u"mineral", u"alkol"
                        , u"misal", u"meal", u"oramiral", u"tuğamiral", u"orjinal", u"koramiral", u"general"
-                       , u"tümgeneral", u"tuğgeneral", u"korgeneral", u"petrol", u"liberal", u"meral"
+                       , u"tümgeneral", u"tuğgeneral", u"korgeneral", u"petrol", u"liberal", u"meral", u"bantrol"
+                       , u"hiperbol", u"perhidrol", u"zanaat", u"ahval", u"paranormal", u"iştigal"
                        , u"metrapol", u"ekümenapol", u"lokal", u"lügat", u"liyakat", u"legal", u"mentol"
                        , u"beşamol", u"meşgul", u"meşekkat", u"oval", u"mahsul", u"makul", u"meraşal"
                        , u"metaryal", u"nasihat", u"radikal", u"moral", u"dikkat", u"rol", u"sinyal"
                        , u"sosyal", u"total", u"şevval", u"sual", u"spesiyal", u"tuval", u"turnusol", u"hol"
                        , u"tropikal", u"zeval", u"zelal", u"terminal", u"termal", u"resul", u"sadakat", u"resital"
                        , u"refakat", u"pastoral", u"hal", u"müzikal", u"müzikhol", u"menkul", u"mahmul", u"maktul"
-                       , u"kolestrol", u"kıraat", u"ziraaat", u"kapital", u"katedral", u"kabul", u"kanaat", u"jurnal"
-                       , u"kefal", u"idrak", u"istiklal", u"integral", u"final", u"ekol", u"emsal", u"enternasyonal"
+                       , u"kolestrol", u"kıraat", u"ziraat", u"kapital", u"katedral", u"kabul", u"kanaat", u"jurnal"
+                       , u"kefal", u"istiklal", u"integral", u"final", u"ekol", u"emsal", u"enternasyonal"
                        , u"nasyonal", u"enstrümantal", u"harf", u"cemal", u"cemaat", u"glikol", u"karambol", u"parabol"
                        , u"kemal"
                        ]
@@ -146,16 +147,7 @@ class turkish:
                     getLastLetter = self.SOFTEN_DHC_AFTER_SUFFIX[self.DISCONTINIOUS_HARD_CONSONANTS_AFTER_SUFFIX.index(getLastLetter)]
                     returndata[u"soften_consonant_for_suffix"] = getLastLetter
     
-        return returndata
-    
-    def makeInfinitive(self, word):
-        if self.lastVowel(word)[u"tone"] == u"front":
-            returndata = self.concat(self, word, u"mak")
-        else:
-            returndata = self.concat(self, word, u"mek")
-            
         return returndata    
-    
     
     def makePlural(self, word, param = {}):
         if "proper_noun" in param:
@@ -373,7 +365,73 @@ class turkish:
             
         return word
 
+    # Mastar eski
+    def makeInfinitive(self, word):
+        if self.lastVowel(word)[u"tone"] == u"front":
+            returndata = self.concat(self, word, u"mak")
+        else:
+            returndata = self.concat(self, word, u"mek")
+            
+        return returndata    
+
+    # Şimdiki zaman
+    def makePresentContinuous(self, word, param):
+        getLastLetter = self.lastLetter(word)
+        getLastVowel = self.lastVowel(word)
+
+        lastLetterIsVowel = getLastLetter[u"letter"] in self.VOWELS
+
+        if param["negative"] == False:
+            if lastLetterIsVowel:
+                word = self.concat(word[:-1], self.MINOR_HARMONY[word[-1]])
+            else:
+                word = self.concat(word, self.MINOR_HARMONY[getLastVowel[u"letter"]])
+        else:
+            word = self.concat(word, u"m")
+            word = self.concat(word, self.MINOR_HARMONY[getLastVowel[u"letter"]])
+
+
+        word = self.concat(word, "yor")
+
+        if param["question"]: 
+            if param["quantity"] == "singular":
+                if param["person"] == 1:
+                    word = self.concat(word, " muyum")
+                elif param["person"] == 2:
+                    word = self.concat(word, " musun")
+            elif param["quantity"] == "plural":
+                if param["person"] == 1:
+                    word = self.concat(word, " muyuz")
+                elif param["person"] == 2:
+                    word = self.concat(word, " musunuz")
+                elif param["person"] == 3:
+                    word = self.concat(word, " mı")            
+        else:
+            if param["quantity"] == "singular":
+                if param["person"] == 1:
+                    word = self.concat(word, "um")
+                elif param["person"] == 2:
+                    word = self.concat(word, "sun")
+            elif param["quantity"] == "plural":
+                if param["person"] == 1:
+                    word = self.concat(word, "uz")
+                elif param["person"] == 2:
+                    word = self.concat(word, "sunuz")
+                elif param["person"] == 3:
+                    word = self.concat(word, "lar")
+
+
+        return word
+
+    # Geniş zaman
+    def makePresent(self, word, param):
+        pass
+
 tr = turkish()
+
+print tr.makePresentContinuous(u"kaç", { "negative": True, "question": False, "person": 1, "quantity": "singular" })
+print tr.makePresentContinuous(u"öl", { "negative": True, "question": True, "person": 1, "quantity": "singular" })
+print tr.makePresentContinuous(u"ara", { "negative": False, "question": True, "person": 2, "quantity": "plural" })
 
 print tr.makeGenitive(u"Öykü", {"proper_noun": True})
 print tr.makeDative("Fatma", {"proper_noun": True})
