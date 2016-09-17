@@ -107,6 +107,7 @@ class turkish:
         , u"müzikhol"
         , u"nasyonal"
         , u"normal"
+        , u"ohal" # abbreviation
         , u"oramiral"
         , u"orjinal"
         , u"oryantal"
