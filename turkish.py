@@ -258,7 +258,7 @@ class turkish:
             
         return returndata
 
-        
+    #-i hali   
     def makeAccusative(self, word, param = {}): # not finished yet
         #firslty exceptions for o (he/she/it) 
         
@@ -294,7 +294,7 @@ class turkish:
                 
         return returndata        
 
-    
+    #-e hali
     def makeDative(self, word, param = {}):
         #firslty exceptions for ben (I) and you (sen)
         proper_noun = param.get("proper_noun", False)
@@ -334,7 +334,7 @@ class turkish:
         
         return returndata
 
-    
+    #-de hali
     def makeGenitive(self, word, param = {}):
         getLastLetter = self.lastLetter(word)
         getLastVowel = self.lastVowel(word)
@@ -360,7 +360,7 @@ class turkish:
         
         return returndata
 
-    
+    #-den hali
     def makeAblative(self, word, param = {}): 
         getLastLetter = self.lastLetter(word)
         getLastVowel = self.lastVowel(word)
@@ -383,7 +383,7 @@ class turkish:
         
         return returndata
     
-    
+    #-de hali    
     def makeLocative(self, word, param = {}):
         getLastLetter = self.lastLetter(word)
         getLastVowel = self.lastVowel(word)
@@ -491,7 +491,7 @@ class turkish:
 
         word = self.concat(word, "yor")
 
-        if param["question"] == False: 
+        if param["question"] == True
             if param["quantity"] == "singular":
                 if param["person"] == 1:
                     word = self.concat(word, u" muyum")
@@ -602,6 +602,14 @@ class turkish:
     # Gelecek zaman
     def makeFuture(self, word, param):
         pass
+
+
+    # Birleşik fiiler eklenecek
+    # Yeterlilik: kızabilir (bil)
+    # Tezlik: koşuver (ver)
+    # Süreklilik: gidedursun, bakakalmak, uyuyakalmak (dur, kal, gel, koy)
+    # Yaklaşma: (yaz) düzeyazmak
+
 
 tr = turkish()
 
