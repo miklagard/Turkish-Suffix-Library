@@ -43,7 +43,9 @@ class turkish:
         , u"ampul"
         , u"anormal"
         , u"bandrol"
+        , u"bemol"
         , u"beşamol"
+        , u"bilkat"
         , u"cemaat"
         , u"cemal"
         , u"deccal"
@@ -53,11 +55,13 @@ class turkish:
         , u"emsal"
         , u"enstrümantal"
         , u"enternasyonal"
+        , u"faal"
         , u"faul"
         , u"final"
         , u"general"
         , u"glikol"
         , u"gol"
+        , u"hakikat"
         , u"hal"
         , u"harf"
         , u"hayal"
@@ -131,6 +135,7 @@ class turkish:
         , u"sosyal"
         , u"spesiyal"
         , u"sual"
+        , u"tefal" # brand
         , u"termal"
         , u"terminal"
         , u"total"
@@ -569,7 +574,7 @@ class turkish:
                     word = self.concat(word, minorHA)
                     word = self.concat(word, u"z")
                     word = self.concat(word, u"s")
-                    word = self.concat(word, self.MINOR_HARMONY[minorHA]) # Düzeltilecek
+                    word = self.concat(word, self.MINOR_HARMONY[minorHA]) 
                     word = self.concat(word, u"n")
                 elif param["person"] == 3:
                     word = self.concat(word, u"m")
@@ -580,16 +585,16 @@ class turkish:
                     word = self.concat(word, u"m")
                     word = self.concat(word, minorHA)
                     word = self.concat(word, u"y")
-                    word = self.concat(word, self.MINOR_HARMONY[minorHA]) # Düzeltilecek
+                    word = self.concat(word, self.MINOR_HARMONY[minorHA]) 
                     word = self.concat(word, u"z")
                 elif param["person"] == 2:
                     word = self.concat(word, u"m")
                     word = self.concat(word, minorHA)
                     word = self.concat(word, u"z")
                     word = self.concat(word, u"s")
-                    word = self.concat(word, self.MINOR_HARMONY[minorHA]) # Düzeltilecek
+                    word = self.concat(word, self.MINOR_HARMONY[minorHA])
                     word = self.concat(word, u"n")
-                    word = self.concat(word, self.MINOR_HARMONY[minorHA]) # Düzeltilecek
+                    word = self.concat(word, self.MINOR_HARMONY[minorHA]) 
                     word = self.concat(word, u"z")
                 elif param["person"] == 3:
                     word = self.concat(word, u"m")
@@ -604,11 +609,11 @@ class turkish:
         pass
 
 
-    # Birleşik fiiler eklenecek
-    # Yeterlilik: kızabilir (bil)
-    # Tezlik: koşuver (ver)
-    # Süreklilik: gidedursun, bakakalmak, uyuyakalmak (dur, kal, gel, koy)
-    # Yaklaşma: (yaz) düzeyazmak
+    # Unified verbs (Birleşik fiiler) 
+    # Ability - Yeterlilik: kızabilir (bil)
+    # Swiftness - Tezlik: koşuver (ver)
+    # Continuity - Süreklilik: gidedursun, bakakalmak, uyuyakalmak (dur, kal, gel, koy)
+    # Approach - Yaklaşma: (yaz) düzeyazmak
 
 
 tr = turkish()
