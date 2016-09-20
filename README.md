@@ -58,3 +58,8 @@ Turkish.js
       
       JavaScript Version
       https://github.com/yasinkuyu/Turkish.js
+
+
+## Special thanks to
+      Yasin Kuyu
+      https://github.com/yasinkuyu/
