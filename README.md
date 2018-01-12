@@ -1,7 +1,7 @@
-Turkish.js
+Turkish.py
 ==========
 
-### Turkish Suffix Library for Javascript
+### Turkish Suffix Library for Python
 
 ## Install 
 
@@ -49,7 +49,7 @@ Turkish.js
  * Turkish is a highly agglutinative language, i.e., Turkish words have many grammatical suffixes or endings that determine meaning. Turkish vowels undergo vowel harmony. When a suffix is attached to a stem, the vowel in the suffix agrees in frontness or backness and in roundedness with the last vowel in the stem. Turkish has no gender.
  * [More Info](http://en.wikipedia.org/wiki/Turkish_grammar)
 
-## Author 
+## Other Languages 
       C# Version
       https://github.com/yasinkuyu/Turkish.cs
       
@@ -60,6 +60,6 @@ Turkish.js
       https://github.com/yasinkuyu/Turkish.js
 
 
-## Special thanks to
+## Special thanks for C#, PHP and JavaScript versions
       Yasin Kuyu
       https://github.com/yasinkuyu/
