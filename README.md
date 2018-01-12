@@ -47,6 +47,9 @@ Turkish.py
 
 ## Turkish Grammar
  * Turkish is a highly agglutinative language, i.e., Turkish words have many grammatical suffixes or endings that determine meaning. Turkish vowels undergo vowel harmony. When a suffix is attached to a stem, the vowel in the suffix agrees in frontness or backness and in roundedness with the last vowel in the stem. Turkish has no gender.
+
+ * Turkish Language is a language with strict rules with only couple of exceptions which makes it very easy for simulating by coding.
+
  * [More Info](http://en.wikipedia.org/wiki/Turkish_grammar)
 
 ## Other Languages 
