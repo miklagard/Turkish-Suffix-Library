@@ -11,27 +11,26 @@ class turkish:
 	DISCONTINIOUS_HARD_CONSONANTS_AFTER_SUFFIX = u"pçk"
 	SOFTEN_DHC_AFTER_SUFFIX = u"bcğ"	
 	MINOR_HARMONY = {
-					 u"a": u"ı"
-					 , u"e": u"i"
-					 , u"ö": u"ü"
-					 , u"o": u"u"
-					 , u"ı": u"ı"
-					 , u"i": u"i"
-					 , u"u": u"u"
-					 , u"ü": u"ü"
+			 u"a": u"ı"
+			 , u"e": u"i"
+			 , u"ö": u"ü"
+			 , u"o": u"u"
+			 , u"ı": u"ı"
+			 , u"i": u"i"
+			 , u"u": u"u"
+			 , u"ü": u"ü"
 	}
 	
 	MINOR_HARMONY_FOR_FUTURE = {
 					 u"a": u"a"
 					 , u"e": u"e"
-					 , u"ö": u"e"
-					 , u"o": u"a"
-					 , u"ı": u"a"
+					 , u"ö": u"ü"
+					 , u"o": u"u"
+					 , u"ı": u"ı"
 					 , u"i": u"e"
-					 , u"u": u"a"
+					 , u"u": u"u"
 					 , u"ü": u"e"
 	}
-	
 	
 	# The exception words which has non-Turkish origins donn't fit for standard Turkish Major Wovel Harmony
 	# beacuse of the vocal difference which doesn't exist in Turkish.
@@ -243,9 +242,14 @@ class turkish:
 		else:
 			returndata[u"consonant"] = True
 			
+			if getLastLetter in self.DISCONTINIOUS_HARD_CONSONANTS:
+				returndata[u"discontinious_hard_consonant"] = True
+				getLastLetter = self.SOFTEN_DHC[self.DISCONTINIOUS_HARD_CONSONANTS.index(getLastLetter)]
+				returndata[u"soften_consonant"] = getLastLetter
+
 			if getLastLetter in self.HARD_CONSONANTS:
 				returndata[u"hard_consonant"] = True
-				
+
 				if getLastLetter in self.DISCONTINIOUS_HARD_CONSONANTS_AFTER_SUFFIX:
 					returndata[u"discontinious_hard_consonant_for_suffix"] = True
 					getLastLetter = self.SOFTEN_DHC_AFTER_SUFFIX[self.DISCONTINIOUS_HARD_CONSONANTS_AFTER_SUFFIX.index(getLastLetter)]
@@ -501,8 +505,8 @@ class turkish:
 
 	# Şimdiki zaman 
 	#	   * arıyorum
-	#	   * For alternative usage of present continuous tense, check the function makePresentContinuous2
-	def makePresentContinuous(self, pword, param = {}):
+	#	   * For alternative usage of present continuous tense, check the function makePresentSimpleContinuous2
+	def makePresentSimpleContinuous(self, pword, param = {}):
 		word = pword
 
 		getLastLetter = self.lastLetter(word)
@@ -510,7 +514,10 @@ class turkish:
 
 		lastLetterIsVowel = getLastLetter[u"letter"] in self.VOWELS
 
-		if param.get("negative", "False") == False:
+		if param.get("negative", False) == False:
+			if u"discontinious_hard_consonant" in getLastLetter:
+				word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant"])
+	
 			if lastLetterIsVowel:
 				word = self.concat(word[:-1], self.MINOR_HARMONY[word[-1]])
 			else:
@@ -559,7 +566,7 @@ class turkish:
 
 		return word
 
-	def makePresentContinuous2(self, pword, param = {}):
+	def makePresentSimpleContinuous2(self, pword, param = {}):
 	# There are two ways to express "present continuous tense in Turkish "
 	# This kind is not common in daily Turkish usage anymore
 	#	   * aramaktayım
@@ -567,7 +574,7 @@ class turkish:
 
 		word = self.makeInfinitive(pword, param = {})
 
-		if self.lastVowel(word)[u"tone"] == u"front" and param.get("negative", "False") == True:
+		if self.lastVowel(word)[u"tone"] == u"front" and param.get("negative", False) == True:
 			word = self.concat(word, u"ma")
 		else:
 			word = self.concat(word, u"me")
@@ -642,8 +649,7 @@ class turkish:
 		return word 
 
 	# Geniş zaman
-	# Question cases not completed
-	def makePresent(self, pword, param = {}):
+	def makePresentSimple(self, pword, param = {}):
 		word = pword
 
 		getLastLetter = self.lastLetter(word)
@@ -654,80 +660,169 @@ class turkish:
 		minorHarmonyLetter = self.MINOR_HARMONY[getLastVowel[u"letter"]]
 		minorHA = self.MINOR_HARMONY_FOR_FUTURE[minorHarmonyLetter]
 
-		if param.get("negative", "False") == False:
-			if lastLetterIsVowel == False:
+		if param.get("negative", False) == False:
+			if u"discontinious_hard_consonant" in getLastLetter:
+				word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant"])
+
+		if param.get("question", False) == True: 
+			if param.get("negative", False) == False:
+				if lastLetterIsVowel == False:
+					word = self.concat(word, minorHA)
+
+				word = self.concat(word, u"r")
+
+				if param.get("quantity", "singular") == "singular":
+					if param.get("person", 3) == 1:
+						word = self.concat(word, " ")
+						word = self.concat(word, "m")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, "y")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, u"m")
+					elif param.get("person", 3) == 2:
+						word = self.concat(word, " ")
+						word = self.concat(word, "m")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, "s")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, u"n")
+					elif param.get("person", 3) == 3:
+						word = self.concat(word, " ")
+						word = self.concat(word, "m")
+						word = self.concat(word, minorHarmonyLetter)				
+				elif param.get("quantity", "singular") == "plural":
+					if param.get("person", 3) == 1:
+						word = self.concat(word, " ")
+						word = self.concat(word, "m")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, "y")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, u"z")
+					elif param.get("person", 3) == 2:
+						word = self.concat(word, " ")
+						word = self.concat(word, "m")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, "s")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, u"n")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, u"z")
+					elif param.get("person", 3) == 3:
+						word = self.makePlural(word)
+						word = self.concat(word, " ")
+						word = self.concat(word, "m")
+						word = self.concat(word, minorHarmonyLetter)	
+			if param.get("negative", True):
+				word = self.concat(word, u"m")
 				word = self.concat(word, minorHarmonyLetter)
-			
+				word = self.concat(word, u"z")
 
-			word = self.concat(word, u"r")
-
-			if param.get("quantity", "singular") == "singular":
-				if param.get("person", 3) == 1:
-					if param.get("question", False) == True: 
+				if param.get("quantity", "singular") == "singular":
+					if param.get("person", 3) == 1:
+						word = self.concat(word, " ")
+						word = self.concat(word, "m")
 						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, "y")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, u"m")
+					elif param.get("person", 3) == 2:
+						word = self.concat(word, " ")
+						word = self.concat(word, "m")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, "s")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, u"n")
+					elif param.get("person", 3) == 3:
+						word = self.concat(word, " ")
+						word = self.concat(word, "m")
+						word = self.concat(word, minorHarmonyLetter)				
+				elif param.get("quantity", "singular") == "plural":
+					if param.get("person", 3) == 1:
+						word = self.concat(word, " ")
+						word = self.concat(word, "m")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, "y")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, u"z")
+					elif param.get("person", 3) == 2:
+						word = self.concat(word, " ")
+						word = self.concat(word, "m")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, "s")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, u"n")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, u"z")
+					elif param.get("person", 3) == 3:
+						word = self.makePlural(word)
+						word = self.concat(word, " ")
+						word = self.concat(word, "m")
+						word = self.concat(word, minorHarmonyLetter)	
+		elif param.get("question", False) == False: 
+			if param.get("negative", False) == False:
+				if lastLetterIsVowel == False:
+					word = self.concat(word, minorHA)
+				
+				word = self.concat(word, u"r")
+
+				if param.get("quantity", "singular") == "singular":
+					if param.get("person", 3) == 1:
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, u"m")
+					elif param.get("person", 3) == 2:
+						word = self.concat(word, u"s")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, u"n")
+				elif param.get("quantity", "singular") == "plural":
+					if param.get("person", 3) == 1:
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, u"z")
+					elif param.get("person", 3) == 2:
+						word = self.concat(word, u"s")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, u"n")
+						word = self.concat(word, minorHarmonyLetter)
+						word = self.concat(word, u"z")
+					elif param.get("person", 3) == 3:
+						word = self.makePlural(word)
+			elif param.get("negative", False) == True:
+				if param.get("quantity", "singular") == "singular":
+					if param.get("person", 3) == 1:
+						word = self.concat(word, u"m")
+						word = self.concat(word, minorHA)
+						word = self.concat(word, u"m")
+					elif param.get("person", 3) == 2:
+						word = self.concat(word, u"m")
+						word = self.concat(word, minorHA)
+						word = self.concat(word, u"z")
+						word = self.concat(word, u"s")
+						word = self.concat(word, self.MINOR_HARMONY[minorHA]) 
+						word = self.concat(word, u"n")
+					elif param.get("person", 3) == 3:
+						word = self.concat(word, u"m")
+						word = self.concat(word, minorHA)
+						word = self.concat(word, u"z")
+				elif param.get("quantity", "singular") == "plural":
+					if param.get("person", 3) == 1:
+						word = self.concat(word, u"m")
+						word = self.concat(word, minorHA)
 						word = self.concat(word, u"y")
-					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"m")
-				elif param.get("person", 3) == 2:
-					if param.get("question", False) == True: 
-						word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"s")
-					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"n")
-				elif param.get("person", 3) == 3:
-					if param.get("question", False) == True: 
-						word = self.concat(word, minorHarmonyLetter)
-
-			elif param.get("quantity", "singular") == "plural":
-				if param.get("person", 3) == 1:
-					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"z")
-				elif param.get("person", 3) == 2:
-					word = self.concat(word, u"s")
-					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"n")
-					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"z")
-				elif param.get("person", 3) == 3:
-					word = self.makePlural(word)
-		elif param.get("negative", "False") == True:
-			if param.get("quantity", "singular") == "singular":
-				if param.get("person", 3) == 1:
-					word = self.concat(word, u"m")
-					word = self.concat(word, minorHA)
-					word = self.concat(word, u"m")
-				elif param.get("person", 3) == 2:
-					word = self.concat(word, u"m")
-					word = self.concat(word, minorHA)
-					word = self.concat(word, u"z")
-					word = self.concat(word, u"s")
-					word = self.concat(word, self.MINOR_HARMONY[minorHA]) 
-					word = self.concat(word, u"n")
-				elif param.get("person", 3) == 3:
-					word = self.concat(word, u"m")
-					word = self.concat(word, minorHA)
-					word = self.concat(word, u"z")
-			elif param.get("quantity", "singular") == "plural":
-				if param.get("person", 3) == 1:
-					word = self.concat(word, u"m")
-					word = self.concat(word, minorHA)
-					word = self.concat(word, u"y")
-					word = self.concat(word, self.MINOR_HARMONY[minorHA]) 
-					word = self.concat(word, u"z")
-				elif param.get("person", 3) == 2:
-					word = self.concat(word, u"m")
-					word = self.concat(word, minorHA)
-					word = self.concat(word, u"z")
-					word = self.concat(word, u"s")
-					word = self.concat(word, self.MINOR_HARMONY[minorHA])
-					word = self.concat(word, u"n")
-					word = self.concat(word, self.MINOR_HARMONY[minorHA]) 
-					word = self.concat(word, u"z")
-				elif param.get("person", 3) == 3:
-					word = self.concat(word, u"m")
-					word = self.concat(word, minorHA)
-					word = self.concat(word, u"z")
-					word = self.makePlural(word)
+						word = self.concat(word, self.MINOR_HARMONY[minorHA]) 
+						word = self.concat(word, u"z")
+					elif param.get("person", 3) == 2:
+						word = self.concat(word, u"m")
+						word = self.concat(word, minorHA)
+						word = self.concat(word, u"z")
+						word = self.concat(word, u"s")
+						word = self.concat(word, self.MINOR_HARMONY[minorHA])
+						word = self.concat(word, u"n")
+						word = self.concat(word, self.MINOR_HARMONY[minorHA]) 
+						word = self.concat(word, u"z")
+					elif param.get("person", 3) == 3:
+						word = self.concat(word, u"m")
+						word = self.concat(word, minorHA)
+						word = self.concat(word, u"z")
+						word = self.makePlural(word)
 
 		return word
 
@@ -735,7 +830,7 @@ class turkish:
 	def makeFuture(self, pword, param = {}):
 		word = pword
 
-		if param.get("negative", "False") == True:
+		if param.get("negative", False) == True:
 			if self.lastVowel(word)[u"tone"] == u"front":
 				word = self.concat(word, u"ma")
 			else:
@@ -822,7 +917,6 @@ class turkish:
 
 		return word
 
-
 	# Unified verbs (Birleşik fiiler) 
 	# Ability - Yeterlilik: kızabilir (bil) (English modal auxiliary verb: Can)
 	# Swiftness - Tezlik: koşuver (ver) ()
@@ -832,35 +926,35 @@ class turkish:
 
 tr = turkish()
 
-print (tr.makePresentContinuous(u"kaldır", { "negative": False, "question": False, "person": 1, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"kaldır", { "negative": False, "question": False, "person": 2, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"kaldır", { "negative": False, "question": False, "person": 3, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"kaldır", { "negative": False, "question": False, "person": 1, "quantity": "plural" }))
-print (tr.makePresentContinuous(u"kaldır", { "negative": False, "question": False, "person": 2, "quantity": "plural" }))
-print (tr.makePresentContinuous(u"kaldır", { "negative": False, "question": False, "person": 3, "quantity": "plural" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": False, "question": False, "person": 1, "quantity": "singular" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": False, "question": False, "person": 2, "quantity": "singular" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": False, "question": False, "person": 3, "quantity": "singular" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": False, "question": False, "person": 1, "quantity": "plural" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": False, "question": False, "person": 2, "quantity": "plural" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": False, "question": False, "person": 3, "quantity": "plural" }))
 
-print (tr.makePresentContinuous(u"kaldır", { "negative": False, "question": True, "person": 1, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"kaldır", { "negative": False, "question": True, "person": 2, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"kaldır", { "negative": False, "question": True, "person": 3, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"kaldır", { "negative": False, "question": True, "person": 1, "quantity": "plural" }))
-print (tr.makePresentContinuous(u"kaldır", { "negative": False, "question": True, "person": 2, "quantity": "plural" }))
-print (tr.makePresentContinuous(u"kaldır", { "negative": False, "question": True, "person": 3, "quantity": "plural" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": False, "question": True, "person": 1, "quantity": "singular" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": False, "question": True, "person": 2, "quantity": "singular" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": False, "question": True, "person": 3, "quantity": "singular" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": False, "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": False, "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": False, "question": True, "person": 3, "quantity": "plural" }))
 
-print (tr.makePresentContinuous(u"kaldır", { "negative": True, "question": False, "person": 1, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"kaldır", { "negative": True, "question": False, "person": 2, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"kaldır", { "negative": True, "question": False, "person": 3, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"kaldır", { "negative": True, "question": False, "person": 1, "quantity": "plural" }))
-print (tr.makePresentContinuous(u"kaldır", { "negative": True, "question": False, "person": 2, "quantity": "plural" }))
-print (tr.makePresentContinuous(u"kaldır", { "negative": True, "question": False, "person": 3, "quantity": "plural" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": True, "question": False, "person": 1, "quantity": "singular" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": True, "question": False, "person": 2, "quantity": "singular" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": True, "question": False, "person": 3, "quantity": "singular" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": True, "question": False, "person": 1, "quantity": "plural" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": True, "question": False, "person": 2, "quantity": "plural" }))
+print (tr.makePresentSimpleContinuous(u"git", { "negative": True, "question": False, "person": 3, "quantity": "plural" }))
 
-print (tr.makePresentContinuous2(u"kaldır", { "negative": True, "question": True, "person": 1, "quantity": "singular" }))
-print (tr.makePresentContinuous2(u"kaldır", { "negative": True, "question": True, "person": 2, "quantity": "singular" }))
-print (tr.makePresentContinuous2(u"kaldır", { "negative": True, "question": True, "person": 3, "quantity": "singular" }))
-print (tr.makePresentContinuous2(u"kaldır", { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
-print (tr.makePresentContinuous2(u"kaldır", { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
-print (tr.makePresentContinuous2(u"kaldır", { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
+print (tr.makePresentSimpleContinuous2(u"git", { "negative": True, "question": True, "person": 1, "quantity": "singular" }))
+print (tr.makePresentSimpleContinuous2(u"git", { "negative": True, "question": True, "person": 2, "quantity": "singular" }))
+print (tr.makePresentSimpleContinuous2(u"git", { "negative": True, "question": True, "person": 3, "quantity": "singular" }))
+print (tr.makePresentSimpleContinuous2(u"git", { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePresentSimpleContinuous2(u"git", { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePresentSimpleContinuous2(u"git", { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
-print (tr.makeFuture(u"kaldır", { "negative": True, "question": False, "person": 3, "quantity": "plural"}))
+print (tr.makeFuture(u"git", { "negative": True, "question": False, "person": 3, "quantity": "plural"}))
 
 print (tr.makeGenitive(u"Öykü", {"proper_noun": True}))
 print (tr.makeDative("Fatma", {"proper_noun": True}))
@@ -883,33 +977,32 @@ print (tr.possessiveAffix("halter", {"person": 3, "quantity": "plural"}))
 print (tr.possessiveAffix(u"Kenya", {"person": 3, "quantity": "plural"}))
 
 
-print (tr.makePresent(u"gör", { "negative": False, "question": False, "person": 1, "quantity": "singular" }))
-print (tr.makePresent(u"gör", { "negative": False, "question": False, "person": 2, "quantity": "singular" }))
-print (tr.makePresent(u"gör", { "negative": False, "question": False, "person": 3, "quantity": "singular" }))
-print (tr.makePresent(u"gör", { "negative": False, "question": False, "person": 1, "quantity": "plural" }))
-print (tr.makePresent(u"gör", { "negative": False, "question": False, "person": 2, "quantity": "plural" }))
-print (tr.makePresent(u"gör", { "negative": False, "question": False, "person": 3, "quantity": "plural" }))
+print (tr.makePresentSimple(u"git", { "negative": False, "question": False, "person": 1, "quantity": "singular" }))
+print (tr.makePresentSimple(u"git", { "negative": False, "question": False, "person": 2, "quantity": "singular" }))
+print (tr.makePresentSimple(u"git", { "negative": False, "question": False, "person": 3, "quantity": "singular" }))
+print (tr.makePresentSimple(u"git", { "negative": False, "question": False, "person": 1, "quantity": "plural" }))
+print (tr.makePresentSimple(u"git", { "negative": False, "question": False, "person": 2, "quantity": "plural" }))
+print (tr.makePresentSimple(u"git", { "negative": False, "question": False, "person": 3, "quantity": "plural" }))
 
-print (tr.makePresent(u"gör", { "negative": True, "question": False, "person": 1, "quantity": "singular" }))
-print (tr.makePresent(u"gör", { "negative": True, "question": False, "person": 2, "quantity": "singular" }))
-print (tr.makePresent(u"gör", { "negative": True, "question": False, "person": 3, "quantity": "singular" }))
-print (tr.makePresent(u"gör", { "negative": True, "question": False, "person": 1, "quantity": "plural" }))
-print (tr.makePresent(u"gör", { "negative": True, "question": False, "person": 2, "quantity": "plural" }))
-print (tr.makePresent(u"gör", { "negative": True, "question": False, "person": 3, "quantity": "plural" }))
+print (tr.makePresentSimple(u"git", { "negative": True, "question": False, "person": 1, "quantity": "singular" }))
+print (tr.makePresentSimple(u"git", { "negative": True, "question": False, "person": 2, "quantity": "singular" }))
+print (tr.makePresentSimple(u"git", { "negative": True, "question": False, "person": 3, "quantity": "singular" }))
+print (tr.makePresentSimple(u"git", { "negative": True, "question": False, "person": 1, "quantity": "plural" }))
+print (tr.makePresentSimple(u"git", { "negative": True, "question": False, "person": 2, "quantity": "plural" }))
+print (tr.makePresentSimple(u"git", { "negative": True, "question": False, "person": 3, "quantity": "plural" }))
 
+print (tr.makePresentSimple(u"git", { "negative": False, "question": True, "person": 1, "quantity": "singular" }))
+print (tr.makePresentSimple(u"git", { "negative": False, "question": True, "person": 2, "quantity": "singular" }))
+print (tr.makePresentSimple(u"git", { "negative": False, "question": True, "person": 3, "quantity": "singular" }))
+print (tr.makePresentSimple(u"git", { "negative": False, "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePresentSimple(u"git", { "negative": False, "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePresentSimple(u"git", { "negative": False, "question": True, "person": 3, "quantity": "plural" }))
 
-print (tr.makePresent(u"gör", { "negative": False, "question": True, "person": 1, "quantity": "singular" }))
-print (tr.makePresent(u"gör", { "negative": False, "question": True, "person": 2, "quantity": "singular" }))
-print (tr.makePresent(u"gör", { "negative": False, "question": True, "person": 3, "quantity": "singular" }))
-print (tr.makePresent(u"gör", { "negative": False, "question": True, "person": 1, "quantity": "plural" }))
-print (tr.makePresent(u"gör", { "negative": False, "question": True, "person": 2, "quantity": "plural" }))
-#print (tr.makePresent(u"gör", { "negative": False, "question": True, "person": 3, "quantity": "plural" }))
-
-#print (tr.makePresent(u"gör", { "negative": True, "question": True, "person": 1, "quantity": "singular" }))
-#print (tr.makePresent(u"gör", { "negative": True, "question": True, "person": 2, "quantity": "singular" }))
-#print (tr.makePresent(u"gör", { "negative": True, "question": True, "person": 3, "quantity": "singular" }))
-#print (tr.makePresent(u"gör", { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
-#print (tr.makePresent(u"gör", { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
-#print (tr.makePresent(u"gör", { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
+#print (tr.makePresentSimple(u"gör", { "negative": True, "question": True, "person": 1, "quantity": "singular" }))
+#print (tr.makePresentSimple(u"gör", { "negative": True, "question": True, "person": 2, "quantity": "singular" }))
+#print (tr.makePresentSimple(u"gör", { "negative": True, "question": True, "person": 3, "quantity": "singular" }))
+#print (tr.makePresentSimple(u"gör", { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
+#print (tr.makePresentSimple(u"gör", { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
+#print (tr.makePresentSimple(u"gör", { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
 print (tr.makeInfinitive(u"ata", { "negative": True} ))
