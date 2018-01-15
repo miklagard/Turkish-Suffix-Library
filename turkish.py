@@ -424,7 +424,7 @@ class turkish:
 		return returndata
 	
 	# İyelik ekleri
-	def possessiveAffix(self, pword, param):
+	def possessiveAffix(self, pword, param = {}):
 		word = pword
 		
 		person = str(param.get("person", 3))
@@ -482,7 +482,7 @@ class turkish:
 		return word
 
 	# Mastar eski
-	def makeInfinitive(self, pword, param):
+	def makeInfinitive(self, pword, param = {}):
 		word = pword
 
 		if param.get("negative", False) == True:
@@ -502,7 +502,7 @@ class turkish:
 	# Şimdiki zaman 
 	#	   * arıyorum
 	#	   * For alternative usage of present continuous tense, check the function makePresentContinuous2
-	def makePresentContinuous(self, pword, param):
+	def makePresentContinuous(self, pword, param = {}):
 		word = pword
 
 		getLastLetter = self.lastLetter(word)
@@ -559,13 +559,13 @@ class turkish:
 
 		return word
 
-	def makePresentContinuous2(self, pword, param):
+	def makePresentContinuous2(self, pword, param = {}):
 	# There are two ways to express "present continuous tense in Turkish "
 	# This kind is not common in daily Turkish usage anymore
 	#	   * aramaktayım
 	#	   * yapmaktayım
 
-		word = self.makeInfinitive(pword, param)
+		word = self.makeInfinitive(pword, param = {})
 
 		if self.lastVowel(word)[u"tone"] == u"front" and param.get("negative", "False") == True:
 			word = self.concat(word, u"ma")
@@ -643,7 +643,7 @@ class turkish:
 
 	# Geniş zaman
 	# Question cases not completed
-	def makePresent(self, pword, param):
+	def makePresent(self, pword, param = {}):
 		word = pword
 
 		getLastLetter = self.lastLetter(word)
@@ -732,9 +732,9 @@ class turkish:
 		return word
 
 	# Gelecek zaman
-	def makeFuture(self, pword, param):
+	def makeFuture(self, pword, param = {}):
 		word = pword
-		
+
 		if param.get("negative", "False") == True:
 			if self.lastVowel(word)[u"tone"] == u"front":
 				word = self.concat(word, u"ma")
@@ -824,8 +824,8 @@ class turkish:
 
 
 	# Unified verbs (Birleşik fiiler) 
-	# Ability - Yeterlilik: kızabilir (bil)
-	# Swiftness - Tezlik: koşuver (ver)
+	# Ability - Yeterlilik: kızabilir (bil) (English modal auxiliary verb: Can)
+	# Swiftness - Tezlik: koşuver (ver) ()
 	# Continuity - Süreklilik: gidedursun, bakakalmak, uyuyakalmak (dur, kal, gel, koy)
 	# Approach - Yaklaşma: (yaz) düzeyazmak
 
