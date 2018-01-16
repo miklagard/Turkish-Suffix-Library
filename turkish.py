@@ -464,6 +464,10 @@ class turkish:
 			
 			elif person == "2": 
 				word = self.concat(word, u"n")
+
+			elif person == "3":
+				word = self.concat(word, u"s")
+				word = self.concat(word, minorHarmonyLetter)
 		else:
 			if person == "1":
 				if lastLetterIsVowel == False:
@@ -642,10 +646,10 @@ class turkish:
 					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
 					word = self.concat(word, u"z")
 				elif param.get("person", 3) == 3:
+					word = self.makePlural(word)
 					word = self.concat(word, u" ")
 					word = self.concat(word, u"m")
 					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
-					word = self.makePlural(word)
 		return word 
 
 	# Geniş zaman
@@ -1055,15 +1059,13 @@ print (tr.makeAccusative(u"erik", {"proper_noun": False}))
 print (tr.makeAccusative(u"Erik", {"proper_noun": True}))
 
 
-print (tr.possessiveAffix("kavanoz", {"person": 1, "quantity": "singular"}))
-print (tr.possessiveAffix("kavanoz", {"person": 2, "quantity": "singular"}))
-print (tr.possessiveAffix("kavanoz", {"person": 3, "quantity": "singular"}))
+print (tr.possessiveAffix("çanta", {"person": 1, "quantity": "singular"}))
+print (tr.possessiveAffix("çanta", {"person": 2, "quantity": "singular"}))
+print (tr.possessiveAffix("çanta", {"person": 3, "quantity": "singular"}))
 
-print (tr.possessiveAffix("halter", {"person": 1, "quantity": "plural"}))
-print (tr.possessiveAffix("halter", {"person": 2, "quantity": "plural"}))
-print (tr.possessiveAffix("halter", {"person": 3, "quantity": "plural"}))
-
-print (tr.possessiveAffix(u"Kenya", {"person": 3, "quantity": "plural"}))
+print (tr.possessiveAffix("çanta", {"person": 1, "quantity": "plural"}))
+print (tr.possessiveAffix("çanta", {"person": 2, "quantity": "plural"}))
+print (tr.possessiveAffix("çanta", {"person": 3, "quantity": "plural"}))
 
 
 print (tr.makePresentSimple(u"at", { "negative": False, "question": False, "person": 1, "quantity": "singular" }))
