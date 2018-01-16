@@ -920,6 +920,92 @@ class turkish:
 
 		return word
 
+	
+	# Not the same with English past perfect tense
+	# This usage is for past tense of an action which is heared/learned but not witnessed.
+	# mişli geçmiş zaman veya öğrenilen geçmiş zaman
+	def makePastPerfect(self, pword, param = {}):
+		word = pword
+
+		if param.get("negative", False) == True:
+			word = self.concat(word, u"m")
+
+			if self.lastVowel(word)[u"tone"] == u"front":
+				word = self.concat(word, u"a")
+			else:
+				word = self.concat(word, u"e")
+
+		getLastVowel = self.lastVowel(word)
+		minorHarmonyLetter= self.MINOR_HARMONY[getLastVowel[u"letter"]]
+
+		word = self.concat(word, u"m")
+		word = self.concat(word, minorHarmonyLetter)
+		word = self.concat(word, u"ş")
+
+		if param.get("question", False) == False:
+			if param.get("quantity", "singular") == "singular":
+				if param.get("person", 3) == 1:
+					word = self.concat(word, minorHarmonyLetter)
+					word = self.concat(word, u"m")
+				elif param.get("person", 3) == 2:
+					word = self.concat(word, u"s")
+					word = self.concat(word, minorHarmonyLetter)
+					word = self.concat(word, u"n")
+			elif param.get("quantity", "singular") == "plural":
+				if param.get("person", 3) == 1:
+					word = self.concat(word, minorHarmonyLetter)
+					word = self.concat(word, u"z")
+				elif param.get("person", 3) == 2:
+					word = self.concat(word, u"s")
+					word = self.concat(word, minorHarmonyLetter)
+					word = self.concat(word, u"n")
+					word = self.concat(word, minorHarmonyLetter)
+					word = self.concat(word, u"z")
+				elif param.get("person", 3) == 2:
+					word = self.makePlural(word)
+		elif param.get("question", False) == True:
+			if param.get("quantity", "singular") == "singular":
+				if param.get("person", 3) == 1:
+					word = self.concat(word, u" ")
+					word = self.concat(word, u"m")
+					word = self.concat(word, minorHarmonyLetter)
+					word = self.concat(word, u"y")
+					word = self.concat(word, minorHarmonyLetter)
+					word = self.concat(word, u"m")
+				elif param.get("person", 3) == 2:
+					word = self.concat(word, u" ")
+					word = self.concat(word, u"m")
+					word = self.concat(word, minorHarmonyLetter)
+					word = self.concat(word, u"s")
+					word = self.concat(word, minorHarmonyLetter)
+					word = self.concat(word, u"n")
+				elif param.get("person", 3) == 2:
+					word = self.concat(word, u" ")
+					word = self.concat(word, u"m")
+					word = self.concat(word, minorHarmonyLetter)
+			elif param.get("quantity", "singular") == "plural":
+				if param.get("person", 3) == 1:
+					word = self.concat(word, u" ")
+					word = self.concat(word, u"m")
+					word = self.concat(word, minorHarmonyLetter)
+					word = self.concat(word, u"y")
+					word = self.concat(word, minorHarmonyLetter)
+					word = self.concat(word, u"z")
+				elif param.get("person", 3) == 2:
+					word = self.concat(word, u" ")
+					word = self.concat(word, u"m")
+					word = self.concat(word, minorHarmonyLetter)
+					word = self.concat(word, u"s")
+					word = self.concat(word, minorHarmonyLetter)
+					word = self.concat(word, u"n")
+					word = self.concat(word, minorHarmonyLetter)
+					word = self.concat(word, u"z")
+				elif param.get("person", 3) == 2:
+					word = self.makePlural(word)
+					word = self.concat(word, u" ")
+					word = self.concat(word, u"m")
+					word = self.concat(word, minorHarmonyLetter)
+		return word
 	# Unified verbs (Birleşik fiiler) 
 	# Ability - Yeterlilik: kızabilir (bil) (English modal auxiliary verb: Can)
 	# Swiftness - Tezlik: koşuver (ver) ()
@@ -1009,3 +1095,5 @@ print (tr.makePresentSimple(u"at", { "negative": True, "question": True, "person
 print (tr.makePresentSimple(u"at", { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
 print (tr.makeInfinitive(u"at", { "negative": True} ))
+
+print (tr.makePastPerfect(u"ölç", { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
