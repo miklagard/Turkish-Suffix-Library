@@ -434,6 +434,7 @@ class turkish:
 	
 	# İyelik ekleri
 	def possessiveAffix(self, pword, param = {}):
+		position = param.get("position", 1)
 		word = pword
 		
 		person = str(param.get("person", 3))
@@ -1015,12 +1016,53 @@ class turkish:
 					word = self.concat(word, u"m")
 					word = self.concat(word, minorHarmonyLetter)
 		return word
-	# Unified verbs (Birleşik fiiler) 
-	# Ability - Yeterlilik: kızabilir (bil) (English modal auxiliary verb: Can)
-	# Swiftness - Tezlik: koşuver (ver) ()
-	# Continuity - Süreklilik: gidedursun, bakakalmak, uyuyakalmak (dur, kal, gel, koy)
-	# Approach - Yaklaşma: (yaz) düzeyazmak
 
+	# Unified verbs (Birleşik fiiler) 
+	# Ability - Yeterlilik: kızabil (bil) (English modal auxiliary verb: Can)
+	# Swiftness - Tezlik: koşuver (ver) ()
+	# Continuity - Süreklilik: gidedur, bakakal, alıkoy (dur, kal, gel, koy)
+	# Approach - Yaklaşma: (yaz) düzeyaz
+	def unify_verbs(self, pword, param = {}):
+		word = pword
+
+		getLastVowel = self.lastVowel(word)
+		getAuxLastVowel = self.lastVowel(param["auxiliary"])
+		minorHarmonyLetter=  self.MINOR_HARMONY[getLastVowel[u"letter"]]			
+		getLastLetter = self.lastLetter(word)
+
+		if u"vowel" in getLastLetter:
+			word = self.concat(word, u"y")
+
+		if param.get("negative", False) == False:
+			if param["auxiliary"] in [u"ver", u"koy"]:
+				word = self.concat(word, minorHarmonyLetter)
+			elif getLastVowel[u"tone"] == u"front":
+				word = self.concat(word, u"a")
+			else:
+				word = self.concat(word, u"e")
+
+			word = self.concat(word, param["auxiliary"])
+		if param.get("negative", False) == True:
+			if param["auxiliary"] == "bil":
+				if getLastVowel[u"tone"] == u"front":
+					word = self.concat(word, u"ama")
+				else:
+					word = self.concat(word, u"eme")
+			else:
+				if param["auxiliary"] in [u"ver", u"koy"]:
+					word = self.concat(word, minorHarmonyLetter)
+				elif getLastVowel[u"tone"] == u"front":
+					word = self.concat(word, u"a")
+				else:
+					word = self.concat(word, u"e")
+
+				word = self.concat(word, param["auxiliary"])
+
+				if getAuxLastVowel[u"tone"] == u"front":
+					word = self.concat(word, u"a")
+				else:
+					word = self.concat(word, u"e")
+		return word 
 
 tr = turkish()
 
@@ -1104,3 +1146,5 @@ print (tr.makePresentSimple(u"at", { "negative": True, "question": True, "person
 print (tr.makeInfinitive(u"at", { "negative": True} ))
 
 print (tr.makePastPerfect(u"ölç", { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
+
+print (tr.unify_verbs("kaç", {"auxiliary": "bil", "negative": False}))
