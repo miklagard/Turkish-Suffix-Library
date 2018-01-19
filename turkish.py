@@ -247,7 +247,11 @@ class turkish:
 				getLastLetter = self.SOFTEN_DHC[self.DISCONTINIOUS_HARD_CONSONANTS.index(getLastLetter)]
 				returndata[u"soften_consonant"] = getLastLetter
 
-			if getLastLetter in self.HARD_CONSONANTS:
+		getLastLetter = word[len(word) - 1]
+		if getLastLetter == "'":
+			getLastLetter = word[len(word) - 2]
+
+		if getLastLetter in self.HARD_CONSONANTS:
 				returndata[u"hard_consonant"] = True
 
 				if getLastLetter in self.DISCONTINIOUS_HARD_CONSONANTS_AFTER_SUFFIX:
@@ -294,12 +298,12 @@ class turkish:
 			
 			if proper_noun == True:
 				word += "'"
-			
+
 			if u"vowel" in getLastLetter:
 				word = self.concat(word, u"y")
-			elif u"discontinious_hard_consonant_for_suffix" in getLastLetter and proper_noun == False:
+			elif u"discontinious_hard_consonant" in getLastLetter and proper_noun == False:
 				if getLastVowel[u"vowel_count"] > 1:
-					word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant_for_suffix"])
+					word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant"])
 	
 			word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
 	
@@ -352,30 +356,31 @@ class turkish:
 	#-de hali
 	def makeGenitive(self, pword, param = {}):
 		word = pword
-
 		getLastLetter = self.lastLetter(word)
 		getLastVowel = self.lastVowel(word)
+		print (getLastLetter)
+
 		lowerWord = self.makeLower(word)
 		proper_noun = param.get("proper_noun", False)
 		
 		if proper_noun == True:
 			word += "'"
+
 		if lowerWord in self.EXCEPTION_MISSING:
 			word = self.fromUpperOrLower(self.EXCEPTION_MISSING[lowerWord], word)
 			lowerWord = self.makeLower(word)
+
+		if u"hard_consonant" in getLastLetter:
+			word = self.concat(word, u"t")
+		else:
+			word = self.concat(word, u"d")
+
+		if getLastVowel[u"tone"] == u"front" and not word in self.EXCEPTION_WORDS:
+			word = self.concat(word, u"a")
+		else:
+			word = self.concat(word, u"e")
 		
-		if u"vowel" in getLastLetter:
-			word = self.concat(word, u"n")
-		elif u"discontinious_hard_consonant_for_suffix" in getLastLetter and proper_noun == False:
-			if getLastVowel["vowel_count"] > 1:
-				word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant_for_suffix"])
-	
-		word = self.concat(word, self.MINOR_HARMONY[getLastVowel[u"letter"]])
-		word = self.concat(word, u"n")
-		
-		returndata = word
-		
-		return returndata
+		return word
 
 	#-den hali
 	def makeAblative(self, pword, param = {}):
@@ -442,9 +447,9 @@ class turkish:
 			
 			if proper_noun == True:
 				word += "'"
-			elif u"discontinious_hard_consonant_for_suffix" in getLastLetter:
+			elif u"discontinious_hard_consonant" in getLastLetter:
 				if getLastVowel[u"vowel_count"] > 1:
-					word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant_for_suffix"])
+					word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant"])
 				if (self.makeLower(word) in self.EXCEPTION_MISSING): 
 					word = self.fromUpperOrLower(self.EXCEPTION_MISSING[self.makeLower(word)], word)
 		
@@ -1054,7 +1059,7 @@ print (tr.makeDative("Fatma", {"proper_noun": True}))
 print (tr.makeAblative("Ali", {"proper_noun": True}))
 print (tr.makeAccusative(u"Kaliningrad", {"proper_noun": True}))
 
-print (tr.makeGenitive(u"ağaç", {"proper_noun": False}))
+print (tr.makeGenitive(u"cam", {"proper_noun": False}))
 print (tr.makeAccusative(u"erik", {"proper_noun": False}))
 print (tr.makeAccusative(u"Erik", {"proper_noun": True}))
 
