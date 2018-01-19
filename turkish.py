@@ -11,25 +11,25 @@ class turkish:
 	DISCONTINIOUS_HARD_CONSONANTS_AFTER_SUFFIX = u"pçk"
 	SOFTEN_DHC_AFTER_SUFFIX = u"bcğ"	
 	MINOR_HARMONY = {
-			 u"a": u"ı"
-			 , u"e": u"i"
-			 , u"ö": u"ü"
-			 , u"o": u"u"
-			 , u"ı": u"ı"
-			 , u"i": u"i"
-			 , u"u": u"u"
-			 , u"ü": u"ü"
+		u"a": u"ı"
+		, u"e": u"i"
+		, u"ö": u"ü"
+		, u"o": u"u"
+		, u"ı": u"ı"
+		, u"i": u"i"
+		, u"u": u"u"
+		, u"ü": u"ü"
 	}
 	
 	MINOR_HARMONY_FOR_FUTURE = {
-					 u"a": u"a"
-					 , u"e": u"e"
-					 , u"ö": u"ü"
-					 , u"o": u"u"
-					 , u"ı": u"ı"
-					 , u"i": u"e"
-					 , u"u": u"u"
-					 , u"ü": u"e"
+		u"a": u"a"
+		, u"e": u"e"
+		, u"ö": u"ü"
+		, u"o": u"u"
+		, u"ı": u"ı"
+		, u"i": u"e"
+		, u"u": u"u"
+		, u"ü": u"e"
 	}
 	
 	# The exception words which has non-Turkish origins donn't fit for standard Turkish Major Wovel Harmony
@@ -358,7 +358,6 @@ class turkish:
 		word = pword
 		getLastLetter = self.lastLetter(word)
 		getLastVowel = self.lastVowel(word)
-		print (getLastLetter)
 
 		lowerWord = self.makeLower(word)
 		proper_noun = param.get("proper_noun", False)
@@ -1022,7 +1021,7 @@ class turkish:
 	# Swiftness - Tezlik: koşuver (ver) ()
 	# Continuity - Süreklilik: gidedur, bakakal, alıkoy (dur, kal, gel, koy)
 	# Approach - Yaklaşma: (yaz) düzeyaz
-	def unify_verbs(self, pword, param = {}):
+	def unifyVerbs(self, pword, param = {}):
 		word = pword
 
 		getLastVowel = self.lastVowel(word)
@@ -1064,6 +1063,55 @@ class turkish:
 					word = self.concat(word, u"e")
 		return word 
 
+	# Make the verb command
+	# Usage: do it, break it, come!
+	# As different from English, command optative mood is valid also for 3rd person in Turkish
+	#    but never for 1st person.
+	# For the second person, there is no suffix
+	def makeCommand(self, pword, param = {}):
+		word = pword
+		getLastVowel = self.lastVowel(word)
+
+		#self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]]
+
+		if param.get("negative", False) == True:
+			word = self.concat(word, u"m")
+			if getLastVowel["tone"] == "front":
+				word = self.concat(word, "a")
+			else:
+				word = self.concat(word, "e")
+
+		minor = self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]]
+		getLastLetter = self.lastLetter(word)
+
+		if param.get("plural", False) == False:
+			if param.get("person", 2) == 3:
+				word = self.concat(word, "s")
+				word = self.concat(word, minor)
+				word = self.concat(word, "n")
+		else: # Singular
+			if param.get("person", 2) == 2:
+				if u"vowel" in getLastLetter:
+					word = self.concat(word, u"y")
+
+				word = self.concat(word, minor)
+				word = self.concat(word, "n")
+
+				if param.get("formal", False) == True:
+					word = self.concat(word, minor)
+					word = self.concat(word, "z")
+			elif param.get("person", 2) == 3:
+				word = self.concat(word, "s")
+				word = self.concat(word, minor)
+				word = self.concat(word, "n")
+				word = self.makePlural(word)
+
+		return word
+	# YAPILACAKLAR (Optative Moods)
+	# Emir kipi (Command): gel, gel-sin, gel-in(iz), gel-sinler (done)
+	# Gereklilik Kipi (must): düş-meli, git-meli, al-malı,yap-malı
+	# İstek Kipi: geleyim, gelesin, gele, gelelim, gelesiniz, gele
+	# Dilek-şart Kipi (if): gelsem, gelsen, gelse, gelsek, gelseniz, gelseler
 tr = turkish()
 
 print (tr.makePresentContinuous(u"at", { "negative": False, "question": False, "person": 1, "quantity": "singular" }))
@@ -1147,4 +1195,6 @@ print (tr.makeInfinitive(u"at", { "negative": True} ))
 
 print (tr.makePastPerfect(u"ölç", { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
 
-print (tr.unify_verbs("kaç", {"auxiliary": "bil", "negative": False}))
+print (tr.unifyVerbs(u"kaç", {"auxiliary": "bil", "negative": False}))
+
+print (tr.makeCommand(u"kaç", {"negative": True, "person": 3, "plural": True}))
