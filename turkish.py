@@ -168,17 +168,22 @@ class turkish:
 		#katli, katle, katli etc. it doesn't really have a nominative case but only with suffixes?
 	}	 
 
-	def isUpper(self, word):
+	def isUpper(self, pword):
+		word = pword
 		word = word.replace(u"ı", u"i").replace(u"İ", u"I").replace(u"ş", u"s").replace(u"Ş", u"S").replace(u"ğ", u"g").replace(u"Ğ", u"G").replace(u"ü", u"u").replace(u"Ü", u"U").replace(u"ç", u"c").replace(u"Ç", u"C").replace(u"ö", u"o").replace(u"Ö", u"O")
 		return word.isupper()
 	
-	def makeLower(self, word):
+	def makeLower(self, pword):
+		word = pword
 		return word.replace(u"İ", u"i").replace(u"I", u"ı").lower()
 	
-	def makeUpper(self, word):
+	def makeUpper(self, pword):
+		word = pword 
 		return word.replace(u"i", u"İ").replace(u"ı", u"I").upper()
 	 
-	def concat(self, str1, str2):
+	def concat(self, xstr1, xstr2):
+		str1 = xstr1
+		str2 = xstr2 
 		if self.isUpper(str1) == True:
 			returndata = str1 + makeUpper(str2)
 		else:
@@ -186,7 +191,10 @@ class turkish:
 		
 		return returndata
 	
-	def fromUpperOrLower(self, newWord, refWord):
+	def fromUpperOrLower(self, pnewWord, prefWord):
+		newWord = pnewWord
+		prefWord = prefWord
+
 		if self.isUpper(refWord[len(refWord) - 1]):
 			returndata = self.makeUpper(newWord)
 		else:
@@ -583,10 +591,11 @@ class turkish:
 
 		word = self.makeInfinitive(pword, param = {})
 
-		if self.lastVowel(word)[u"tone"] == u"front" and param.get("negative", False) == True:
-			word = self.concat(word, u"ma")
-		else:
-			word = self.concat(word, u"me")
+		if param.get("negative", False) == True:
+			if self.lastVowel(word)[u"tone"] == u"front":
+				word = self.concat(word, u"ma")
+			else:
+				word = self.concat(word, u"me")
 
 
 		if self.lastVowel(word)[u"tone"] == u"front":
@@ -721,7 +730,7 @@ class turkish:
 						word = self.concat(word, " ")
 						word = self.concat(word, "m")
 						word = self.concat(word, minorHarmonyLetter)	
-			if param.get("negative", True) == True:
+			elif param.get("negative", False) == True:
 				getLastVowel = self.lastVowel(word)
 				minorHarmonyLetterFF = self.MINOR_HARMONY_FOR_FUTURE[getLastVowel[u"letter"]]
 
@@ -849,10 +858,13 @@ class turkish:
 				word = self.concat(word, u"me")
 
 		getLastLetter = self.lastLetter(word)
-			
+		getLastVowel = self.lastVowel(word)
+
 		if u"vowel" in getLastLetter:
 			word = self.concat(word, u"y")
-
+		elif u"discontinious_hard_consonant" in getLastLetter and getLastVowel[u"vowel_count"] > 1 and param.get("negative", False) == False:
+			word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant"])
+		
 		if param.get("question", False) == True:
 			if self.lastVowel(word)[u"tone"] == u"front":
 				if param.get("person", 3) == 3 and param.get("quantity", "singular") == "plural":
@@ -875,7 +887,6 @@ class turkish:
 					elif param.get("person", 3) == 3:
 						word = self.concat(word, u"mı")
 			else:
-				word = self.concat(word, u"ecek ")
 				if param.get("person", 3) == 3 and param.get("quantity", "singular") == "plural":
 					word = self.concat(word, u"ecekler ")
 				else:
@@ -970,7 +981,7 @@ class turkish:
 					word = self.concat(word, u"n")
 					word = self.concat(word, minorHarmonyLetter)
 					word = self.concat(word, u"z")
-				elif param.get("person", 3) == 2:
+				elif param.get("person", 3) == 3:
 					word = self.makePlural(word)
 		elif param.get("question", False) == True:
 			if param.get("quantity", "singular") == "singular":
@@ -988,7 +999,7 @@ class turkish:
 					word = self.concat(word, u"s")
 					word = self.concat(word, minorHarmonyLetter)
 					word = self.concat(word, u"n")
-				elif param.get("person", 3) == 2:
+				elif param.get("person", 3) == 3:
 					word = self.concat(word, u" ")
 					word = self.concat(word, u"m")
 					word = self.concat(word, minorHarmonyLetter)
@@ -1009,28 +1020,32 @@ class turkish:
 					word = self.concat(word, u"n")
 					word = self.concat(word, minorHarmonyLetter)
 					word = self.concat(word, u"z")
-				elif param.get("person", 3) == 2:
+				elif param.get("person", 3) == 3:
 					word = self.makePlural(word)
 					word = self.concat(word, u" ")
 					word = self.concat(word, u"m")
 					word = self.concat(word, minorHarmonyLetter)
 		return word
 
-	# Unified verbs (Birleşik fiiler) 
+	# Unified verbs (Birleşik fiiler) (Not a suffix but for "can-bil" modal verb, this is necessary)
 	# Ability - Yeterlilik: kızabil (bil) (English modal auxiliary verb: Can)
-	# Swiftness - Tezlik: koşuver (ver) ()
+	# Swiftness - Tezlik: koşuver (ver) 
 	# Continuity - Süreklilik: gidedur, bakakal, alıkoy (dur, kal, gel, koy)
 	# Approach - Yaklaşma: (yaz) düzeyaz
 	def unifyVerbs(self, pword, param = {}):
 		word = pword
 
+		getLastLetter = self.lastLetter(word)
 		getLastVowel = self.lastVowel(word)
 		getAuxLastVowel = self.lastVowel(param["auxiliary"])
-		minorHarmonyLetter=  self.MINOR_HARMONY[getLastVowel[u"letter"]]			
+		minorHarmonyLetter = self.MINOR_HARMONY[getLastVowel[u"letter"]]			
 		getLastLetter = self.lastLetter(word)
 
 		if u"vowel" in getLastLetter:
 			word = self.concat(word, u"y")
+		elif u"discontinious_hard_consonant" in getLastLetter and getLastVowel[u"vowel_count"] > 1 and param.get("negative", False) == False:
+			word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant"])
+
 
 		if param.get("negative", False) == False:
 			if param["auxiliary"] in [u"ver", u"koy"]:
@@ -1084,15 +1099,22 @@ class turkish:
 		minor = self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]]
 		getLastLetter = self.lastLetter(word)
 
-		if param.get("plural", False) == False:
+		if param.get("quantity", "singular") == "singular":
 			if param.get("person", 2) == 3:
 				word = self.concat(word, "s")
 				word = self.concat(word, minor)
 				word = self.concat(word, "n")
-		else: # Singular
+
+				if param.get("question", False) == True:
+					word = self.concat(word, " ")
+					word = self.concat(word, "m")
+					word = self.concat(word, minor)
+		else: # Plural
 			if param.get("person", 2) == 2:
 				if u"vowel" in getLastLetter:
 					word = self.concat(word, u"y")
+				elif u"discontinious_hard_consonant" in getLastLetter and getLastVowel[u"vowel_count"] > 1 and param.get("negative", False) == False:
+					word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant"])
 
 				word = self.concat(word, minor)
 				word = self.concat(word, "n")
@@ -1105,8 +1127,148 @@ class turkish:
 				word = self.concat(word, minor)
 				word = self.concat(word, "n")
 				word = self.makePlural(word)
+				if param.get("question", False) == True:
+					word = self.concat(word, " ")
+					word = self.concat(word, "m")
+					word = self.concat(word, minor)
 
 		return word
+
+	# Past tense
+	# -di'li geçmiş zama
+	def makePast(self, pword, param = {}):
+		word = pword
+		getLastVowel = self.lastVowel(word)
+		getLastLetter = self.lastLetter(word)
+		minor = self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]]
+
+		if param.get("negative", False) == True:
+			word = self.concat(word, "m")
+			if getLastVowel[u"tone"] == u"front":
+				word = self.concat(word, "a")
+			else:
+				word = self.concat(word, "e")
+
+				getLastVowel = self.lastVowel(word)
+				getLastLetter = self.lastLetter(word)
+				minor = self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]]
+
+		if "hard_consonant" in getLastLetter:
+			ps = "t"
+		else:
+			ps = "d"
+
+		if param.get("quantity", "singular") == "singular":
+			if param.get("person", 3) == 1:
+				word = self.concat(word, ps)
+				word = self.concat(word, minor)
+				word = self.concat(word, "m")
+			elif param.get("person", 3) == 2:
+				word = self.concat(word, ps)
+				word = self.concat(word, minor)
+				word = self.concat(word, "n")
+			elif param.get("person", 3) == 3:
+				word = self.concat(word, ps)
+				word = self.concat(word, minor)
+		else: # plural
+			if param.get("person", 3) == 1:
+				word = self.concat(word, ps)
+				word = self.concat(word, minor)
+				word = self.concat(word, "k")
+			elif param.get("person", 3) == 2:
+				word = self.concat(word, ps)
+				word = self.concat(word, minor)
+				word = self.concat(word, "n")
+				word = self.concat(word, minor)
+				word = self.concat(word, "z")
+			elif param.get("person", 3) == 3:
+				word = self.concat(word, ps)
+				word = self.concat(word, minor)
+				word = self.makePlural(word)
+
+		if param.get("question", False) == True:
+			getLastVowel = self.lastVowel(word)
+			minor = self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]]
+
+			word = self.concat(word, " ")	
+			word = self.concat(word, "m")
+			word = self.concat(word, minor)
+
+		return word
+
+	# Öğrenilen geçmiş zamanın hikayesi
+	# Yapmışlardı (-miş -di)
+	# Example: It is heard by someone that somebody did something in the past
+	def makePastPastPerfect(self, pword, param = {}):
+		word = pword 
+
+		if param.get("person") == 3 and param.get("quantity") == "plural":
+			word = self.makePastPerfect(word, { 
+				"negative": param.get("negative", False), 
+				"question": param.get("question", False),
+				"person": param.get("person", 3),
+				"quantity": param.get("quantity", "singular")
+			})
+		else:
+			word = self.makePastPerfect(word, { 
+				"negative": param.get("negative", False), 
+				"question": param.get("question", False),
+			})
+
+		if param.get("question", False) == True:
+			word = self.concat(word, "y")
+
+		if param.get("person") == 3 and param.get("quantity") == "plural":
+			word = self.makePast(word, { 
+				"person": param.get("person", 3)
+			})
+		else:
+			word = self.makePast(word, { 
+				"person": param.get("person", 3),
+				"quantity": param.get("quantity", "singular"),
+			})
+
+		return word
+
+	# Gelecek zamanın hikayesi
+	# Yapacaklardı (-acak -dı)
+	# Example: It is heard by someone that somebody will do something in the past
+	def makePastPerfectFuture(self, pword, param = {}):
+		word = pword 
+
+		if param.get("person") == 3 and param.get("quantity") == "plural":
+			word = self.makeFuture(word, { 
+				"negative": param.get("negative", False), 
+				"question": param.get("question", False),
+				"person": param.get("person", 3),
+				"quantity": param.get("quantity", "singular")
+			})
+		else:
+			word = self.makeFuture(word, { 
+				"negative": param.get("negative", False), 
+				"question": param.get("question", False),
+			})
+
+
+		if param.get("person") == 3 and param.get("quantity") == "plural":
+			word = self.concat(word, "m")
+			word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
+			word = self.concat(word, "y")
+			word = self.makePastPerfect(word, { 
+				"person": param.get("person", 3)
+			})
+		else:
+			if param.get("question", False) == True:
+				word = self.concat(word, "y")
+
+			word = self.makePastPerfect(word, { 
+				"person": param.get("person", 3),
+				"quantity": param.get("quantity", "singular"),
+			})
+
+		return word
+
+
 	# YAPILACAKLAR (Optative Moods)
 	# Emir kipi (Command): gel, gel-sin, gel-in(iz), gel-sinler (done)
 	# Gereklilik Kipi (must): düş-meli, git-meli, al-malı,yap-malı
@@ -1114,44 +1276,264 @@ class turkish:
 	# Dilek-şart Kipi (if): gelsem, gelsen, gelse, gelsek, gelseniz, gelseler
 tr = turkish()
 
-print (tr.makePresentContinuous(u"at", { "negative": False, "question": False, "person": 1, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"at", { "negative": False, "question": False, "person": 2, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"at", { "negative": False, "question": False, "person": 3, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"at", { "negative": False, "question": False, "person": 1, "quantity": "plural" }))
-print (tr.makePresentContinuous(u"at", { "negative": False, "question": False, "person": 2, "quantity": "plural" }))
-print (tr.makePresentContinuous(u"at", { "negative": False, "question": False, "person": 3, "quantity": "plural" }))
+sample_verb = u"seyret" 
 
-print (tr.makePresentContinuous(u"at", { "negative": False, "question": True, "person": 1, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"at", { "negative": False, "question": True, "person": 2, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"at", { "negative": False, "question": True, "person": 3, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"at", { "negative": False, "question": True, "person": 1, "quantity": "plural" }))
-print (tr.makePresentContinuous(u"at", { "negative": False, "question": True, "person": 2, "quantity": "plural" }))
-print (tr.makePresentContinuous(u"at", { "negative": False, "question": True, "person": 3, "quantity": "plural" }))
+print (tr.makeInfinitive(sample_verb))
+print (tr.makeInfinitive(sample_verb, { "negative": True} ))
+	
+print (tr.makeCommand(sample_verb, { "person": 2 }))
+print (tr.makeCommand(sample_verb, { "person": 3 }))
+print (tr.makeCommand(sample_verb, { "question": True, "person": 3 }))
+print (tr.makeCommand(sample_verb, { "person": 2, "quantity": "plural" }))
+print (tr.makeCommand(sample_verb, { "person": 2, "quantity": "plural", "formal": True }))
+print (tr.makeCommand(sample_verb, { "person": 3, "quantity": "plural" }))
+print (tr.makeCommand(sample_verb, { "question": True, "person": 3, "quantity": "plural" }))
 
-print (tr.makePresentContinuous(u"at", { "negative": True, "question": False, "person": 1, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"at", { "negative": True, "question": False, "person": 2, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"at", { "negative": True, "question": False, "person": 3, "quantity": "singular" }))
-print (tr.makePresentContinuous(u"at", { "negative": True, "question": False, "person": 1, "quantity": "plural" }))
-print (tr.makePresentContinuous(u"at", { "negative": True, "question": False, "person": 2, "quantity": "plural" }))
-print (tr.makePresentContinuous(u"at", { "negative": True, "question": False, "person": 3, "quantity": "plural" }))
+print (tr.makeCommand(sample_verb, { "negative": True, "person": 2 }))
+print (tr.makeCommand(sample_verb, { "negative": True, "person": 3 }))
+print (tr.makeCommand(sample_verb, { "negative": True, "question": True, "person": 3 }))
+print (tr.makeCommand(sample_verb, { "negative": True, "person": 2, "quantity": "plural" }))
+print (tr.makeCommand(sample_verb, { "negative": True, "person": 2, "quantity": "plural", "formal": True }))
+print (tr.makeCommand(sample_verb, { "negative": True, "person": 3, "quantity": "plural" }))
+print (tr.makeCommand(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
-print (tr.makePresentContinuous2(u"at", { "negative": True, "question": True, "person": 1, "quantity": "singular" }))
-print (tr.makePresentContinuous2(u"at", { "negative": True, "question": True, "person": 2, "quantity": "singular" }))
-print (tr.makePresentContinuous2(u"at", { "negative": True, "question": True, "person": 3, "quantity": "singular" }))
-print (tr.makePresentContinuous2(u"at", { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
-print (tr.makePresentContinuous2(u"at", { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
-print (tr.makePresentContinuous2(u"at", { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
+print (tr.makePresentContinuous(sample_verb, { "person": 1 }))
+print (tr.makePresentContinuous(sample_verb, { "person": 2 }))
+print (tr.makePresentContinuous(sample_verb, { "person": 3 }))
+print (tr.makePresentContinuous(sample_verb, { "person": 1, "quantity": "plural" }))
+print (tr.makePresentContinuous(sample_verb, { "person": 2, "quantity": "plural" }))
+print (tr.makePresentContinuous(sample_verb, { "person": 3, "quantity": "plural" }))
 
-print (tr.makeFuture(u"at", { "negative": True, "question": False, "person": 3, "quantity": "plural"}))
+print (tr.makePresentContinuous(sample_verb, { "question": True, "person": 1 }))
+print (tr.makePresentContinuous(sample_verb, { "question": True, "person": 2 }))
+print (tr.makePresentContinuous(sample_verb, { "question": True, "person": 3 }))
+print (tr.makePresentContinuous(sample_verb, { "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePresentContinuous(sample_verb, { "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePresentContinuous(sample_verb, { "question": True, "person": 3, "quantity": "plural" }))
 
-print (tr.makeGenitive(u"Öykü", {"proper_noun": True}))
-print (tr.makeDative("Fatma", {"proper_noun": True}))
-print (tr.makeAblative("Ali", {"proper_noun": True}))
-print (tr.makeAccusative(u"Kaliningrad", {"proper_noun": True}))
+print (tr.makePresentContinuous(sample_verb, { "negative": True, "person": 1 }))
+print (tr.makePresentContinuous(sample_verb, { "negative": True, "person": 2 }))
+print (tr.makePresentContinuous(sample_verb, { "negative": True, "person": 3 }))
+print (tr.makePresentContinuous(sample_verb, { "negative": True, "person": 1, "quantity": "plural" }))
+print (tr.makePresentContinuous(sample_verb, { "negative": True, "person": 2, "quantity": "plural" }))
+print (tr.makePresentContinuous(sample_verb, { "negative": True, "person": 3, "quantity": "plural" }))
 
-print (tr.makeGenitive(u"cam", {"proper_noun": False}))
-print (tr.makeAccusative(u"erik", {"proper_noun": False}))
-print (tr.makeAccusative(u"Erik", {"proper_noun": True}))
+print (tr.makePresentContinuous(sample_verb, { "negative": True, "question": True, "person": 1 }))
+print (tr.makePresentContinuous(sample_verb, { "negative": True, "question": True, "person": 2 }))
+print (tr.makePresentContinuous(sample_verb, { "negative": True, "question": True, "person": 3 }))
+print (tr.makePresentContinuous(sample_verb, { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePresentContinuous(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePresentContinuous(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePresentContinuous2(sample_verb, { "person": 1 }))
+print (tr.makePresentContinuous2(sample_verb, { "person": 2 }))
+print (tr.makePresentContinuous2(sample_verb, { "person": 3 }))
+print (tr.makePresentContinuous2(sample_verb, { "person": 1, "quantity": "plural" }))
+print (tr.makePresentContinuous2(sample_verb, { "person": 2, "quantity": "plural" }))
+print (tr.makePresentContinuous2(sample_verb, { "person": 3, "quantity": "plural" }))
+
+print (tr.makePresentContinuous2(sample_verb, { "question": True, "person": 1 }))
+print (tr.makePresentContinuous2(sample_verb, { "question": True, "person": 2 }))
+print (tr.makePresentContinuous2(sample_verb, { "question": True, "person": 3 }))
+print (tr.makePresentContinuous2(sample_verb, { "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePresentContinuous2(sample_verb, { "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePresentContinuous2(sample_verb, { "question": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePresentContinuous2(sample_verb, { "negative": True, "person": 1 }))
+print (tr.makePresentContinuous2(sample_verb, { "negative": True, "person": 2 }))
+print (tr.makePresentContinuous2(sample_verb, { "negative": True, "person": 3 }))
+print (tr.makePresentContinuous2(sample_verb, { "negative": True, "person": 1, "quantity": "plural" }))
+print (tr.makePresentContinuous2(sample_verb, { "negative": True, "person": 2, "quantity": "plural" }))
+print (tr.makePresentContinuous2(sample_verb, { "negative": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePresentContinuous2(sample_verb, { "negative": True, "question": True, "person": 1 }))
+print (tr.makePresentContinuous2(sample_verb, { "negative": True, "question": True, "person": 2 }))
+print (tr.makePresentContinuous2(sample_verb, { "negative": True, "question": True, "person": 3 }))
+print (tr.makePresentContinuous2(sample_verb, { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePresentContinuous2(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePresentContinuous2(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makeFuture(sample_verb, { "person": 1 }))
+print (tr.makeFuture(sample_verb, { "person": 2 }))
+print (tr.makeFuture(sample_verb, { "person": 3 }))
+print (tr.makeFuture(sample_verb, { "person": 1, "quantity": "plural" }))
+print (tr.makeFuture(sample_verb, { "person": 2, "quantity": "plural" }))
+print (tr.makeFuture(sample_verb, { "person": 3, "quantity": "plural" }))
+
+print (tr.makeFuture(sample_verb, { "question": True, "person": 1 }))
+print (tr.makeFuture(sample_verb, { "question": True, "person": 2 }))
+print (tr.makeFuture(sample_verb, { "question": True, "person": 3 }))
+print (tr.makeFuture(sample_verb, { "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makeFuture(sample_verb, { "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makeFuture(sample_verb, { "question": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makeFuture(sample_verb, { "negative": True, "person": 1 }))
+print (tr.makeFuture(sample_verb, { "negative": True, "person": 2 }))
+print (tr.makeFuture(sample_verb, { "negative": True, "person": 3 }))
+print (tr.makeFuture(sample_verb, { "negative": True, "person": 1, "quantity": "plural" }))
+print (tr.makeFuture(sample_verb, { "negative": True, "person": 2, "quantity": "plural" }))
+print (tr.makeFuture(sample_verb, { "negative": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makeFuture(sample_verb, { "negative": True, "question": True, "person": 1}))
+print (tr.makeFuture(sample_verb, { "negative": True, "question": True, "person": 2}))
+print (tr.makeFuture(sample_verb, { "negative": True, "question": True, "person": 3}))
+print (tr.makeFuture(sample_verb, { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makeFuture(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makeFuture(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePresentSimple(sample_verb, { "person": 1 }))
+print (tr.makePresentSimple(sample_verb, { "person": 2 }))
+print (tr.makePresentSimple(sample_verb, { "person": 3 }))
+print (tr.makePresentSimple(sample_verb, { "person": 1, "quantity": "plural" }))
+print (tr.makePresentSimple(sample_verb, { "person": 2, "quantity": "plural" }))
+print (tr.makePresentSimple(sample_verb, { "person": 3, "quantity": "plural" }))
+
+print (tr.makePresentSimple(sample_verb, { "question": True, "person": 1 }))
+print (tr.makePresentSimple(sample_verb, { "question": True, "person": 2 }))
+print (tr.makePresentSimple(sample_verb, { "question": True, "person": 3 }))
+print (tr.makePresentSimple(sample_verb, { "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePresentSimple(sample_verb, { "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePresentSimple(sample_verb, { "question": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePresentSimple(sample_verb, { "negative": True, "person": 1 }))
+print (tr.makePresentSimple(sample_verb, { "negative": True, "person": 2 }))
+print (tr.makePresentSimple(sample_verb, { "negative": True, "person": 3 }))
+print (tr.makePresentSimple(sample_verb, { "negative": True, "person": 1, "quantity": "plural" }))
+print (tr.makePresentSimple(sample_verb, { "negative": True, "person": 2, "quantity": "plural" }))
+print (tr.makePresentSimple(sample_verb, { "negative": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePresentSimple(sample_verb, { "negative": True, "question": True, "person": 1 }))
+print (tr.makePresentSimple(sample_verb, { "negative": True, "question": True, "person": 2 }))
+print (tr.makePresentSimple(sample_verb, { "negative": True, "question": True, "person": 3 }))
+print (tr.makePresentSimple(sample_verb, { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePresentSimple(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePresentSimple(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
+
+
+print (tr.makePast(sample_verb, { "person": 1 }))
+print (tr.makePast(sample_verb, { "person": 2 }))
+print (tr.makePast(sample_verb, { "person": 3 }))
+print (tr.makePast(sample_verb, { "person": 1, "quantity": "plural" }))
+print (tr.makePast(sample_verb, { "person": 2, "quantity": "plural" }))
+print (tr.makePast(sample_verb, { "person": 3, "quantity": "plural" }))
+
+print (tr.makePast(sample_verb, { "question": True, "person": 1 }))
+print (tr.makePast(sample_verb, { "question": True, "person": 2 }))
+print (tr.makePast(sample_verb, { "question": True, "person": 3 }))
+print (tr.makePast(sample_verb, { "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePast(sample_verb, { "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePast(sample_verb, { "question": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePast(sample_verb, { "negative": True, "person": 1 }))
+print (tr.makePast(sample_verb, { "negative": True, "person": 2 }))
+print (tr.makePast(sample_verb, { "negative": True, "person": 3 }))
+print (tr.makePast(sample_verb, { "negative": True, "person": 1, "quantity": "plural" }))
+print (tr.makePast(sample_verb, { "negative": True, "person": 2, "quantity": "plural" }))
+print (tr.makePast(sample_verb, { "negative": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePast(sample_verb, { "negative": True, "question": True, "person": 1 }))
+print (tr.makePast(sample_verb, { "negative": True, "question": True, "person": 2 }))
+print (tr.makePast(sample_verb, { "negative": True, "question": True, "person": 3 }))
+print (tr.makePast(sample_verb, { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePast(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePast(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
+
+
+print (tr.makePastPerfect(sample_verb, { "person": 1 }))
+print (tr.makePastPerfect(sample_verb, { "person": 2 }))
+print (tr.makePastPerfect(sample_verb, { "person": 3 }))
+print (tr.makePastPerfect(sample_verb, { "person": 1, "quantity": "plural" }))
+print (tr.makePastPerfect(sample_verb, { "person": 2, "quantity": "plural" }))
+print (tr.makePastPerfect(sample_verb, { "person": 3, "quantity": "plural" }))
+
+print (tr.makePastPerfect(sample_verb, { "question": True, "person": 1 }))
+print (tr.makePastPerfect(sample_verb, { "question": True, "person": 2 }))
+print (tr.makePastPerfect(sample_verb, { "question": True, "person": 3 }))
+print (tr.makePastPerfect(sample_verb, { "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePastPerfect(sample_verb, { "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePastPerfect(sample_verb, { "question": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePastPerfect(sample_verb, { "negative": True, "person": 1 }))
+print (tr.makePastPerfect(sample_verb, { "negative": True, "person": 2 }))
+print (tr.makePastPerfect(sample_verb, { "negative": True, "person": 3 }))
+print (tr.makePastPerfect(sample_verb, { "negative": True, "person": 1, "quantity": "plural" }))
+print (tr.makePastPerfect(sample_verb, { "negative": True, "person": 2, "quantity": "plural" }))
+print (tr.makePastPerfect(sample_verb, { "negative": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePastPerfect(sample_verb, { "negative": True, "question": True, "person": 1 }))
+print (tr.makePastPerfect(sample_verb, { "negative": True, "question": True, "person": 2 }))
+print (tr.makePastPerfect(sample_verb, { "negative": True, "question": True, "person": 3 }))
+print (tr.makePastPerfect(sample_verb, { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePastPerfect(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePastPerfect(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
+
+
+print (tr.makePastPastPerfect(sample_verb, { "person": 1 }))
+print (tr.makePastPastPerfect(sample_verb, { "person": 2 }))
+print (tr.makePastPastPerfect(sample_verb, { "person": 3 }))
+print (tr.makePastPastPerfect(sample_verb, { "person": 1, "quantity": "plural" }))
+print (tr.makePastPastPerfect(sample_verb, { "person": 2, "quantity": "plural" }))
+print (tr.makePastPastPerfect(sample_verb, { "person": 3, "quantity": "plural" }))
+
+print (tr.makePastPastPerfect(sample_verb, { "question": True, "person": 1 }))
+print (tr.makePastPastPerfect(sample_verb, { "question": True, "person": 2 }))
+print (tr.makePastPastPerfect(sample_verb, { "question": True, "person": 3 }))
+print (tr.makePastPastPerfect(sample_verb, { "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePastPastPerfect(sample_verb, { "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePastPastPerfect(sample_verb, { "question": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePastPastPerfect(sample_verb, { "negative": True, "person": 1 }))
+print (tr.makePastPastPerfect(sample_verb, { "negative": True, "person": 2 }))
+print (tr.makePastPastPerfect(sample_verb, { "negative": True, "person": 3 }))
+print (tr.makePastPastPerfect(sample_verb, { "negative": True, "person": 1, "quantity": "plural" }))
+print (tr.makePastPastPerfect(sample_verb, { "negative": True, "person": 2, "quantity": "plural" }))
+print (tr.makePastPastPerfect(sample_verb, { "negative": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePastPastPerfect(sample_verb, { "negative": True, "question": True, "person": 1 }))
+print (tr.makePastPastPerfect(sample_verb, { "negative": True, "question": True, "person": 2 }))
+print (tr.makePastPastPerfect(sample_verb, { "negative": True, "question": True, "person": 3 }))
+print (tr.makePastPastPerfect(sample_verb, { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePastPastPerfect(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePastPastPerfect(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
+
+
+print (tr.makePastPerfectFuture(sample_verb, { "person": 1 }))
+print (tr.makePastPerfectFuture(sample_verb, { "person": 2 }))
+print (tr.makePastPerfectFuture(sample_verb, { "person": 3 }))
+print (tr.makePastPerfectFuture(sample_verb, { "person": 1, "quantity": "plural" }))
+print (tr.makePastPerfectFuture(sample_verb, { "person": 2, "quantity": "plural" }))
+print (tr.makePastPerfectFuture(sample_verb, { "person": 3, "quantity": "plural" }))
+
+print (tr.makePastPerfectFuture(sample_verb, { "question": True, "person": 1 }))
+print (tr.makePastPerfectFuture(sample_verb, { "question": True, "person": 2 }))
+print (tr.makePastPerfectFuture(sample_verb, { "question": True, "person": 3 }))
+print (tr.makePastPerfectFuture(sample_verb, { "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePastPerfectFuture(sample_verb, { "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePastPerfectFuture(sample_verb, { "question": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePastPerfectFuture(sample_verb, { "negative": True, "person": 1 }))
+print (tr.makePastPerfectFuture(sample_verb, { "negative": True, "person": 2 }))
+print (tr.makePastPerfectFuture(sample_verb, { "negative": True, "person": 3 }))
+print (tr.makePastPerfectFuture(sample_verb, { "negative": True, "person": 1, "quantity": "plural" }))
+print (tr.makePastPerfectFuture(sample_verb, { "negative": True, "person": 2, "quantity": "plural" }))
+print (tr.makePastPerfectFuture(sample_verb, { "negative": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePastPerfectFuture(sample_verb, { "negative": True, "question": True, "person": 1 }))
+print (tr.makePastPerfectFuture(sample_verb, { "negative": True, "question": True, "person": 2 }))
+print (tr.makePastPerfectFuture(sample_verb, { "negative": True, "question": True, "person": 3 }))
+print (tr.makePastPerfectFuture(sample_verb, { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePastPerfectFuture(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePastPerfectFuture(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makeGenitive(u"araba"))
+print (tr.makeDative("araba"))
+print (tr.makeAblative("araba"))
+print (tr.makeAccusative(u"araba"))
+
+print (tr.makeGenitive(u"Cem", { "proper_noun": True} ))
+print (tr.makeDative("Cem", { "proper_noun": True} ))
+print (tr.makeAblative("Cem", { "proper_noun": True} ))
+print (tr.makeAccusative(u"Cem", { "proper_noun": True} ))
 
 
 print (tr.possessiveAffix("çanta", {"person": 1, "quantity": "singular"}))
@@ -1163,38 +1545,5 @@ print (tr.possessiveAffix("çanta", {"person": 2, "quantity": "plural"}))
 print (tr.possessiveAffix("çanta", {"person": 3, "quantity": "plural"}))
 
 
-print (tr.makePresentSimple(u"at", { "negative": False, "question": False, "person": 1, "quantity": "singular" }))
-print (tr.makePresentSimple(u"at", { "negative": False, "question": False, "person": 2, "quantity": "singular" }))
-print (tr.makePresentSimple(u"at", { "negative": False, "question": False, "person": 3, "quantity": "singular" }))
-print (tr.makePresentSimple(u"at", { "negative": False, "question": False, "person": 1, "quantity": "plural" }))
-print (tr.makePresentSimple(u"at", { "negative": False, "question": False, "person": 2, "quantity": "plural" }))
-print (tr.makePresentSimple(u"at", { "negative": False, "question": False, "person": 3, "quantity": "plural" }))
+print (tr.unifyVerbs(u"seyret", {"auxiliary": "bil", "negative": False}))
 
-print (tr.makePresentSimple(u"seyret", { "negative": True, "question": False, "person": 1, "quantity": "singular" }))
-print (tr.makePresentSimple(u"seyret", { "negative": True, "question": False, "person": 2, "quantity": "singular" }))
-print (tr.makePresentSimple(u"seyret", { "negative": True, "question": False, "person": 3, "quantity": "singular" }))
-print (tr.makePresentSimple(u"seyret", { "negative": True, "question": False, "person": 1, "quantity": "plural" }))
-print (tr.makePresentSimple(u"seyret", { "negative": True, "question": False, "person": 2, "quantity": "plural" }))
-print (tr.makePresentSimple(u"seyret", { "negative": True, "question": False, "person": 3, "quantity": "plural" }))
-
-print (tr.makePresentSimple(u"at", { "negative": False, "question": True, "person": 1, "quantity": "singular" }))
-print (tr.makePresentSimple(u"at", { "negative": False, "question": True, "person": 2, "quantity": "singular" }))
-print (tr.makePresentSimple(u"at", { "negative": False, "question": True, "person": 3, "quantity": "singular" }))
-print (tr.makePresentSimple(u"at", { "negative": False, "question": True, "person": 1, "quantity": "plural" }))
-print (tr.makePresentSimple(u"at", { "negative": False, "question": True, "person": 2, "quantity": "plural" }))
-print (tr.makePresentSimple(u"at", { "negative": False, "question": True, "person": 3, "quantity": "plural" }))
-
-print (tr.makePresentSimple(u"at", { "negative": True, "question": True, "person": 1, "quantity": "singular" }))
-print (tr.makePresentSimple(u"at", { "negative": True, "question": True, "person": 2, "quantity": "singular" }))
-print (tr.makePresentSimple(u"at", { "negative": True, "question": True, "person": 3, "quantity": "singular" }))
-print (tr.makePresentSimple(u"at", { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
-print (tr.makePresentSimple(u"at", { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
-print (tr.makePresentSimple(u"at", { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
-
-print (tr.makeInfinitive(u"at", { "negative": True} ))
-
-print (tr.makePastPerfect(u"ölç", { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
-
-print (tr.unifyVerbs(u"kaç", {"auxiliary": "bil", "negative": False}))
-
-print (tr.makeCommand(u"kaç", {"negative": True, "person": 3, "plural": True}))
