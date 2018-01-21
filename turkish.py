@@ -1347,6 +1347,45 @@ class turkish:
 
 		return word
 
+	# Bilinen geçmiş zamanın hikayesi
+	# yaptıydım, yaptıydın, yaptıydı, yaptıydık, yaptıydınız, yaptıydılar
+	# yaptı mıydım, yaptı mıydın, yaptı mıydı, yaptı mıydık, yaptı mıydınız, yaptılar mıydı
+	def makePastPast(self, pword, param = {}):
+		word = pword
+
+		if param.get("person", 3) == 3 and param.get("question", False) == True and param.get("quantity", "singular") == "plural":
+			word = self.makePast(word, {
+				"person": 3,
+				"quantity": "singular",
+				"negative": param.get("negative", False),
+			})
+		else:
+			word = self.makePast(word, {
+				"person": 3,
+				"quantity": "singular",
+				"negative": param.get("negative", False),
+				"question": param.get("question", False)
+			})
+
+			word = self.concat(word, "y")
+
+		if param.get("person", 3) == 3 and param.get("question", False) == True and param.get("quantity", "singular") == "plural":
+			word = self.makePlural(word)
+
+			word = self.concat(word, " ")
+			word = self.concat(word, "m")
+			if self.lastVowel(word)[u"tone"] == u"front":
+				word = self.concat(word, u"ı")
+			else:
+				word = self.concat(word, "i")
+		else:
+			word = self.makePast(word, {
+				"person": param.get("person", 3),
+				"quantity": param.get("quantity", "singular")
+			})
+
+		return word
+
 	# Öğrenilen geçmiş zamanın hikayesi
 	# Yapmışlardı (-miş -di)
 	# Example: It is heard by someone that somebody did something in the past
@@ -1457,11 +1496,6 @@ class turkish:
 
 		return word
 
-	# YAPILACAKLAR (Optative Moods)
-	# Emir kipi (Command): gel, gel-sin, gel-in(iz), gel-sinler (done)
-	# Gereklilik Kipi (must): düş-meli, git-meli, al-malı,yap-malı
-	# İstek Kipi: geleyim, gelesin, gele, gelelim, gelesiniz, gele
-	# Dilek-şart Kipi (if): gelsem, gelsen, gelse, gelsek, gelseniz, gelseler
 tr = turkish()
 
 #sample_verb = input("Please enter a verb in Turkish (example: seyret): ")
@@ -1834,6 +1868,37 @@ print (tr.makePastFuture(sample_verb, { "negative": True, "question": True, "per
 print (tr.makePastFuture(sample_verb, { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
 print (tr.makePastFuture(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
 print (tr.makePastFuture(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
+
+
+
+print (tr.makePastPast(sample_verb, { "person": 1 }))
+print (tr.makePastPast(sample_verb, { "person": 2 }))
+print (tr.makePastPast(sample_verb, { "person": 3 }))
+print (tr.makePastPast(sample_verb, { "person": 1, "quantity": "plural" }))
+print (tr.makePastPast(sample_verb, { "person": 2, "quantity": "plural" }))
+print (tr.makePastPast(sample_verb, { "person": 3, "quantity": "plural" }))
+
+print (tr.makePastPast(sample_verb, { "question": True, "person": 1 }))
+print (tr.makePastPast(sample_verb, { "question": True, "person": 2 }))
+print (tr.makePastPast(sample_verb, { "question": True, "person": 3 }))
+print (tr.makePastPast(sample_verb, { "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePastPast(sample_verb, { "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePastPast(sample_verb, { "question": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePastPast(sample_verb, { "negative": True, "person": 1 }))
+print (tr.makePastPast(sample_verb, { "negative": True, "person": 2 }))
+print (tr.makePastPast(sample_verb, { "negative": True, "person": 3 }))
+print (tr.makePastPast(sample_verb, { "negative": True, "person": 1, "quantity": "plural" }))
+print (tr.makePastPast(sample_verb, { "negative": True, "person": 2, "quantity": "plural" }))
+print (tr.makePastPast(sample_verb, { "negative": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePastPast(sample_verb, { "negative": True, "question": True, "person": 1 }))
+print (tr.makePastPast(sample_verb, { "negative": True, "question": True, "person": 2 }))
+print (tr.makePastPast(sample_verb, { "negative": True, "question": True, "person": 3 }))
+print (tr.makePastPast(sample_verb, { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePastPast(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePastPast(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
+
 
 print (tr.makeGenitive(u"araba"))
 print (tr.makeDative("araba"))
