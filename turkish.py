@@ -1493,6 +1493,44 @@ class turkish:
 
 		return word
 
+	# Öğrenilen geçmiş zamanın rivayeti
+	# Duymuşmuşum Duymuşmuşsun Duymuşmuş Duymuşmuşuz Duymuşmuşunuz Duymuşmuşlar
+	# Duymuş mumuymuşum? Duymuş mumuymuşsun? Duymuş mumuymuş? Duymuş mumuymuşuz? Duymuş mumuymuşsunuz Duymuşlar mıymış?
+	def makePastPerfectPastPerfect(self, pword, param = {}):
+		word = pword
+
+		word = self.makePastPerfect(word, { "negative": param.get("negative", False)} )
+
+		if param.get("question", False) == False:
+			word = self.makePastPerfect(word, {
+				"person": param.get("person", 3),
+				"quantity": param.get("quantity", "singular"),
+				"question": param.get("question", False)
+			})
+		else:
+			if param.get("person", 3) == 3 and param.get("quantity", "singular") == "plural":
+				word = self.makePlural(word)
+				minor = self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]]
+				
+				word = self.concat(word, u" ")
+				word = self.concat(word, u"m")
+				word = self.concat(word, minor)
+				word = self.concat(word, u"y")
+				word = self.concat(word, u"m")
+				word = self.concat(word, minor)
+				word = self.concat(word, u"ş")
+			else:
+				minor = self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]]
+				word = self.concat(word, u" ")
+				word = self.concat(word, u"m")
+				word = self.concat(word, minor)
+				word = self.concat(word, u"y")
+				word = self.makePastPerfect(word, {
+					"person": param.get("person", 3),
+					"quantity": param.get("quantity", "singular")
+				})
+		return word
+
 	# Gelecek zamanın rivayeti
 	# Yapacaklardı (-acak -mış)
 	# Example: It is heard by someone that somebody will do something in the past
@@ -1577,12 +1615,15 @@ tr = turkish()
 
 sample_verb = u"ye"
 
+# Mastar
 print (tr.makeInfinitive(sample_verb))
 print (tr.makeInfinitive(sample_verb, { "negative": True} ))
 
+# Birleşik fiil
 print (tr.unifyVerbs(sample_verb, {"auxiliary": "bil", "negative": False}))
 print (tr.unifyVerbs(sample_verb, {"auxiliary": "bil", "negative": True}))
 	
+# Emir kimi
 print (tr.makeCommand(sample_verb, { "person": 2 }))
 print (tr.makeCommand(sample_verb, { "person": 3 }))
 print (tr.makeCommand(sample_verb, { "question": True, "person": 3 }))
@@ -1599,6 +1640,7 @@ print (tr.makeCommand(sample_verb, { "negative": True, "person": 2, "quantity": 
 print (tr.makeCommand(sample_verb, { "negative": True, "person": 3, "quantity": "plural" }))
 print (tr.makeCommand(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
+# Şimdiki zaman
 print (tr.makePresentContinuous(sample_verb, { "person": 1 })) 
 print (tr.makePresentContinuous(sample_verb, { "person": 2 }))
 print (tr.makePresentContinuous(sample_verb, { "person": 3 }))
@@ -1627,6 +1669,7 @@ print (tr.makePresentContinuous(sample_verb, { "negative": True, "question": Tru
 print (tr.makePresentContinuous(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
 print (tr.makePresentContinuous(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
+# Şimdiki zaman 2
 print (tr.makePresentContinuous2(sample_verb, { "person": 1 }))
 print (tr.makePresentContinuous2(sample_verb, { "person": 2 }))
 print (tr.makePresentContinuous2(sample_verb, { "person": 3 }))
@@ -1655,6 +1698,7 @@ print (tr.makePresentContinuous2(sample_verb, { "negative": True, "question": Tr
 print (tr.makePresentContinuous2(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
 print (tr.makePresentContinuous2(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
+# Gelecek zaman
 print (tr.makeFuture(sample_verb, { "person": 1 }))
 print (tr.makeFuture(sample_verb, { "person": 2 }))
 print (tr.makeFuture(sample_verb, { "person": 3 }))
@@ -1683,6 +1727,7 @@ print (tr.makeFuture(sample_verb, { "negative": True, "question": True, "person"
 print (tr.makeFuture(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
 print (tr.makeFuture(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
+# Geniş zaman
 print (tr.makePresentSimple(sample_verb, { "person": 1 }))
 print (tr.makePresentSimple(sample_verb, { "person": 2 }))
 print (tr.makePresentSimple(sample_verb, { "person": 3 }))
@@ -1712,6 +1757,7 @@ print (tr.makePresentSimple(sample_verb, { "negative": True, "question": True, "
 print (tr.makePresentSimple(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
 
+# Geçmiş zaman
 print (tr.makePast(sample_verb, { "person": 1 }))
 print (tr.makePast(sample_verb, { "person": 2 }))
 print (tr.makePast(sample_verb, { "person": 3 }))
@@ -1740,7 +1786,7 @@ print (tr.makePast(sample_verb, { "negative": True, "question": True, "person": 
 print (tr.makePast(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
 print (tr.makePast(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
-
+# Gereklilik kipi
 print (tr.makeMust(sample_verb, { "person": 1 }))
 print (tr.makeMust(sample_verb, { "person": 2 }))
 print (tr.makeMust(sample_verb, { "person": 3 }))
@@ -1769,7 +1815,7 @@ print (tr.makeMust(sample_verb, { "negative": True, "question": True, "person": 
 print (tr.makeMust(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
 print (tr.makeMust(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
-
+# Dilek-Şart kipi
 print (tr.makeWishCondition(sample_verb, { "person": 1 }))
 print (tr.makeWishCondition(sample_verb, { "person": 2 }))
 print (tr.makeWishCondition(sample_verb, { "person": 3 }))
@@ -1798,7 +1844,7 @@ print (tr.makeWishCondition(sample_verb, { "negative": True, "question": True, "
 print (tr.makeWishCondition(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
 print (tr.makeWishCondition(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
-
+# İstek kipi
 print (tr.makeWish(sample_verb, { "person": 1 }))
 print (tr.makeWish(sample_verb, { "person": 2 }))
 print (tr.makeWish(sample_verb, { "person": 3 }))
@@ -1827,6 +1873,7 @@ print (tr.makeWish(sample_verb, { "negative": True, "question": True, "person": 
 print (tr.makeWish(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
 print (tr.makeWish(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
+# Öğrenilen geçmiş zaman
 print (tr.makePastPerfect(sample_verb, { "person": 1 }))
 print (tr.makePastPerfect(sample_verb, { "person": 2 }))
 print (tr.makePastPerfect(sample_verb, { "person": 3 }))
@@ -1855,7 +1902,7 @@ print (tr.makePastPerfect(sample_verb, { "negative": True, "question": True, "pe
 print (tr.makePastPerfect(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
 print (tr.makePastPerfect(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
-
+# Öğrenilen geçmiş zamanın hikayesi
 print (tr.makePastPastPerfect(sample_verb, { "person": 1 }))
 print (tr.makePastPastPerfect(sample_verb, { "person": 2 }))
 print (tr.makePastPastPerfect(sample_verb, { "person": 3 }))
@@ -1884,7 +1931,36 @@ print (tr.makePastPastPerfect(sample_verb, { "negative": True, "question": True,
 print (tr.makePastPastPerfect(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
 print (tr.makePastPastPerfect(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
+# Öğrenilen geçmiş zamanın rivayeti
+print (tr.makePastPerfectPastPerfect(sample_verb, { "person": 1 }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "person": 2 }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "person": 3 }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "person": 1, "quantity": "plural" }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "person": 2, "quantity": "plural" }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "person": 3, "quantity": "plural" }))
 
+print (tr.makePastPerfectPastPerfect(sample_verb, { "question": True, "person": 1 }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "question": True, "person": 2 }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "question": True, "person": 3 }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "question": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePastPerfectPastPerfect(sample_verb, { "negative": True, "person": 1 }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "negative": True, "person": 2 }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "negative": True, "person": 3 }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "negative": True, "person": 1, "quantity": "plural" }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "negative": True, "person": 2, "quantity": "plural" }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "negative": True, "person": 3, "quantity": "plural" }))
+
+print (tr.makePastPerfectPastPerfect(sample_verb, { "negative": True, "question": True, "person": 1 }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "negative": True, "question": True, "person": 2 }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "negative": True, "question": True, "person": 3 }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "negative": True, "question": True, "person": 1, "quantity": "plural" }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
+print (tr.makePastPerfectPastPerfect(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
+
+# Gelecek zamanın rivayeti
 print (tr.makePastPerfectFuture(sample_verb, { "person": 1 }))
 print (tr.makePastPerfectFuture(sample_verb, { "person": 2 }))
 print (tr.makePastPerfectFuture(sample_verb, { "person": 3 }))
@@ -1913,7 +1989,7 @@ print (tr.makePastPerfectFuture(sample_verb, { "negative": True, "question": Tru
 print (tr.makePastPerfectFuture(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
 print (tr.makePastPerfectFuture(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
-
+# Gelecek zamanın hikayesi
 print (tr.makePastFuture(sample_verb, { "person": 1 }))
 print (tr.makePastFuture(sample_verb, { "person": 2 }))
 print (tr.makePastFuture(sample_verb, { "person": 3 }))
@@ -1942,8 +2018,7 @@ print (tr.makePastFuture(sample_verb, { "negative": True, "question": True, "per
 print (tr.makePastFuture(sample_verb, { "negative": True, "question": True, "person": 2, "quantity": "plural" }))
 print (tr.makePastFuture(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
-
-
+# Geçmiş zamanın hikayesi
 print (tr.makePastPast(sample_verb, { "person": 1 }))
 print (tr.makePastPast(sample_verb, { "person": 2 }))
 print (tr.makePastPast(sample_verb, { "person": 3 }))
@@ -1973,6 +2048,7 @@ print (tr.makePastPast(sample_verb, { "negative": True, "question": True, "perso
 print (tr.makePastPast(sample_verb, { "negative": True, "question": True, "person": 3, "quantity": "plural" }))
 
 
+# Bilinen geçmiş zamanın şartı
 print (tr.makePastCondition(sample_verb, { "person": 1 }))
 print (tr.makePastCondition(sample_verb, { "person": 2 }))
 print (tr.makePastCondition(sample_verb, { "person": 3 }))
