@@ -2,184 +2,184 @@
 # -*- coding: utf-8 -*-
 
 class turkish:
-	VOWELS = u"aıoöuüei"
-	FRONT_VOWELS = u"aıou"
-	BACK_VOWELS = u"eiöü"
-	HARD_CONSONANTS = u"fstkçşhp"
-	DISCONTINIOUS_HARD_CONSONANTS = u"pçtk"
-	SOFTEN_DHC = u"bcdğ"
-	DISCONTINIOUS_HARD_CONSONANTS_AFTER_SUFFIX = u"pçk"
-	SOFTEN_DHC_AFTER_SUFFIX = u"bcğ"	
+	VOWELS = "aıoöuüei"
+	FRONT_VOWELS = "aıo"
+	BACK_VOWELS = "eiöü"
+	HARD_CONSONANTS = "fstkçşhp"
+	DISCONTINIOUS_HARD_CONSONANTS = "pçtk"
+	SOFTEN_DHC = "bcdğ"
+	DISCONTINIOUS_HARD_CONSONANTS_AFTER_SUFFIX = "pçk"
+	SOFTEN_DHC_AFTER_SUFFIX = "bcğ"	
 	MINOR_HARMONY = {
-		u"a": u"ı"
-		, u"e": u"i"
-		, u"ö": u"ü"
-		, u"o": u"u"
-		, u"ı": u"ı"
-		, u"i": u"i"
-		, u"u": u"u"
-		, u"ü": u"ü"
+		"a": "ı"
+		, "e": "i"
+		, "ö": "ü"
+		, "o": ""
+		, "ı": "ı"
+		, "i": "i"
+		, "": ""
+		, "ü": "ü"
 	}
 	
 	MINOR_HARMONY_FOR_FUTURE = {
-		u"a": u"a"
-		, u"e": u"e"
-		, u"ö": u"ü"
-		, u"o": u"u"
-		, u"ı": u"ı"
-		, u"i": u"e"
-		, u"u": u"u"
-		, u"ü": u"e"
+		"a": "a"
+		, "e": "e"
+		, "ö": "ü"
+		, "o": ""
+		, "ı": "ı"
+		, "i": "e"
+		, "": ""
+		, "ü": "e"
 	}
 	
 	# The exception words which has non-Turkish origins donn't fit for standard Turkish Major Wovel Harmony
 	# beacuse of the vocal difference which doesn't exist in Turkish.
 	EXCEPTION_WORDS = [
-		u"ahval"
-		, u"akropol"
-		, u"alkol"
-		, u"ametal"
-		, u"amiral"
-		, u"ampul"
-		, u"anormal"
-		, u"bandrol"
-		, u"bemol"
-		, u"beşamol"
-		, u"bilkat"
-		, u"cemaat"
-		, u"cemal"
-		, u"deccal"
-		, u"dikkat"
-		, u"ekol"
-		, u"ekümenapol"
-		, u"emsal"
-		, u"enstrümantal"
-		, u"enternasyonal"
-		, u"faal"
-		, u"faul"
-		, u"final"
-		, u"general"
-		, u"glikol"
-		, u"gol"
-		, u"hakikat"
-		, u"hal"
-		, u"harf"
-		, u"hayal"
-		, u"hilal"
-		, u"hiperbol"
-		, u"hol"
-		, u"integral"
-		, u"iştigal"
-		, u"istikbal"
-		, u"istiklal"
-		, u"jurnal"
-		, u"kabul"
-		, u"kalp"
-		, u"kanaat"
-		, u"kapital"
-		, u"karambol"
-		, u"katedral"
-		, u"kefal"
-		, u"kemal"
-		, u"kıraat"
-		, u"kolestrol"
-		, u"kontrol"
-		, u"koramiral"
-		, u"korgeneral"
-		, u"legal"
-		, u"liberal"
-		, u"liyakat"
-		, u"lokal"
-		, u"mahmul"
-		, u"mahsul"
-		, u"maktul"
-		, u"makul"
-		, u"meal"
-		, u"menkul"
-		, u"mentol"
-		, u"meral"
-		, u"meraşal"
-		, u"meşekkat"
-		, u"meşgul"
-		, u"metal"
-		, u"metaryal"
-		, u"metrapol"
-		, u"mineral"
-		, u"misal"
-		, u"moral"
-		, u"müzikal"
-		, u"müzikhol"
-		, u"nasyonal"
-		, u"normal"
-		, u"ohal" # abbreviation
-		, u"oramiral"
-		, u"orjinal"
-		, u"oryantal"
-		, u"oval"
-		, u"parabol"
-		, u"paranormal"
-		, u"pastoral"
-		, u"perhidrol"
-		, u"petrol"
-		, u"radikal"
-		, u"refakat"
-		, u"resital"
-		, u"resul"
-		, u"rol"
-		, u"saat"
-		, u"sadakat"
-		, u"santral"
-		, u"şefkat"
-		, u"şevval"
-		, u"sinyal"
-		, u"sosyal"
-		, u"spesiyal"
-		, u"sual"
-		, u"tefal" # brand
-		, u"termal"
-		, u"terminal"
-		, u"total"
-		, u"trambol"
-		, u"tropikal"
-		, u"tuğamiral"
-		, u"tuğgeneral"
-		, u"tümgeneral"
-		, u"turnusol"
-		, u"tuval"
-		, u"usul"
-		, u"zelal"
-		, u"zerdeçal"
-		, u"zeval"
-		, u"ziraat"
+		"ahval"
+		, "akropol"
+		, "alkol"
+		, "ametal"
+		, "amiral"
+		, "ampul"
+		, "anormal"
+		, "bandrol"
+		, "bemol"
+		, "beşamol"
+		, "bilkat"
+		, "cemaat"
+		, "cemal"
+		, "deccal"
+		, "dikkat"
+		, "ekol"
+		, "ekümenapol"
+		, "emsal"
+		, "enstrümantal"
+		, "enternasyonal"
+		, "faal"
+		, "faul"
+		, "final"
+		, "general"
+		, "glikol"
+		, "gol"
+		, "hakikat"
+		, "hal"
+		, "harf"
+		, "hayal"
+		, "hilal"
+		, "hiperbol"
+		, "hol"
+		, "integral"
+		, "iştigal"
+		, "istikbal"
+		, "istiklal"
+		, "jurnal"
+		, "kabul"
+		, "kalp"
+		, "kanaat"
+		, "kapital"
+		, "karambol"
+		, "katedral"
+		, "kefal"
+		, "kemal"
+		, "kıraat"
+		, "kolestrol"
+		, "kontrol"
+		, "koramiral"
+		, "korgeneral"
+		, "legal"
+		, "liberal"
+		, "liyakat"
+		, "lokal"
+		, "mahmul"
+		, "mahsul"
+		, "maktul"
+		, "makul"
+		, "meal"
+		, "menkul"
+		, "mentol"
+		, "meral"
+		, "meraşal"
+		, "meşekkat"
+		, "meşgul"
+		, "metal"
+		, "metaryal"
+		, "metrapol"
+		, "mineral"
+		, "misal"
+		, "moral"
+		, "müzikal"
+		, "müzikhol"
+		, "nasyonal"
+		, "normal"
+		, "ohal" # abbreviation
+		, "oramiral"
+		, "orjinal"
+		, "oryantal"
+		, "oval"
+		, "parabol"
+		, "paranormal"
+		, "pastoral"
+		, "perhidrol"
+		, "petrol"
+		, "radikal"
+		, "refakat"
+		, "resital"
+		, "resul"
+		, "rol"
+		, "saat"
+		, "sadakat"
+		, "santral"
+		, "şefkat"
+		, "şevval"
+		, "sinyal"
+		, "sosyal"
+		, "spesiyal"
+		, "sual"
+		, "tefal" # brand
+		, "termal"
+		, "terminal"
+		, "total"
+		, "trambol"
+		, "tropikal"
+		, "tuğamiral"
+		, "tuğgeneral"
+		, "tümgeneral"
+		, "turnusol"
+		, "tuval"
+		, "usul"
+		, "zelal"
+		, "zerdeçal"
+		, "zeval"
+		, "ziraat"
 	]
 
 	
 	EXCEPTION_MISSING = {
-		u"isim": u"ism",
-		u"kasır": u"kasr",
-		u"kısım": u"kısm",
-		u"af": u"aff",
-		u"ilim": u"ilm",
-		#u"hatır": u"hatr", # for daily usage only
-		u"boyun": u"boyn",
-		u"nesil": u"nesl",
-		u"koyun": u"koyn", # koyun (sheep) or koyun (bosom)? for koyun (sheep) there is no exception but for koyun (bosom) there is. aaaaargh turkish!!
-		u"karın": u"karn" #same with this, karın (your wife) or karın (stomach)? for karın (your wife) there is not a such exception
+		"isim": "ism",
+		"kasır": "kasr",
+		"kısım": "kısm",
+		"af": "aff",
+		"ilim": "ilm",
+		#"hatır": "hatr", # for daily usage only
+		"boyun": "boyn",
+		"nesil": "nesl",
+		"koyun": "koyn", # koyun (sheep) or koyun (bosom)? for koyun (sheep) there is no exception but for koyun (bosom) there is. aaaaargh turkish!!
+		"karın": "karn" #same with this, karın (your wife) or karın (stomach)? for karın (your wife) there is not a such exception
 		#katli, katle, katli etc. it doesn't really have a nominative case but only with suffixes?
 	}	 
 
 	def isUpper(self, pword):
 		word = pword
-		word = word.replace(u"ı", u"i").replace(u"İ", u"I").replace(u"ş", u"s").replace(u"Ş", u"S").replace(u"ğ", u"g").replace(u"Ğ", u"G").replace(u"ü", u"u").replace(u"Ü", u"U").replace(u"ç", u"c").replace(u"Ç", u"C").replace(u"ö", u"o").replace(u"Ö", u"O")
+		word = word.replace("ı", "i").replace("İ", "I").replace("ş", "s").replace("Ş", "S").replace("ğ", "g").replace("Ğ", "G").replace("ü", "").replace("Ü", "U").replace("ç", "c").replace("Ç", "C").replace("ö", "o").replace("Ö", "O")
 		return word.isupper()
 	
 	def makeLower(self, pword):
 		word = pword
-		return word.replace(u"İ", u"i").replace(u"I", u"ı").lower()
+		return word.replace("İ", "i").replace("I", "ı").lower()
 	
 	def makeUpper(self, pword):
 		word = pword 
-		return word.replace(u"i", u"İ").replace(u"ı", u"I").upper()
+		return word.replace("i", "İ").replace("ı", "I").upper()
 	 
 	def concat(self, xstr1, xstr2):
 		str1 = xstr1
@@ -215,24 +215,24 @@ class turkish:
 		for letter in word:
 			if letter in self.FRONT_VOWELS:
 				vowel_count = vowel_count + 1
-				returndata = {u"letter": letter, u"tone": u"front"}
+				returndata = {"letter": letter, "tone": "front"}
 			elif letter in self.BACK_VOWELS:
 				vowel_count = vowel_count + 1
-				returndata = {u"letter": letter, u"tone": u"back"}
+				returndata = {"letter": letter, "tone": "back"}
 	
 		# fake return for exception behaviour in Turkish
 		if word in self.EXCEPTION_WORDS:
-			if returndata[u"letter"] == u"o":
-				returndata = {u"letter": u"ö", u"tone": u"back"}
-			elif returndata[u"letter"] == u"a":
-				returndata = {u"letter": u"e", u"tone": u"back"}
-			elif returndata[u"letter"] == u"u":
-				returndata = {u"letter": u"ü", u"tone": u"back"}
+			if returndata["letter"] == "o":
+				returndata = {"letter": "ö", "tone": "back"}
+			elif returndata["letter"] == "a":
+				returndata = {"letter": "e", "tone": "back"}
+			elif returndata["letter"] == "":
+				returndata = {"letter": "ü", "tone": "back"}
 			
 		if returndata == "":
-			returndata = {u"letter": "", u"tone": u"back"}
+			returndata = {"letter": "", "tone": "back"}
 	
-		returndata[u"vowel_count"] = vowel_count
+		returndata["vowel_count"] = vowel_count
 		return returndata
 	
 	def lastLetter(self, pword):
@@ -242,33 +242,33 @@ class turkish:
 		if getLastLetter == "'":
 			getLastLetter = word[len(word) - 2]
 		
-		returndata[u"letter"] = getLastLetter	  
+		returndata["letter"] = getLastLetter	  
 		
 		if getLastLetter in self.VOWELS:
-			returndata[u"vowel"] = True
+			returndata["vowel"] = True
 			if getLastLetter in self.FRONT_VOWELS:
-				returndata[u"front_vowel"] = True
+				returndata["front_vowel"] = True
 			else:
-				returndata[u"back_vowel"] = True
+				returndata["back_vowel"] = True
 		else:
-			returndata[u"consonant"] = True
+			returndata["consonant"] = True
 			
 			if getLastLetter in self.DISCONTINIOUS_HARD_CONSONANTS:
-				returndata[u"discontinious_hard_consonant"] = True
+				returndata["discontinious_hard_consonant"] = True
 				getLastLetter = self.SOFTEN_DHC[self.DISCONTINIOUS_HARD_CONSONANTS.index(getLastLetter)]
-				returndata[u"soften_consonant"] = getLastLetter
+				returndata["soften_consonant"] = getLastLetter
 
 		getLastLetter = word[len(word) - 1]
 		if getLastLetter == "'":
 			getLastLetter = word[len(word) - 2]
 
 		if getLastLetter in self.HARD_CONSONANTS:
-				returndata[u"hard_consonant"] = True
+				returndata["hard_consonant"] = True
 
 				if getLastLetter in self.DISCONTINIOUS_HARD_CONSONANTS_AFTER_SUFFIX:
-					returndata[u"discontinious_hard_consonant_for_suffix"] = True
+					returndata["discontinious_hard_consonant_for_suffix"] = True
 					getLastLetter = self.SOFTEN_DHC_AFTER_SUFFIX[self.DISCONTINIOUS_HARD_CONSONANTS_AFTER_SUFFIX.index(getLastLetter)]
-					returndata[u"soften_consonant_for_suffix"] = getLastLetter
+					returndata["soften_consonant_for_suffix"] = getLastLetter
 	
 		return returndata	
 	
@@ -278,10 +278,10 @@ class turkish:
 		if "proper_noun" in param:
 			word = word + "'"
 		
-		if self.lastVowel(word)[u"tone"] == u"front":
-			returndata = self.concat(word, u"lar")
+		if self.lastVowel(word)["tone"] == "front":
+			returndata = self.concat(word, "lar")
 		else:
-			returndata = self.concat(word, u"ler")
+			returndata = self.concat(word, "ler")
 			
 		return returndata
 
@@ -294,11 +294,11 @@ class turkish:
 	
 		proper_noun = param.get("proper_noun", False)
 	
-		if lowerWord == u"o":
+		if lowerWord == "o":
 			if proper_noun == True:
-				returndata = self.fromUpperOrLower(u"O'nu", word)
+				returndata = self.fromUpperOrLower("O'nu", word)
 			else:
-				returndata = self.fromUpperOrLower(u"onu", word)
+				returndata = self.fromUpperOrLower("onu", word)
 		else:
 			if lowerWord in self.EXCEPTION_MISSING and proper_noun == True:
 				word = self.fromUpperOrLower(self.EXCEPTION_MISSING[lowerWord], word)
@@ -310,13 +310,13 @@ class turkish:
 			if proper_noun == True:
 				word += "'"
 
-			if u"vowel" in getLastLetter:
-				word = self.concat(word, u"y")
-			elif u"discontinious_hard_consonant" in getLastLetter and proper_noun == False:
-				if getLastVowel[u"vowel_count"] > 1:
-					word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant"])
+			if "vowel" in getLastLetter:
+				word = self.concat(word, "y")
+			elif "discontinious_hard_consonant" in getLastLetter and proper_noun == False:
+				if getLastVowel["vowel_count"] > 1:
+					word = self.concat(word[0:len(word) - 1], getLastLetter["soften_consonant"])
 	
-			word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
+			word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
 	
 			returndata = word
 				
@@ -334,10 +334,10 @@ class turkish:
 		if proper_noun == True:
 			word += "'"
 	
-		if lowerWord == u"ben" and proper_noun == False:
-			returndata = fromUpperOrLower(u"bana", word)
-		elif lowerWord == u"sen" and proper_noun == False:
-			returndata = self.fromUpperOrLower(u"sana", word)
+		if lowerWord == "ben" and proper_noun == False:
+			returndata = fromUpperOrLower("bana", word)
+		elif lowerWord == "sen" and proper_noun == False:
+			returndata = self.fromUpperOrLower("sana", word)
 		else:
 			if lowerWord in self.EXCEPTION_MISSING and proper_noun == False:
 				word = self.fromUpperOrLower(self.EXCEPTION_MISSING[lowerWord], word)
@@ -346,16 +346,16 @@ class turkish:
 			getLastLetter = self.lastLetter(word)
 			getLastVowel = self.lastVowel(word)
 				
-			if u"vowel" in getLastLetter:
-				word = self.concat(word, u"y")
-			elif u"discontinious_hard_consonant_for_suffix" in getLastLetter:
-				if getLastVowel[u"vowel_count"] > 1 and proper_noun == False:
-					word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant_for_suffix"])
+			if "vowel" in getLastLetter:
+				word = self.concat(word, "y")
+			elif "discontinious_hard_consonant_for_suffix" in getLastLetter:
+				if getLastVowel["vowel_count"] > 1 and proper_noun == False:
+					word = self.concat(word[0:len(word) - 1], getLastLetter["soften_consonant_for_suffix"])
 	
-			if getLastVowel[u"tone"] == u"front":
-				word = self.concat(word, u"a")
+			if getLastVowel["tone"] == "front":
+				word = self.concat(word, "a")
 			else:
-				word = self.concat(word, u"e")
+				word = self.concat(word, "e")
 			
 			returndata = word
 		
@@ -380,15 +380,15 @@ class turkish:
 			word = self.fromUpperOrLower(self.EXCEPTION_MISSING[lowerWord], word)
 			lowerWord = self.makeLower(word)
 
-		if u"hard_consonant" in getLastLetter:
-			word = self.concat(word, u"t")
+		if "hard_consonant" in getLastLetter:
+			word = self.concat(word, "t")
 		else:
-			word = self.concat(word, u"d")
+			word = self.concat(word, "d")
 
-		if getLastVowel[u"tone"] == u"front" and not word in self.EXCEPTION_WORDS:
-			word = self.concat(word, u"a")
+		if getLastVowel["tone"] == "front" and not word in self.EXCEPTION_WORDS:
+			word = self.concat(word, "a")
 		else:
-			word = self.concat(word, u"e")
+			word = self.concat(word, "e")
 		
 		return word
 
@@ -404,14 +404,14 @@ class turkish:
 			word += "'"
 	
 		if getLastLetter["letter"] in self.HARD_CONSONANTS:
-			word = self.concat(word, u"t")
+			word = self.concat(word, "t")
 		else:
-			word = self.concat(word, u"d")
+			word = self.concat(word, "d")
 	
-		if getLastVowel[u"tone"] == u"front":
-			word = self.concat(word, u"an")
+		if getLastVowel["tone"] == "front":
+			word = self.concat(word, "an")
 		else:
-			word = self.concat(word, u"en")
+			word = self.concat(word, "en")
 		
 		returndata = word
 		
@@ -429,14 +429,14 @@ class turkish:
 			word += "'"
 	
 		if getLastLetter["letter"] in self.HARD_CONSONANTS:
-			word = self.concat(word, u"t")
+			word = self.concat(word, "t")
 		else:
-			word = self.concat(word, u"d")
+			word = self.concat(word, "d")
 	
-		if getLastVowel[u"tone"] == u"front":
-			word = self.concat(word, u"a")
+		if getLastVowel["tone"] == "front":
+			word = self.concat(word, "a")
 		else:
-			word = self.concat(word, u"e")
+			word = self.concat(word, "e")
 		
 		returndata = word
 		
@@ -458,48 +458,48 @@ class turkish:
 			
 			if proper_noun == True:
 				word += "'"
-			elif u"discontinious_hard_consonant" in getLastLetter:
-				if getLastVowel[u"vowel_count"] > 1:
-					word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant"])
+			elif "discontinious_hard_consonant" in getLastLetter:
+				if getLastVowel["vowel_count"] > 1:
+					word = self.concat(word[0:len(word) - 1], getLastLetter["soften_consonant"])
 				if (self.makeLower(word) in self.EXCEPTION_MISSING): 
 					word = self.fromUpperOrLower(self.EXCEPTION_MISSING[self.makeLower(word)], word)
 		
 		getLastLetter = self.lastLetter(word)
 		getLastVowel = self.lastVowel(word)
 		
-		lastLetterIsVowel = getLastLetter[u"letter"] in self.VOWELS
+		lastLetterIsVowel = getLastLetter["letter"] in self.VOWELS
 		
-		minorHarmonyLetter = self.MINOR_HARMONY[getLastVowel[u"letter"]]
+		minorHarmonyLetter = self.MINOR_HARMONY[getLastVowel["letter"]]
 	
-		if quantity == u"singular":
+		if quantity == "singular":
 			if lastLetterIsVowel == False:
 				word = self.concat(word, minorHarmonyLetter)
 	
 			if person == "1": 
-				word = self.concat(word, u"m")
+				word = self.concat(word, "m")
 			
 			elif person == "2": 
-				word = self.concat(word, u"n")
+				word = self.concat(word, "n")
 
 			elif person == "3":
-				word = self.concat(word, u"s")
+				word = self.concat(word, "s")
 				word = self.concat(word, minorHarmonyLetter)
 		else:
 			if person == "1":
 				if lastLetterIsVowel == False:
 					word = self.concat(word, minorHarmonyLetter)
-				word = self.concat(word, u"m")				
+				word = self.concat(word, "m")				
 				word = self.concat(word, minorHarmonyLetter)
-				word = self.concat(word, u"z")				
+				word = self.concat(word, "z")				
 			elif person == "2":
 				if lastLetterIsVowel == False:
 					word = self.concat(word, minorHarmonyLetter)
-				word = self.concat(word, u"n")				
+				word = self.concat(word, "n")				
 				word = self.concat(word, minorHarmonyLetter)
-				word = self.concat(word, u"z")				
+				word = self.concat(word, "z")				
 			else:
-				if self.makeLower(word) == u"ism":
-					word = self.fromUpperOrLower(u"isim", word)
+				if self.makeLower(word) == "ism":
+					word = self.fromUpperOrLower("isim", word)
 				word = self.makePlural(word)
 				word = self.concat(word, minorHarmonyLetter)
 			
@@ -510,15 +510,15 @@ class turkish:
 		word = pword
 
 		if param.get("negative", False) == True:
-			if self.lastVowel(word)[u"tone"] == u"front":
-				returndata = self.concat(word, u"mamak")
+			if self.lastVowel(word)["tone"] == "front":
+				returndata = self.concat(word, "mamak")
 			else:
-				returndata = self.concat(word, u"memek")
+				returndata = self.concat(word, "memek")
 		else: 
-			if self.lastVowel(word)[u"tone"] == u"front":
-				returndata = self.concat(word, u"mak")
+			if self.lastVowel(word)["tone"] == "front":
+				returndata = self.concat(word, "mak")
 			else:
-				returndata = self.concat(word, u"mek")
+				returndata = self.concat(word, "mek")
 			
 		return returndata	
 
@@ -532,11 +532,11 @@ class turkish:
 		getLastLetter = self.lastLetter(word)
 		getLastVowel = self.lastVowel(word)
 
-		lastLetterIsVowel = getLastLetter[u"letter"] in self.VOWELS
+		lastLetterIsVowel = getLastLetter["letter"] in self.VOWELS
 
 		if param.get("negative", False) == False:
-			#if u"discontinious_hard_consonant" in getLastLetter and getLastVowel[u"vowel_count"] > 1:
-			#	word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant"])
+			#if "discontinious_hard_consonant" in getLastLetter and getLastVowel["vowel_count"] > 1:
+			#	word = self.concat(word[0:len(word) - 1], getLastLetter["soften_consonant"])
 
 			if word == "git":
 				word = "gid"
@@ -544,10 +544,10 @@ class turkish:
 			if lastLetterIsVowel:
 				word = self.concat(word[:-1], self.MINOR_HARMONY[word[-1]])
 			else:
-				word = self.concat(word, self.MINOR_HARMONY[getLastVowel[u"letter"]])
+				word = self.concat(word, self.MINOR_HARMONY[getLastVowel["letter"]])
 		else:
-			word = self.concat(word, u"m")
-			word = self.concat(word, self.MINOR_HARMONY[getLastVowel[u"letter"]])
+			word = self.concat(word, "m")
+			word = self.concat(word, self.MINOR_HARMONY[getLastVowel["letter"]])
 
 
 		word = self.concat(word, "yor")
@@ -555,34 +555,34 @@ class turkish:
 		if param.get("question", False) == True:
 			if param.get("quantity", "singular") == "singular":
 				if param.get("person", 3) == 1:
-					word = self.concat(word, u" muyum")
+					word = self.concat(word, " muyum")
 				elif param.get("person", 3) == 2:
-					word = self.concat(word, u" musun")
+					word = self.concat(word, " musun")
 				elif param.get("person", 3) == 3:
-					word = self.concat(word, u" mu")
+					word = self.concat(word, " m")
 			elif param.get("quantity", "singular") == "plural":
 				if param.get("person", 3) == 1:
-					word = self.concat(word, u" muyuz")
+					word = self.concat(word, " muyuz")
 				elif param.get("person", 3) == 2:
-					word = self.concat(word, u" musunuz")
+					word = self.concat(word, " musunuz")
 				elif param.get("person", 3) == 3:
 					word = self.makePlural(word)
-					word = self.concat(word, u" m")
-					if self.lastVowel(word)[u"tone"] == u"front":
-						word = self.concat(word, u"ı")
+					word = self.concat(word, " m")
+					if self.lastVowel(word)["tone"] == "front":
+						word = self.concat(word, "ı")
 					else:
-						word = self.concat(word, u"i")
+						word = self.concat(word, "i")
 		else:
 			if param.get("quantity", "singular") == "singular":
 				if param.get("person", 3) == 1:
-					word = self.concat(word, u"um")
+					word = self.concat(word, "um")
 				elif param.get("person", 3) == 2:
-					word = self.concat(word, u"sun")
+					word = self.concat(word, "sun")
 			elif param.get("quantity", "singular") == "plural":
 				if param.get("person", 3) == 1:
-					word = self.concat(word, u"uz")
+					word = self.concat(word, "uz")
 				elif param.get("person", 3) == 2:
-					word = self.concat(word, u"sunuz")
+					word = self.concat(word, "sunuz")
 				elif param.get("person", 3) == 3:
 					word = self.makePlural(word)
 
@@ -594,82 +594,82 @@ class turkish:
 	# This kind is not common in daily Turkish usage anymore
 	#	   * aramaktayım
 	#	   * yapmaktayım
-
-		word = self.makeInfinitive(pword, param = {})
+		word = pword
 
 		if param.get("negative", False) == True:
-			if self.lastVowel(word)[u"tone"] == u"front":
-				word = self.concat(word, u"ma")
+			if self.lastVowel(word)["tone"] == "front":
+				word = self.concat(word, "ma")
 			else:
-				word = self.concat(word, u"me")
+				word = self.concat(word, "me")
 
+		word = self.makeInfinitive(word, param = {})
 
-		if self.lastVowel(word)[u"tone"] == u"front":
-			word = self.concat(word, u"ta")
+		if self.lastVowel(word)["tone"] == "front":
+			word = self.concat(word, "ta")
 		else:
-			word = self.concat(word, u"te")
+			word = self.concat(word, "te")
 
 		if param.get("question", False)  == False:
 			if param.get("quantity", "singular") == "singular":
 				if param.get("person", 3) == 1:
-					word = self.concat(word, u"y")
-					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
-					word = self.concat(word, u"m")
+					word = self.concat(word, "y")
+					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
+					word = self.concat(word, "mu")
 				elif param.get("person", 3) == 2:
-					word = self.concat(word, u"s")
-					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
-					word = self.concat(word, u"n")
+					word = self.concat(word, "s")
+					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
+					word = self.concat(word, "n")
 			elif param.get("quantity", "singular") == "plural":
 				if param.get("person", 3) == 1:
-					word = self.concat(word, u"y")
-					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
-					word = self.concat(word, u"z")
+					word = self.concat(word, "y")
+					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
+					word = self.concat(word, "z")
 				elif param.get("person", 3) == 2:
-					word = self.concat(word, u"s")
-					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
-					word = self.concat(word, u"n")
-					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
-					word = self.concat(word, u"z")
+					word = self.concat(word, "s")
+					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
+					word = self.concat(word, "n")
+					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
+					word = self.concat(word, "z")
 				elif param.get("person", 3) == 3:
 					word = self.makePlural(word)
 		elif param.get("question", False) == True:
 			if param.get("quantity", "singular") == "singular":
 				if param.get("person", 3) == 1:
-					word = self.concat(word, u" ")
-					word = self.concat(word, u"m")
-					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
-					word = self.concat(word, u"y")
-					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
-					word = self.concat(word, u"m")
+					word = self.concat(word, " ")
+					word = self.concat(word, "m")
+					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
+					word = self.concat(word, "y")
+					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
+					word = self.concat(word, "m")
 				elif param.get("person", 3) == 2:
-					word = self.concat(word, u" ")
-					word = self.concat(word, u"m")
-					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
-					word = self.concat(word, u"s")
-					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
-					word = self.concat(word, u"n")
+					word = self.concat(word, " ")
+					word = self.concat(word, "m")
+					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
+					word = self.concat(word, "s")
+					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
+					word = self.concat(word, "n")
 			elif param.get("quantity", "singular") == "plural":
 				if param.get("person", 3) == 1:
-					word = self.concat(word, u" ")
-					word = self.concat(word, u"m")
-					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
-					word = self.concat(word, u"y")
-					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
-					word = self.concat(word, u"z")
+					word = self.concat(word, " ")
+					word = self.concat(word, "m")
+					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
+					word = self.concat(word, "y")
+					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
+					word = self.concat(word, "z")
 				elif param.get("person", 3) == 2:
-					word = self.concat(word, u" ")
-					word = self.concat(word, u"m")
-					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
-					word = self.concat(word, u"s")
-					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
-					word = self.concat(word, u"n")
-					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
-					word = self.concat(word, u"z")
+					word = self.concat(word, " ")
+					word = self.concat(word, "m")
+					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
+					word = self.concat(word, "s")
+					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
+					word = self.concat(word, "n")
+					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
+					word = self.concat(word, "z")
 				elif param.get("person", 3) == 3:
 					word = self.makePlural(word)
-					word = self.concat(word, u" ")
-					word = self.concat(word, u"m")
-					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
+					word = self.concat(word, " ")
+					word = self.concat(word, "m")
+					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
 		return word 
 
 	# Geniş zaman
@@ -678,15 +678,15 @@ class turkish:
 		getLastLetter = self.lastLetter(word)
 		getLastVowel = self.lastVowel(word)
 
-		lastLetterIsVowel = getLastLetter[u"letter"] in self.VOWELS
+		lastLetterIsVowel = getLastLetter["letter"] in self.VOWELS
 	
-		minorHarmonyLetter = self.MINOR_HARMONY[getLastVowel[u"letter"]]
-		minorHarmonyLetterFF = self.MINOR_HARMONY_FOR_FUTURE[getLastVowel[u"letter"]]
+		minorHarmonyLetter = self.MINOR_HARMONY[getLastVowel["letter"]]
+		minorHarmonyLetterFF = self.MINOR_HARMONY_FOR_FUTURE[getLastVowel["letter"]]
 		minorHA = self.MINOR_HARMONY_FOR_FUTURE[minorHarmonyLetter]
 
 		if param.get("negative", False) == False:
-			if u"discontinious_hard_consonant" in getLastLetter and getLastVowel[u"vowel_count"] > 1:
-				word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant"])
+			if "discontinious_hard_consonant" in getLastLetter and getLastVowel["vowel_count"] > 1:
+				word = self.concat(word[0:len(word) - 1], getLastLetter["soften_consonant"])
 			if word == "git":
 				word = "gid"
 
@@ -695,7 +695,7 @@ class turkish:
 				if lastLetterIsVowel == False:
 					word = self.concat(word, minorHarmonyLetterFF)
 
-				word = self.concat(word, u"r")
+				word = self.concat(word, "r")
 
 				if param.get("quantity", "singular") == "singular":
 					if param.get("person", 3) == 1:
@@ -704,14 +704,14 @@ class turkish:
 						word = self.concat(word, minorHarmonyLetter)
 						word = self.concat(word, "y")
 						word = self.concat(word, minorHarmonyLetter)
-						word = self.concat(word, u"m")
+						word = self.concat(word, "m")
 					elif param.get("person", 3) == 2:
 						word = self.concat(word, " ")
 						word = self.concat(word, "m")
 						word = self.concat(word, minorHarmonyLetter)
 						word = self.concat(word, "s")
 						word = self.concat(word, minorHarmonyLetter)
-						word = self.concat(word, u"n")
+						word = self.concat(word, "n")
 					elif param.get("person", 3) == 3:
 						word = self.concat(word, " ")
 						word = self.concat(word, "m")
@@ -723,16 +723,16 @@ class turkish:
 						word = self.concat(word, minorHarmonyLetter)
 						word = self.concat(word, "y")
 						word = self.concat(word, minorHarmonyLetter)
-						word = self.concat(word, u"z")
+						word = self.concat(word, "z")
 					elif param.get("person", 3) == 2:
 						word = self.concat(word, " ")
 						word = self.concat(word, "m")
 						word = self.concat(word, minorHarmonyLetter)
 						word = self.concat(word, "s")
 						word = self.concat(word, minorHarmonyLetter)
-						word = self.concat(word, u"n")
+						word = self.concat(word, "n")
 						word = self.concat(word, minorHarmonyLetter)
-						word = self.concat(word, u"z")
+						word = self.concat(word, "z")
 					elif param.get("person", 3) == 3:
 						word = self.makePlural(word)
 						word = self.concat(word, " ")
@@ -741,14 +741,14 @@ class turkish:
 			elif param.get("negative", False) == True:
 				getLastVowel = self.lastVowel(word)
 
-				if self.lastVowel(word)[u"tone"] == u"front":
+				if self.lastVowel(word)["tone"] == "front":
 					minorHarmonyLetterFF = "a"
 				else:
 					minorHarmonyLetterFF = "e"
 
-				word = self.concat(word, u"m")
+				word = self.concat(word, "m")
 				word = self.concat(word, minorHarmonyLetterFF)
-				word = self.concat(word, u"z")
+				word = self.concat(word, "z")
 
 				if param.get("quantity", "singular") == "singular":
 					if param.get("person", 3) == 1:
@@ -757,14 +757,14 @@ class turkish:
 						word = self.concat(word, minorHarmonyLetter)
 						word = self.concat(word, "y")
 						word = self.concat(word, minorHarmonyLetter)
-						word = self.concat(word, u"m")
+						word = self.concat(word, "m")
 					elif param.get("person", 3) == 2:
 						word = self.concat(word, " ")
 						word = self.concat(word, "m")
 						word = self.concat(word, minorHarmonyLetter)
 						word = self.concat(word, "s")
 						word = self.concat(word, minorHarmonyLetter)
-						word = self.concat(word, u"n")
+						word = self.concat(word, "n")
 					elif param.get("person", 3) == 3:
 						word = self.concat(word, " ")
 						word = self.concat(word, "m")
@@ -776,16 +776,16 @@ class turkish:
 						word = self.concat(word, minorHarmonyLetter)
 						word = self.concat(word, "y")
 						word = self.concat(word, minorHarmonyLetter)
-						word = self.concat(word, u"z")
+						word = self.concat(word, "z")
 					elif param.get("person", 3) == 2:
 						word = self.concat(word, " ")
 						word = self.concat(word, "m")
 						word = self.concat(word, minorHarmonyLetter)
 						word = self.concat(word, "s")
 						word = self.concat(word, minorHarmonyLetter)
-						word = self.concat(word, u"n")
+						word = self.concat(word, "n")
 						word = self.concat(word, minorHarmonyLetter)
-						word = self.concat(word, u"z")
+						word = self.concat(word, "z")
 					elif param.get("person", 3) == 3:
 						word = self.makePlural(word)
 						word = self.concat(word, " ")
@@ -796,70 +796,70 @@ class turkish:
 				if lastLetterIsVowel == False:
 					word = self.concat(word, minorHarmonyLetterFF) 
 				
-				word = self.concat(word, u"r")
+				word = self.concat(word, "r")
 
 				if param.get("quantity", "singular") == "singular":
 					if param.get("person", 3) == 1:
 						word = self.concat(word, minorHarmonyLetter)
-						word = self.concat(word, u"m")
+						word = self.concat(word, "m")
 					elif param.get("person", 3) == 2:
-						word = self.concat(word, u"s")
+						word = self.concat(word, "s")
 						word = self.concat(word, minorHarmonyLetter)
-						word = self.concat(word, u"n")
+						word = self.concat(word, "n")
 				elif param.get("quantity", "singular") == "plural":
 					if param.get("person", 3) == 1:
 						word = self.concat(word, minorHarmonyLetter)
-						word = self.concat(word, u"z")
+						word = self.concat(word, "z")
 					elif param.get("person", 3) == 2:
-						word = self.concat(word, u"s")
+						word = self.concat(word, "s")
 						word = self.concat(word, minorHarmonyLetter)
-						word = self.concat(word, u"n")
+						word = self.concat(word, "n")
 						word = self.concat(word, minorHarmonyLetter)
-						word = self.concat(word, u"z")
+						word = self.concat(word, "z")
 					elif param.get("person", 3) == 3:
 						word = self.makePlural(word)
 			elif param.get("negative", False) == True:
-				if self.lastVowel(word)[u"tone"] == u"front":
+				if self.lastVowel(word)["tone"] == "front":
 					minorHarmonyLetterFF = "a"
 				else:
 					minorHarmonyLetterFF = "e"
 
 				if param.get("quantity", "singular") == "singular":
 					if param.get("person", 3) == 1:
-						word = self.concat(word, u"m")
+						word = self.concat(word, "m")
 						word = self.concat(word, minorHarmonyLetterFF)
-						word = self.concat(word, u"m")
+						word = self.concat(word, "m")
 					elif param.get("person", 3) == 2:
-						word = self.concat(word, u"m")
+						word = self.concat(word, "m")
 						word = self.concat(word, minorHarmonyLetterFF)
-						word = self.concat(word, u"z")
-						word = self.concat(word, u"s")
+						word = self.concat(word, "z")
+						word = self.concat(word, "s")
 						word = self.concat(word, self.MINOR_HARMONY[minorHA]) 
-						word = self.concat(word, u"n")
+						word = self.concat(word, "n")
 					elif param.get("person", 3) == 3:
-						word = self.concat(word, u"m")
+						word = self.concat(word, "m")
 						word = self.concat(word, minorHarmonyLetterFF)
-						word = self.concat(word, u"z")
+						word = self.concat(word, "z")
 				elif param.get("quantity", "singular") == "plural":
 					if param.get("person", 3) == 1:
-						word = self.concat(word, u"m")
+						word = self.concat(word, "m")
 						word = self.concat(word, minorHarmonyLetterFF)
-						word = self.concat(word, u"y")
+						word = self.concat(word, "y")
 						word = self.concat(word, self.MINOR_HARMONY[minorHA]) 
-						word = self.concat(word, u"z")
+						word = self.concat(word, "z")
 					elif param.get("person", 3) == 2:
-						word = self.concat(word, u"m")
+						word = self.concat(word, "m")
 						word = self.concat(word, minorHarmonyLetterFF)
-						word = self.concat(word, u"z")
-						word = self.concat(word, u"s")
+						word = self.concat(word, "z")
+						word = self.concat(word, "s")
 						word = self.concat(word, self.MINOR_HARMONY[minorHA])
-						word = self.concat(word, u"n")
+						word = self.concat(word, "n")
 						word = self.concat(word, self.MINOR_HARMONY[minorHA]) 
-						word = self.concat(word, u"z")
+						word = self.concat(word, "z")
 					elif param.get("person", 3) == 3:
-						word = self.concat(word, u"m")
+						word = self.concat(word, "m")
 						word = self.concat(word, minorHarmonyLetterFF)
-						word = self.concat(word, u"z")
+						word = self.concat(word, "z")
 						word = self.makePlural(word)
 
 		return word
@@ -869,23 +869,23 @@ class turkish:
 		word = pword
 
 		if param.get("negative", False) == True:
-			if self.lastVowel(word)[u"tone"] == u"front":
-				word = self.concat(word, u"ma")
+			if self.lastVowel(word)["tone"] == "front":
+				word = self.concat(word, "ma")
 			else:
-				word = self.concat(word, u"me")
+				word = self.concat(word, "me")
 
 		getLastLetter = self.lastLetter(word)
 		getLastVowel = self.lastVowel(word)
 
-		if u"vowel" in getLastLetter:
+		if "vowel" in getLastLetter:
 			if word == "de":
 				word = "di"
 			elif word == "ye":
 				word = "yi"
 
-			word = self.concat(word, u"y")
-		elif u"discontinious_hard_consonant" in getLastLetter and getLastVowel[u"vowel_count"] > 1 and param.get("negative", False) == False:
-			word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant"])
+			word = self.concat(word, "y")
+		elif "discontinious_hard_consonant" in getLastLetter and getLastVowel["vowel_count"] > 1 and param.get("negative", False) == False:
+			word = self.concat(word[0:len(word) - 1], getLastLetter["soften_consonant"])
 		
 
 		if param.get("negative", False) == False:
@@ -894,77 +894,77 @@ class turkish:
 
 
 		if param.get("question", False) == True:
-			if self.lastVowel(word)[u"tone"] == u"front":
+			if self.lastVowel(word)["tone"] == "front":
 				if param.get("person", 3) == 3 and param.get("quantity", "singular") == "plural":
-					word = self.concat(word, u"acaklar ")
+					word = self.concat(word, "acaklar ")
 				else:
-					word = self.concat(word, u"acak ")
+					word = self.concat(word, "acak ")
 
 				if param.get("quantity", "singular") == "singular":
 					if param.get("person", 3) == 1:
-						word = self.concat(word, u"mıyım")
+						word = self.concat(word, "mıyım")
 					elif param.get("person", 3) == 2:
-						word = self.concat(word, u"mısın")
+						word = self.concat(word, "mısın")
 					elif param.get("person", 3) == 3:
-						word = self.concat(word, u"mı")
+						word = self.concat(word, "mı")
 				elif param.get("quantity", "singular") == "plural":
 					if param.get("person", 3) == 1:
-						word = self.concat(word, u"mıyız")
+						word = self.concat(word, "mıyız")
 					elif param.get("person", 3) == 2:
-						word = self.concat(word, u"mısınız")
+						word = self.concat(word, "mısınız")
 					elif param.get("person", 3) == 3:
-						word = self.concat(word, u"mı")
+						word = self.concat(word, "mı")
 			else:
 				if param.get("person", 3) == 3 and param.get("quantity", "singular") == "plural":
-					word = self.concat(word, u"ecekler ")
+					word = self.concat(word, "ecekler ")
 				else:
-					word = self.concat(word, u"ecek ")
+					word = self.concat(word, "ecek ")
 
 				if param.get("quantity", "singular") == "singular":
 					if param.get("person", 3) == 1:
-						word = self.concat(word, u"miyim")
+						word = self.concat(word, "miyim")
 					elif param.get("person", 3) == 2:
-						word = self.concat(word, u"misin")
+						word = self.concat(word, "misin")
 					elif param.get("person", 3) == 3:
-						word = self.concat(word, u"mi")
+						word = self.concat(word, "mi")
 				elif param.get("quantity", "singular") == True:
 					if param.get("person", 3) == 1:
-						word = self.concat(word, u"miyiz")
+						word = self.concat(word, "miyiz")
 					elif param.get("person", 3) == 2:
-						word = self.concat(word, u"misiniz")
+						word = self.concat(word, "misiniz")
 					elif param.get("person", 3) == 3:
-						word = self.concat(word, u"mi")
+						word = self.concat(word, "mi")
 		elif param.get("question", False) == False:
-			if self.lastVowel(word)[u"tone"] == u"front":
+			if self.lastVowel(word)["tone"] == "front":
 				if param.get("quantity", "singular") == "singular":
 					if param.get("person", 3) == 1:
-						word = self.concat(word, u"acağım")
+						word = self.concat(word, "acağım")
 					elif param.get("person", 3) == 2:
-						word = self.concat(word, u"acaksın")
+						word = self.concat(word, "acaksın")
 					elif param.get("person", 3) == 3:
-						word = self.concat(word, u"acak")
+						word = self.concat(word, "acak")
 				elif param.get("quantity", "singular") == "plural":
 					if param.get("person", 3) == 1:
-						word = self.concat(word, u"acağız")
+						word = self.concat(word, "acağız")
 					elif param.get("person", 3) == 2:
-						word = self.concat(word, u"acaksınız")
+						word = self.concat(word, "acaksınız")
 					elif param.get("person", 3) == 3:
-						word = self.concat(word, u"acaklar")
+						word = self.concat(word, "acaklar")
 			else:
 				if param.get("quantity", "singular") == "singular":
 					if param.get("person", 3) == 1:
-						word = self.concat(word, u"eceğim")
+						word = self.concat(word, "eceğim")
 					elif param.get("person", 3) == 2:
-						word = self.concat(word, u"eceğiz")
+						word = self.concat(word, "eceğiz")
 					elif param.get("person", 3) == 3:
-						word = self.concat(word, u"ecek")
+						word = self.concat(word, "ecek")
 				elif param.get("quantity", "plural") == "plural":
 					if param.get("person", 3) == 1:
-						word = self.concat(word, u"eceğiz")
+						word = self.concat(word, "eceğiz")
 					elif param.get("person", 3) == 2:
-						word = self.concat(word, u"eceksiniz")
+						word = self.concat(word, "eceksiniz")
 					elif param.get("person", 3) == 3:
-						word = self.concat(word, u"ecekler")
+						word = self.concat(word, "ecekler")
 
 		return word
 
@@ -976,82 +976,82 @@ class turkish:
 		word = pword
 
 		if param.get("negative", False) == True:
-			word = self.concat(word, u"m")
+			word = self.concat(word, "m")
 
-			if self.lastVowel(word)[u"tone"] == u"front":
-				word = self.concat(word, u"a")
+			if self.lastVowel(word)["tone"] == "front":
+				word = self.concat(word, "a")
 			else:
-				word = self.concat(word, u"e")
+				word = self.concat(word, "e")
 
 		getLastVowel = self.lastVowel(word)
-		minorHarmonyLetter= self.MINOR_HARMONY[getLastVowel[u"letter"]]
+		minorHarmonyLetter= self.MINOR_HARMONY[getLastVowel["letter"]]
 
-		word = self.concat(word, u"m")
+		word = self.concat(word, "m")
 		word = self.concat(word, minorHarmonyLetter)
-		word = self.concat(word, u"ş")
+		word = self.concat(word, "ş")
 
 		if param.get("question", False) == False:
 			if param.get("quantity", "singular") == "singular":
 				if param.get("person", 3) == 1:
 					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"m")
+					word = self.concat(word, "m")
 				elif param.get("person", 3) == 2:
-					word = self.concat(word, u"s")
+					word = self.concat(word, "s")
 					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"n")
+					word = self.concat(word, "n")
 			elif param.get("quantity", "singular") == "plural":
 				if param.get("person", 3) == 1:
 					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"z")
+					word = self.concat(word, "z")
 				elif param.get("person", 3) == 2:
-					word = self.concat(word, u"s")
+					word = self.concat(word, "s")
 					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"n")
+					word = self.concat(word, "n")
 					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"z")
+					word = self.concat(word, "z")
 				elif param.get("person", 3) == 3:
 					word = self.makePlural(word)
 		elif param.get("question", False) == True:
 			if param.get("quantity", "singular") == "singular":
 				if param.get("person", 3) == 1:
-					word = self.concat(word, u" ")
-					word = self.concat(word, u"m")
+					word = self.concat(word, " ")
+					word = self.concat(word, "m")
 					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"y")
+					word = self.concat(word, "y")
 					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"m")
+					word = self.concat(word, "m")
 				elif param.get("person", 3) == 2:
-					word = self.concat(word, u" ")
-					word = self.concat(word, u"m")
+					word = self.concat(word, " ")
+					word = self.concat(word, "m")
 					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"s")
+					word = self.concat(word, "s")
 					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"n")
+					word = self.concat(word, "n")
 				elif param.get("person", 3) == 3:
-					word = self.concat(word, u" ")
-					word = self.concat(word, u"m")
+					word = self.concat(word, " ")
+					word = self.concat(word, "m")
 					word = self.concat(word, minorHarmonyLetter)
 			elif param.get("quantity", "singular") == "plural":
 				if param.get("person", 3) == 1:
-					word = self.concat(word, u" ")
-					word = self.concat(word, u"m")
+					word = self.concat(word, " ")
+					word = self.concat(word, "m")
 					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"y")
+					word = self.concat(word, "y")
 					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"z")
+					word = self.concat(word, "z")
 				elif param.get("person", 3) == 2:
-					word = self.concat(word, u" ")
-					word = self.concat(word, u"m")
+					word = self.concat(word, " ")
+					word = self.concat(word, "m")
 					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"s")
+					word = self.concat(word, "s")
 					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"n")
+					word = self.concat(word, "n")
 					word = self.concat(word, minorHarmonyLetter)
-					word = self.concat(word, u"z")
+					word = self.concat(word, "z")
 				elif param.get("person", 3) == 3:
 					word = self.makePlural(word)
-					word = self.concat(word, u" ")
-					word = self.concat(word, u"m")
+					word = self.concat(word, " ")
+					word = self.concat(word, "m")
 					word = self.concat(word, minorHarmonyLetter)
 		return word
 
@@ -1072,44 +1072,44 @@ class turkish:
 		getLastLetter = self.lastLetter(word)
 		getLastVowel = self.lastVowel(word)
 		getAuxLastVowel = self.lastVowel(param["auxiliary"])
-		minorHarmonyLetter = self.MINOR_HARMONY[getLastVowel[u"letter"]]			
+		minorHarmonyLetter = self.MINOR_HARMONY[getLastVowel["letter"]]			
 		getLastLetter = self.lastLetter(word)
 
-		if u"vowel" in getLastLetter:
-			word = self.concat(word, u"y")
-		elif u"discontinious_hard_consonant" in getLastLetter and getLastVowel[u"vowel_count"] > 1:
-			word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant"])
+		if "vowel" in getLastLetter:
+			word = self.concat(word, "y")
+		elif "discontinious_hard_consonant" in getLastLetter and getLastVowel["vowel_count"] > 1:
+			word = self.concat(word[0:len(word) - 1], getLastLetter["soften_consonant"])
 
 
 		if param.get("negative", False) == False:
-			if param["auxiliary"] in [u"ver", u"koy"]:
+			if param["auxiliary"] in ["ver", "koy"]:
 				word = self.concat(word, minorHarmonyLetter)
-			elif getLastVowel[u"tone"] == u"front":
-				word = self.concat(word, u"a")
+			elif getLastVowel["tone"] == "front":
+				word = self.concat(word, "a")
 			else:
-				word = self.concat(word, u"e")
+				word = self.concat(word, "e")
 
 			word = self.concat(word, param["auxiliary"])
 		if param.get("negative", False) == True:
 			if param["auxiliary"] == "bil":
-				if getLastVowel[u"tone"] == u"front":
-					word = self.concat(word, u"ama")
+				if getLastVowel["tone"] == "front":
+					word = self.concat(word, "ama")
 				else:
-					word = self.concat(word, u"eme")
+					word = self.concat(word, "eme")
 			else:
-				if param["auxiliary"] in [u"ver", u"koy"]:
+				if param["auxiliary"] in ["ver", "koy"]:
 					word = self.concat(word, minorHarmonyLetter)
-				elif getLastVowel[u"tone"] == u"front":
-					word = self.concat(word, u"a")
+				elif getLastVowel["tone"] == "front":
+					word = self.concat(word, "a")
 				else:
-					word = self.concat(word, u"e")
+					word = self.concat(word, "e")
 
 				word = self.concat(word, param["auxiliary"])
 
-				if getAuxLastVowel[u"tone"] == u"front":
-					word = self.concat(word, u"a")
+				if getAuxLastVowel["tone"] == "front":
+					word = self.concat(word, "a")
 				else:
-					word = self.concat(word, u"e")
+					word = self.concat(word, "e")
 		return word 
 
 	# Gereklilik kipi (-meli, -malı)
@@ -1118,50 +1118,50 @@ class turkish:
 		getLastVowel = self.lastVowel(word)
 
 		if getLastVowel["tone"] == "front":
-			letterA = u"a"
-			letterI = u"ı"
+			letterA = "a"
+			letterI = "ı"
 		else:
-			letterA = u"e"
-			letterI = u"i"
+			letterA = "e"
+			letterI = "i"
 
 
 		if param.get("negative", False) == True:
-			word = self.concat(word, u"m")
+			word = self.concat(word, "m")
 			word = self.concat(word, letterA)
 
-		word = self.concat(word, u"m")
+		word = self.concat(word, "m")
 		word = self.concat(word, letterA)
-		word = self.concat(word, u"l")
+		word = self.concat(word, "l")
 		word = self.concat(word, letterI)
 
 		if param.get("person", 3) == 3 and param.get("quantity", "singular") == "plural":
 			word = self.makePlural(word)
 
 		if param.get("question", False) == True:
-			word = self.concat(word, u" ")
-			word = self.concat(word, u"m")
+			word = self.concat(word, " ")
+			word = self.concat(word, "m")
 			word = self.concat(word, letterI)
 
 		if param.get("quantity", "singular") == "singular":
 			if param.get("person", 3) == 1:
-				word = self.concat(word, u"y")
+				word = self.concat(word, "y")
 				word = self.concat(word, letterI)
-				word = self.concat(word, u"m")
+				word = self.concat(word, "m")
 			elif param.get("person", 3) == 2:
-				word = self.concat(word, u"s")
+				word = self.concat(word, "s")
 				word = self.concat(word, letterI)
-				word = self.concat(word, u"n")
+				word = self.concat(word, "n")
 		elif param.get("quantity", "singular") == "plural":
 			if param.get("person", 3) == 1:
-				word = self.concat(word, u"y")
+				word = self.concat(word, "y")
 				word = self.concat(word, letterI)
-				word = self.concat(word, u"z")
+				word = self.concat(word, "z")
 			elif param.get("person", 3) == 2:
-				word = self.concat(word, u"s")
+				word = self.concat(word, "s")
 				word = self.concat(word, letterI)
-				word = self.concat(word, u"n")
+				word = self.concat(word, "n")
 				word = self.concat(word, letterI)
-				word = self.concat(word, u"z")
+				word = self.concat(word, "z")
 
 		return word
 
@@ -1171,11 +1171,11 @@ class turkish:
 		getLastVowel = self.lastVowel(word)
 
 		if getLastVowel["tone"] == "front":
-			letterA = u"a"
-			letterI = u"ı"
+			letterA = "a"
+			letterI = "ı"
 		else:
-			letterA = u"e"
-			letterI = u"i"
+			letterA = "e"
+			letterI = "i"
 
 		if param.get("negative", False) == True:
 			word = self.concat(word, "m")
@@ -1213,16 +1213,16 @@ class turkish:
 		getLastVowel = self.lastVowel(word)
 
 		if getLastVowel["tone"] == "front":
-			letterA = u"a"
-			letterI = u"ı"
+			letterA = "a"
+			letterI = "ı"
 		else:
-			letterA = u"e"
-			letterI = u"i"
+			letterA = "e"
+			letterI = "i"
 
 		if param.get("negative", False) == True:
 			word = self.concat(word, "m")
 			word = self.concat(word, letterA)
-			word = self.concat(word, u"y")
+			word = self.concat(word, "y")
 			word = self.concat(word, letterA)
 		else:
 			if word == "de":
@@ -1233,10 +1233,10 @@ class turkish:
 			if word == "git":
 				word = "gid"
 
-			if u"vowel" in getLastLetter:
-				word = self.concat(word, u"y")
-			elif  u"discontinious_hard_consonant" in getLastLetter and getLastVowel[u"vowel_count"] > 1:
-				word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant"])
+			if "vowel" in getLastLetter:
+				word = self.concat(word, "y")
+			elif  "discontinious_hard_consonant" in getLastLetter and getLastVowel["vowel_count"] > 1:
+				word = self.concat(word[0:len(word) - 1], getLastLetter["soften_consonant"])
 			
 			word = self.concat(word, letterA)
 
@@ -1279,10 +1279,10 @@ class turkish:
 		word = pword
 		getLastVowel = self.lastVowel(word)
 
-		#self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]]
+		#self.MINOR_HARMONY[self.lastVowel(word)["letter"]]
 
 		if param.get("negative", False) == True:
-			word = self.concat(word, u"m")
+			word = self.concat(word, "m")
 			if getLastVowel["tone"] == "front":
 				word = self.concat(word, "a")
 			else:
@@ -1290,7 +1290,7 @@ class turkish:
 
 		getLastLetter = self.lastLetter(word)
 		getLastVowel = self.lastVowel(word)
-		minor = self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]]
+		minor = self.MINOR_HARMONY[self.lastVowel(word)["letter"]]
 		
 		if param.get("quantity", "singular") == "singular":
 			if param.get("person", 2) == 3:
@@ -1309,10 +1309,10 @@ class turkish:
 				elif word == "ye":
 					word = "yi"
 
-				if u"vowel" in getLastLetter:
-					word = self.concat(word, u"y")
-				elif u"discontinious_hard_consonant" in getLastLetter and getLastVowel[u"vowel_count"] > 1 and param.get("negative", False) == False:
-					word = self.concat(word[0:len(word) - 1], getLastLetter[u"soften_consonant"])
+				if "vowel" in getLastLetter:
+					word = self.concat(word, "y")
+				elif "discontinious_hard_consonant" in getLastLetter and getLastVowel["vowel_count"] > 1 and param.get("negative", False) == False:
+					word = self.concat(word[0:len(word) - 1], getLastLetter["soften_consonant"])
 
 				if word == "git":
 					word = "gid"
@@ -1341,20 +1341,20 @@ class turkish:
 		word = pword
 		getLastVowel = self.lastVowel(word)
 		getLastLetter = self.lastLetter(word)
-		minor = self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]]
+		minor = self.MINOR_HARMONY[self.lastVowel(word)["letter"]]
 
 		if param.get("negative", False) == True:
 			word = self.concat(word, "m")
-			if getLastVowel[u"tone"] == u"front":
+			if getLastVowel["tone"] == "front":
 				word = self.concat(word, "a")
 			else:
 				word = self.concat(word, "e")
 
 		getLastVowel = self.lastVowel(word)
 		getLastLetter = self.lastLetter(word)
-		minor = self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]]
+		minor = self.MINOR_HARMONY[self.lastVowel(word)["letter"]]
 
-		if "hard_consonant" not in getLastLetter or u"vowel" in getLastLetter:
+		if "hard_consonant" not in getLastLetter or "vowel" in getLastLetter:
 			ps = "d"
 		else:
 			ps = "t"
@@ -1389,7 +1389,7 @@ class turkish:
 
 		if param.get("question", False) == True:
 			getLastVowel = self.lastVowel(word)
-			minor = self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]]
+			minor = self.MINOR_HARMONY[self.lastVowel(word)["letter"]]
 
 			word = self.concat(word, " ")	
 			word = self.concat(word, "m")
@@ -1424,8 +1424,8 @@ class turkish:
 
 			word = self.concat(word, " ")
 			word = self.concat(word, "m")
-			if self.lastVowel(word)[u"tone"] == u"front":
-				word = self.concat(word, u"ı")
+			if self.lastVowel(word)["tone"] == "front":
+				word = self.concat(word, "ı")
 			else:
 				word = self.concat(word, "i")
 		else:
@@ -1463,8 +1463,8 @@ class turkish:
 			if param.get("person", 3) == 3 and param.get("quantity", "singular") == "plural":
 				word = self.makePlural(word)
 			
-			if self.lastVowel(word)[u"tone"] == u"front":
-				letter = u"ı"
+			if self.lastVowel(word)["tone"] == "front":
+				letter = "ı"
 			else:
 				letter = "i"
 			
@@ -1540,21 +1540,21 @@ class turkish:
 		else:
 			if param.get("person", 3) == 3 and param.get("quantity", "singular") == "plural":
 				word = self.makePlural(word)
-				minor = self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]]
+				minor = self.MINOR_HARMONY[self.lastVowel(word)["letter"]]
 				
-				word = self.concat(word, u" ")
-				word = self.concat(word, u"m")
+				word = self.concat(word, " ")
+				word = self.concat(word, "m")
 				word = self.concat(word, minor)
-				word = self.concat(word, u"y")
-				word = self.concat(word, u"m")
+				word = self.concat(word, "y")
+				word = self.concat(word, "m")
 				word = self.concat(word, minor)
-				word = self.concat(word, u"ş")
+				word = self.concat(word, "ş")
 			else:
-				minor = self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]]
-				word = self.concat(word, u" ")
-				word = self.concat(word, u"m")
+				minor = self.MINOR_HARMONY[self.lastVowel(word)["letter"]]
+				word = self.concat(word, " ")
+				word = self.concat(word, "m")
 				word = self.concat(word, minor)
-				word = self.concat(word, u"y")
+				word = self.concat(word, "y")
 				word = self.makePastPerfect(word, {
 					"person": param.get("person", 3),
 					"quantity": param.get("quantity", "singular")
@@ -1583,7 +1583,7 @@ class turkish:
 
 		if param.get("person") == 3 and param.get("quantity") == "plural" and param.get("question", False) == True:
 			word = self.concat(word, "m")
-			word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
+			word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
 			word = self.concat(word, "y")
 			word = self.makePastPerfect(word, { 
 				"person": param.get("person", 3)
@@ -1621,7 +1621,7 @@ class turkish:
 
 		if param.get("person") == 3 and param.get("quantity") == "plural" and param.get("question", False) == True:
 			word = self.concat(word, "m")
-			word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)[u"letter"]])
+			word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
 			word = self.concat(word, "y")
 			word = self.makePast(word, { 
 				"person": param.get("person", 3)
@@ -1666,185 +1666,185 @@ def exec(cmd, tense, verb, params = {}):
 	conn.execute(sql)
 
 verbs = [
-u"aç"
-, u"ağla"
-, u"ak"
-, u"al"
-, u"anla"
-, u"anlat"
-, u"ara"
-, u"art"
-, u"aş"
-, u"at"
-, u"ayır"
-, u"ayrıl"
-, u"azal"
-, u"bağır"
-, u"bağla"
-, u"bak"
-, u"bas"
-, u"başla"
-, u"bekle"
-, u"belirle"
-, u"belirt"
-, u"benze"
-, u"bırak"
-, u"bil"
-, u"bin"
-, u"bitir"
-, u"bit"
-, u"bozul"
-, u"bul"
-, u"büyü"
-, u"çalış"
-, u"çal"
-, u"çekil"
-, u"çek"
-, u"çevir"
-, u"çıkar"
-, u"çık"
-, u"çiz"
-, u"dayan"
-, u"değerlendir"
-, u"değiş"
-, u"değiştir"
-, u"de"
-, u"devam et"
-, u"dikkat et"
-, u"dile"
-, u"dinle"
-, u"doğ"
-, u"dolaş"
-, u"doldur"
-, u"dön"
-, u"dönüş"
-, u"dur"
-, u"duy"
-, u"düş"
-, u"düşün"
-, u"düzenle"
-, u"ekle"
-, u"etkile"
-, u"et"
-, u"evlen"
-, u"fark et"
-, u"geçir"
-, u"geç"
-, u"geliş"
-, u"geliştir"
-, u"gel"
-, u"gerçekleş"
-, u"gerek"
-, u"getir"
-, u"gir"
-, u"git"
-, u"giy"
-, u"gönder"
-, u"gör"
-, u"görün"
-, u"görüş"
-, u"göster"
-, u"götür"
-, u"gül"
-, u"hareket et"
-, u"hatırla"
-, u"hazırla"
-, u"hisset"
-, u"iç"
-, u"ifade et"
-, u"ilerle"
-, u"ilgilen"
-, u"inan"
-, u"incele"
-, u"in"
-, u"iste"
-, u"izle"
-, u"kabul et"
-, u"kaç"
-, u"kaldır"
-, u"kalk"
-, u"kal"
-, u"kapat"
-, u"karış"
-, u"karıştır"
-, u"karşıla"
-, u"karşılaş"
-, u"katıl"
-, u"kaybet"
-, u"kazan"
-, u"kes"
-, u"kıl"
-, u"konuş"
-, u"kork"
-, u"koru"
-, u"koş"
-, u"koy"
-, u"kullan"
-, u"kur"
-, u"kurtar"
-, u"kurtul"
-, u"oku"
-, u"ol"
-, u"oluş"
-, u"otur"
-, u"oyna"
-, u"öde"
-, u"öğren"
-, u"öldür"
-, u"öl"
-, u"paylaş"
-, u"sağla"
-, u"sahip ol"
-, u"san"
-, u"satın al"
-, u"sat"
-, u"say"
-, u"seç"
-, u"sev"
-, u"seyret"
-, u"sok"
-, u"sor"
-, u"söyle"
-, u"söylen"
-, u"söz et"
-, u"sun"
-, u"sürdür"
-, u"sür"
-, u"tanı"
-, u"taşı"
-, u"tercih et"
-, u"topla"
-, u"toplan"
-, u"tut"
-, u"uğraş"
-, u"ulaş"
-, u"unut"
-, u"uygula"
-, u"uy"
-, u"uyu"
-, u"uzan"
-, u"uzat"
-, u"üret"
-, u"var"
-, u"ver"
-, u"vur"
-, u"yakala"
-, u"yaklaş"
-, u"yak"
-, u"yan"
-, u"yap"
-, u"yararlan"
-, u"yarat"
-, u"yardımcı ol"
-, u"yaşa"
-, u"yat"
-, u"yayıl"
-, u"yayımlan"
-, u"yazıl"
-, u"yaz"
-, u"ye"
-, u"yüksel"
-, u"yürü"
+"aç"
+, "ağla"
+, "ak"
+, "al"
+, "anla"
+, "anlat"
+, "ara"
+, "art"
+, "aş"
+, "at"
+, "ayır"
+, "ayrıl"
+, "azal"
+, "bağır"
+, "bağla"
+, "bak"
+, "bas"
+, "başla"
+, "bekle"
+, "belirle"
+, "belirt"
+, "benze"
+, "bırak"
+, "bil"
+, "bin"
+, "bitir"
+, "bit"
+, "bozul"
+, "bul"
+, "büyü"
+, "çalış"
+, "çal"
+, "çekil"
+, "çek"
+, "çevir"
+, "çıkar"
+, "çık"
+, "çiz"
+, "dayan"
+, "değerlendir"
+, "değiş"
+, "değiştir"
+, "de"
+, "devam et"
+, "dikkat et"
+, "dile"
+, "dinle"
+, "doğ"
+, "dolaş"
+, "doldur"
+, "dön"
+, "dönüş"
+, "dur"
+, "duy"
+, "düş"
+, "düşün"
+, "düzenle"
+, "ekle"
+, "etkile"
+, "et"
+, "evlen"
+, "fark et"
+, "geçir"
+, "geç"
+, "geliş"
+, "geliştir"
+, "gel"
+, "gerçekleş"
+, "gerek"
+, "getir"
+, "gir"
+, "git"
+, "giy"
+, "gönder"
+, "gör"
+, "görün"
+, "görüş"
+, "göster"
+, "götür"
+, "gül"
+, "hareket et"
+, "hatırla"
+, "hazırla"
+, "hisset"
+, "iç"
+, "ifade et"
+, "ilerle"
+, "ilgilen"
+, "inan"
+, "incele"
+, "in"
+, "iste"
+, "izle"
+, "kabul et"
+, "kaç"
+, "kaldır"
+, "kalk"
+, "kal"
+, "kapat"
+, "karış"
+, "karıştır"
+, "karşıla"
+, "karşılaş"
+, "katıl"
+, "kaybet"
+, "kazan"
+, "kes"
+, "kıl"
+, "konuş"
+, "kork"
+, "kor"
+, "koş"
+, "koy"
+, "kullan"
+, "kur"
+, "kurtar"
+, "kurtul"
+, "ok"
+, "ol"
+, "oluş"
+, "otur"
+, "oyna"
+, "öde"
+, "öğren"
+, "öldür"
+, "öl"
+, "paylaş"
+, "sağla"
+, "sahip ol"
+, "san"
+, "satın al"
+, "sat"
+, "say"
+, "seç"
+, "sev"
+, "seyret"
+, "sok"
+, "sor"
+, "söyle"
+, "söylen"
+, "söz et"
+, "sun"
+, "sürdür"
+, "sür"
+, "tanı"
+, "taşı"
+, "tercih et"
+, "topla"
+, "toplan"
+, "tut"
+, "uğraş"
+, "ulaş"
+, "unut"
+, "uygula"
+, "uy"
+, "uy"
+, "uzan"
+, "uzat"
+, "üret"
+, "var"
+, "ver"
+, "vur"
+, "yakala"
+, "yaklaş"
+, "yak"
+, "yan"
+, "yap"
+, "yararlan"
+, "yarat"
+, "yardımcı ol"
+, "yaşa"
+, "yat"
+, "yayıl"
+, "yayımlan"
+, "yazıl"
+, "yaz"
+, "ye"
+, "yüksel"
+, "yürü"
 ]
 
 tr = turkish()
@@ -1852,15 +1852,15 @@ tr = turkish()
 for vrb in verbs:
 	sample_verb = vrb
 	print (vrb)
-	tense = u"Mastar"
+	tense = "Mastar"
 	exec ("tr.makeInfinitive", tense, "sample_verb")
 	exec ("tr.makeInfinitive", tense, "sample_verb", { "negative": True})
 
-	#tense = u"Birleşik fiil"
+	#tense = "Birleşik fiil"
 	#exec ("tr.unifyVerbs", tense, "sample_verb", {"auxiliary": "bil", "negative": False})
 	#exec ("tr.unifyVerbs", tense, "sample_verb", {"auxiliary": "bil", "negative": True})
 		
-	tense = u"Emir kipi"
+	tense = "Emir kipi"
 	exec ("tr.makeCommand", tense, "sample_verb", { "person": 2 })
 	exec ("tr.makeCommand", tense, "sample_verb", { "person": 3 })
 	exec ("tr.makeCommand", tense, "sample_verb", { "question": True, "person": 3 })
@@ -1877,7 +1877,7 @@ for vrb in verbs:
 	exec ("tr.makeCommand", tense, "sample_verb", { "negative": True, "person": 3, "quantity": "plural" })
 	exec ("tr.makeCommand", tense, "sample_verb", { "negative": True, "question": True, "person": 3, "quantity": "plural" })
 
-	tense = u"Şimdiki zaman"
+	tense = "Şimdiki zaman"
 	exec ("tr.makePresentContinuous", tense, "sample_verb", { "person": 1 }) 
 	exec ("tr.makePresentContinuous", tense, "sample_verb", { "person": 2 })
 	exec ("tr.makePresentContinuous", tense, "sample_verb", { "person": 3 })
@@ -1906,7 +1906,7 @@ for vrb in verbs:
 	exec ("tr.makePresentContinuous", tense, "sample_verb", { "negative": True, "question": True, "person": 2, "quantity": "plural" })
 	exec ("tr.makePresentContinuous", tense, "sample_verb", { "negative": True, "question": True, "person": 3, "quantity": "plural" })
 
-	tense = u"Şimdiki zaman 2"
+	tense = "Şimdiki zaman 2"
 	exec ("tr.makePresentContinuous2", tense, "sample_verb", { "person": 1 })
 	exec ("tr.makePresentContinuous2", tense, "sample_verb", { "person": 2 })
 	exec ("tr.makePresentContinuous2", tense, "sample_verb", { "person": 3 })
@@ -1935,7 +1935,7 @@ for vrb in verbs:
 	exec ("tr.makePresentContinuous2", tense, "sample_verb", { "negative": True, "question": True, "person": 2, "quantity": "plural" })
 	exec ("tr.makePresentContinuous2", tense, "sample_verb", { "negative": True, "question": True, "person": 3, "quantity": "plural" })
 
-	tense = u"Gelecek zaman"
+	tense = "Gelecek zaman"
 	exec ("tr.makeFuture", tense, "sample_verb", { "person": 1 })
 	exec ("tr.makeFuture", tense, "sample_verb", { "person": 2 })
 	exec ("tr.makeFuture", tense, "sample_verb", { "person": 3 })
@@ -1964,7 +1964,7 @@ for vrb in verbs:
 	exec ("tr.makeFuture", tense, "sample_verb", { "negative": True, "question": True, "person": 2, "quantity": "plural" })
 	exec ("tr.makeFuture", tense, "sample_verb", { "negative": True, "question": True, "person": 3, "quantity": "plural" })
 
-	tense = u"Geniş zaman"
+	tense = "Geniş zaman"
 	exec ("tr.makePresentSimple", tense, "sample_verb", { "person": 1 })
 	exec ("tr.makePresentSimple", tense, "sample_verb", { "person": 2 })
 	exec ("tr.makePresentSimple", tense, "sample_verb", { "person": 3 })
@@ -1994,7 +1994,7 @@ for vrb in verbs:
 	exec ("tr.makePresentSimple", tense, "sample_verb", { "negative": True, "question": True, "person": 3, "quantity": "plural" })
 
 
-	tense = u"Geçmiş zaman"
+	tense = "Geçmiş zaman"
 	exec ("tr.makePast", tense, "sample_verb", { "person": 1 })
 	exec ("tr.makePast", tense, "sample_verb", { "person": 2 })
 	exec ("tr.makePast", tense, "sample_verb", { "person": 3 })
@@ -2023,7 +2023,7 @@ for vrb in verbs:
 	exec ("tr.makePast", tense, "sample_verb", { "negative": True, "question": True, "person": 2, "quantity": "plural" })
 	exec ("tr.makePast", tense, "sample_verb", { "negative": True, "question": True, "person": 3, "quantity": "plural" })
 
-	tense = u"Gereklilik kipi"
+	tense = "Gereklilik kipi"
 	exec ("tr.makeMust", tense, "sample_verb", { "person": 1 })
 	exec ("tr.makeMust", tense, "sample_verb", { "person": 2 })
 	exec ("tr.makeMust", tense, "sample_verb", { "person": 3 })
@@ -2052,7 +2052,7 @@ for vrb in verbs:
 	exec ("tr.makeMust", tense, "sample_verb", { "negative": True, "question": True, "person": 2, "quantity": "plural" })
 	exec ("tr.makeMust", tense, "sample_verb", { "negative": True, "question": True, "person": 3, "quantity": "plural" })
 
-	tense = u"Dilek-Şart kipi"
+	tense = "Dilek-Şart kipi"
 	exec ("tr.makeWishCondition", tense, "sample_verb", { "person": 1 })
 	exec ("tr.makeWishCondition", tense, "sample_verb", { "person": 2 })
 	exec ("tr.makeWishCondition", tense, "sample_verb", { "person": 3 })
@@ -2081,7 +2081,7 @@ for vrb in verbs:
 	exec ("tr.makeWishCondition", tense, "sample_verb", { "negative": True, "question": True, "person": 2, "quantity": "plural" })
 	exec ("tr.makeWishCondition", tense, "sample_verb", { "negative": True, "question": True, "person": 3, "quantity": "plural" })
 
-	tense = u"İstek kipi"
+	tense = "İstek kipi"
 	exec ("tr.makeWish", tense, "sample_verb", { "person": 1 })
 	exec ("tr.makeWish", tense, "sample_verb", { "person": 2 })
 	exec ("tr.makeWish", tense, "sample_verb", { "person": 3 })
@@ -2110,7 +2110,7 @@ for vrb in verbs:
 	exec ("tr.makeWish", tense, "sample_verb", { "negative": True, "question": True, "person": 2, "quantity": "plural" })
 	exec ("tr.makeWish", tense, "sample_verb", { "negative": True, "question": True, "person": 3, "quantity": "plural" })
 
-	tense = u"Öğrenilen geçmiş zaman"
+	tense = "Öğrenilen geçmiş zaman"
 	exec ("tr.makePastPerfect", tense, "sample_verb", { "person": 1 })
 	exec ("tr.makePastPerfect", tense, "sample_verb", { "person": 2 })
 	exec ("tr.makePastPerfect", tense, "sample_verb", { "person": 3 })
@@ -2139,7 +2139,7 @@ for vrb in verbs:
 	exec ("tr.makePastPerfect", tense, "sample_verb", { "negative": True, "question": True, "person": 2, "quantity": "plural" })
 	exec ("tr.makePastPerfect", tense, "sample_verb", { "negative": True, "question": True, "person": 3, "quantity": "plural" })
 
-	tense = u"Öğrenilen geçmiş zamanın hikayesi"
+	tense = "Öğrenilen geçmiş zamanın hikayesi"
 	exec ("tr.makePastPastPerfect", tense, "sample_verb", { "person": 1 })
 	exec ("tr.makePastPastPerfect", tense, "sample_verb", { "person": 2 })
 	exec ("tr.makePastPastPerfect", tense, "sample_verb", { "person": 3 })
@@ -2168,7 +2168,7 @@ for vrb in verbs:
 	exec ("tr.makePastPastPerfect", tense, "sample_verb", { "negative": True, "question": True, "person": 2, "quantity": "plural" })
 	exec ("tr.makePastPastPerfect", tense, "sample_verb", { "negative": True, "question": True, "person": 3, "quantity": "plural" })
 
-	tense = u"Öğrenilen geçmiş zamanın rivayeti"
+	tense = "Öğrenilen geçmiş zamanın rivayeti"
 	exec ("tr.makePastPerfectPastPerfect", tense, "sample_verb", { "person": 1 })
 	exec ("tr.makePastPerfectPastPerfect", tense, "sample_verb", { "person": 2 })
 	exec ("tr.makePastPerfectPastPerfect", tense, "sample_verb", { "person": 3 })
@@ -2197,7 +2197,7 @@ for vrb in verbs:
 	exec ("tr.makePastPerfectPastPerfect", tense, "sample_verb", { "negative": True, "question": True, "person": 2, "quantity": "plural" })
 	exec ("tr.makePastPerfectPastPerfect", tense, "sample_verb", { "negative": True, "question": True, "person": 3, "quantity": "plural" })
 
-	tense = u"Gelecek zamanın rivayeti"
+	tense = "Gelecek zamanın rivayeti"
 	exec ("tr.makePastPerfectFuture", tense, "sample_verb", { "person": 1 })
 	exec ("tr.makePastPerfectFuture", tense, "sample_verb", { "person": 2 })
 	exec ("tr.makePastPerfectFuture", tense, "sample_verb", { "person": 3 })
@@ -2226,7 +2226,7 @@ for vrb in verbs:
 	exec ("tr.makePastPerfectFuture", tense, "sample_verb", { "negative": True, "question": True, "person": 2, "quantity": "plural" })
 	exec ("tr.makePastPerfectFuture", tense, "sample_verb", { "negative": True, "question": True, "person": 3, "quantity": "plural" })
 
-	tense = u"Gelecek zamanın hikayesi"
+	tense = "Gelecek zamanın hikayesi"
 	exec ("tr.makePastFuture", tense, "sample_verb", { "person": 1 })
 	exec ("tr.makePastFuture", tense, "sample_verb", { "person": 2 })
 	exec ("tr.makePastFuture", tense, "sample_verb", { "person": 3 })
@@ -2255,7 +2255,7 @@ for vrb in verbs:
 	exec ("tr.makePastFuture", tense, "sample_verb", { "negative": True, "question": True, "person": 2, "quantity": "plural" })
 	exec ("tr.makePastFuture", tense, "sample_verb", { "negative": True, "question": True, "person": 3, "quantity": "plural" })
 
-	tense = u"Geçmiş zamanın hikayesi"
+	tense = "Geçmiş zamanın hikayesi"
 	exec ("tr.makePastPast", tense, "sample_verb", { "person": 1 })
 	exec ("tr.makePastPast", tense, "sample_verb", { "person": 2 })
 	exec ("tr.makePastPast", tense, "sample_verb", { "person": 3 })
@@ -2285,7 +2285,7 @@ for vrb in verbs:
 	exec ("tr.makePastPast", tense, "sample_verb", { "negative": True, "question": True, "person": 3, "quantity": "plural" })
 
 
-	tense = u"Bilinen geçmiş zamanın şartı"
+	tense = "Bilinen geçmiş zamanın şartı"
 	exec ("tr.makePastCondition", tense, "sample_verb", { "person": 1 })
 	exec ("tr.makePastCondition", tense, "sample_verb", { "person": 2 })
 	exec ("tr.makePastCondition", tense, "sample_verb", { "person": 3 })
@@ -2318,15 +2318,15 @@ for vrb in verbs:
 
 conn.close()
 
-print (tr.makeGenitive(u"araba"))
+print (tr.makeGenitive("araba"))
 print (tr.makeDative("araba"))
 print (tr.makeAblative("araba"))
-print (tr.makeAccusative(u"araba"))
+print (tr.makeAccusative("araba"))
 
-print (tr.makeGenitive(u"Cem", { "proper_noun": True} ))
+print (tr.makeGenitive("Cem", { "proper_noun": True} ))
 print (tr.makeDative("Cem", { "proper_noun": True} ))
 print (tr.makeAblative("Cem", { "proper_noun": True} ))
-print (tr.makeAccusative(u"Cem", { "proper_noun": True} ))
+print (tr.makeAccusative("Cem", { "proper_noun": True} ))
 
 
 print (tr.possessiveAffix("çanta", {"person": 1, "quantity": "singular"}))
