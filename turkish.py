@@ -692,10 +692,13 @@ class turkish:
 
 		if param.get("question", False) == True: 
 			if param.get("negative", False) == False:
-				if lastLetterIsVowel == False:
-					word = self.concat(word, minorHarmonyLetterFF)
+				if word in ["al", "kal"]:
+					word = self.concat(word, "ır")
+				else:
+					if lastLetterIsVowel == False:
+						word = self.concat(word, minorHarmonyLetterFF)
 
-				word = self.concat(word, "r")
+					word = self.concat(word, "r")
 
 				if param.get("quantity", "singular") == "singular":
 					if param.get("person", 3) == 1:
@@ -793,10 +796,13 @@ class turkish:
 						word = self.concat(word, minorHarmonyLetter)	
 		elif param.get("question", False) == False: 
 			if param.get("negative", False) == False:
-				if lastLetterIsVowel == False:
-					word = self.concat(word, minorHarmonyLetterFF) 
-				
-				word = self.concat(word, "r")
+				if word in ["al", "kal"]:
+					word = self.concat(word, "ır")
+				else:
+					if lastLetterIsVowel == False:
+						word = self.concat(word, minorHarmonyLetterFF)
+
+					word = self.concat(word, "r")
 
 				if param.get("quantity", "singular") == "singular":
 					if param.get("person", 3) == 1:
