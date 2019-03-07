@@ -3,7 +3,7 @@
 
 class turkish:
 	VOWELS = "aıoöuüei"
-	FRONT_VOWELS = "aıo"
+	FRONT_VOWELS = "aıou"
 	BACK_VOWELS = "eiöü"
 	HARD_CONSONANTS = "fstkçşhp"
 	DISCONTINIOUS_HARD_CONSONANTS = "pçtk"
@@ -14,10 +14,10 @@ class turkish:
 		"a": "ı"
 		, "e": "i"
 		, "ö": "ü"
-		, "o": ""
+		, "o": "u"
 		, "ı": "ı"
 		, "i": "i"
-		, "": ""
+		, "u": "u"
 		, "ü": "ü"
 	}
 	
@@ -25,12 +25,13 @@ class turkish:
 		"a": "a"
 		, "e": "e"
 		, "ö": "ü"
-		, "o": ""
+		, "o": "u"
 		, "ı": "ı"
 		, "i": "e"
-		, "": ""
+		, "u": "u"
 		, "ü": "e"
 	}
+	
 	
 	# The exception words which has non-Turkish origins donn't fit for standard Turkish Major Wovel Harmony
 	# beacuse of the vocal difference which doesn't exist in Turkish.
@@ -559,7 +560,7 @@ class turkish:
 				elif param.get("person", 3) == 2:
 					word = self.concat(word, " musun")
 				elif param.get("person", 3) == 3:
-					word = self.concat(word, " m")
+					word = self.concat(word, " mu")
 			elif param.get("quantity", "singular") == "plural":
 				if param.get("person", 3) == 1:
 					word = self.concat(word, " muyuz")
@@ -614,7 +615,7 @@ class turkish:
 				if param.get("person", 3) == 1:
 					word = self.concat(word, "y")
 					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
-					word = self.concat(word, "mu")
+					word = self.concat(word, "m")
 				elif param.get("person", 3) == 2:
 					word = self.concat(word, "s")
 					word = self.concat(word, self.MINOR_HARMONY[self.lastVowel(word)["letter"]])
@@ -718,7 +719,7 @@ class turkish:
 					elif param.get("person", 3) == 3:
 						word = self.concat(word, " ")
 						word = self.concat(word, "m")
-						word = self.concat(word, minorHarmonyLetter)				
+						word = self.concat(word, minorHarmonyLetter)
 				elif param.get("quantity", "singular") == "plural":
 					if param.get("person", 3) == 1:
 						word = self.concat(word, " ")
