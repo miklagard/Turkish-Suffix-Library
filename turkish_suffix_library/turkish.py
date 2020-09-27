@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from turkish_string import is_upper, make_lower, make_upper, concat, from_upper_or_lower, last_vowel, last_letter
-from consonants import EXCEPTION_MISSING, HARD_CONSONANTS, MINOR_HARMONY, EXCEPTION_WORDS, \
+from turkish_suffix_library.turkish_string import is_upper, make_lower, make_upper, concat, from_upper_or_lower, \
+    last_vowel, last_letter
+from turkish_suffix_library.consonants import EXCEPTION_MISSING, HARD_CONSONANTS, MINOR_HARMONY, EXCEPTION_WORDS, \
     VOWELS, MINOR_HARMONY_FOR_FUTURE
 
 
@@ -15,6 +16,7 @@ def make_plural(parameter_word: str, **kwargs) -> str:
         return concat(word, 'lar')
     else:
         return concat(word, 'ler')
+
 
 # -i hali
 def make_accusative(parameter_word, **kwargs):  # not finished yet
@@ -198,7 +200,7 @@ def possessive_affix(parameter_word, **kwargs):
         elif 'discontinuous_hard_consonant' in actual_last_letter:
             if actual_last_vowel['vowel_count'] > 1:
                 word = concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
-           
+
             if make_lower(word) in EXCEPTION_MISSING:
                 word = from_upper_or_lower(EXCEPTION_MISSING[make_lower(word)], word)
 
@@ -224,7 +226,7 @@ def possessive_affix(parameter_word, **kwargs):
             word = concat(word, minor_harmony_letter)
     else:
         if person == '1':
-            if not last_letter_is_vowel :
+            if not last_letter_is_vowel:
                 word = concat(word, minor_harmony_letter)
 
             word = concat(word, 'm')
@@ -247,6 +249,7 @@ def possessive_affix(parameter_word, **kwargs):
             word = concat(word, minor_harmony_letter)
 
     return word
+
 
 # Mastar eski
 def make_infinitive(parameter_word, **kwargs):
@@ -538,7 +541,7 @@ def make_present_simple(parameter_word, **kwargs):
                     word = concat(word, ' ')
                     word = concat(word, 'm')
                     word = concat(word, minor_harmony_letter)
-    elif not kwargs.get('question', False) :
+    elif not kwargs.get('question', False):
         if not kwargs.get('negative', False):
             if word in ['al', 'kal']:
                 word = concat(word, 'ır')
@@ -1066,7 +1069,8 @@ def make_command(parameter_word, **kwargs):
 
             if 'vowel' in actual_last_letter:
                 word = concat(word, 'y')
-            elif 'discontinuous_hard_consonant' in actual_last_letter and actual_last_vowel['vowel_count'] > 1 and kwargs.get(
+            elif 'discontinuous_hard_consonant' in actual_last_letter and actual_last_vowel[
+                'vowel_count'] > 1 and kwargs.get(
                     'negative', False) == False:
                 word = concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
 
@@ -1144,7 +1148,7 @@ def make_past(parameter_word, **kwargs):
             word = concat(word, minor)
             word = make_plural(word)
 
-    if kwargs.get('question', False) :
+    if kwargs.get('question', False):
         actual_last_vowel = last_vowel(word)
         minor = MINOR_HARMONY[last_vowel(word)['letter']]
 
@@ -1165,17 +1169,17 @@ def make_past_past(parameter_word, **kwargs):
             and kwargs.get('question', False) \
             and kwargs.get('quantity', 'singular') == 'plural':
         word = make_past(word,
-            person=3,
-            quantity='singular',
-            negative=kwargs.get('negative', False),
-        )
+                         person=3,
+                         quantity='singular',
+                         negative=kwargs.get('negative', False),
+                         )
     else:
         word = make_past(word,
-            person=3,
-            quantity='singular',
-            negative=kwargs.get('negative', False),
-            question=kwargs.get('question', False)
-        )
+                         person=3,
+                         quantity='singular',
+                         negative=kwargs.get('negative', False),
+                         question=kwargs.get('question', False)
+                         )
 
         word = concat(word, 'y')
 
@@ -1192,9 +1196,9 @@ def make_past_past(parameter_word, **kwargs):
             word = concat(word, 'i')
     else:
         word = make_past(word,
-            person=kwargs.get('person', 3),
-            quantity=kwargs.get('quantity', 'singular')
-        )
+                         person=kwargs.get('person', 3),
+                         quantity=kwargs.get('quantity', 'singular')
+                         )
 
     return word
 
@@ -1207,21 +1211,21 @@ def make_past_condition(parameter_word, **kwargs):
 
     if not kwargs.get('question', False):
         word = make_past(word,
-            person=3,
-            negative=kwargs.get('negative', False)
-        )
+                         person=3,
+                         negative=kwargs.get('negative', False)
+                         )
 
         word = concat(word, 'y')
 
         word = make_wish_condition(word,
-            person=kwargs.get('person', 3),
-            quantity=kwargs.get('quantity', 'singular')
-        )
+                                   person=kwargs.get('person', 3),
+                                   quantity=kwargs.get('quantity', 'singular')
+                                   )
     else:
         word = make_wish_condition(word,
-            person=3,
-            negative=kwargs.get('negative', False)
-        )
+                                   person=3,
+                                   negative=kwargs.get('negative', False)
+                                   )
 
         if kwargs.get('person', 3) == 3 and kwargs.get('quantity', 'singular') == 'plural':
             word = make_plural(word)
@@ -1261,29 +1265,29 @@ def make_past_past_perfect(parameter_wrod, **kwargs):
 
     if kwargs.get('person') == 3 and kwargs.get('quantity') == 'plural' and kwargs.get('question', False):
         word = make_past_perfect(word,
-            negative=kwargs.get('negative', False),
-            question=kwargs.get('question', False),
-            person=kwargs.get('person', 3),
-            quantity=kwargs.get('quantity', 'singular')
-        )
+                                 negative=kwargs.get('negative', False),
+                                 question=kwargs.get('question', False),
+                                 person=kwargs.get('person', 3),
+                                 quantity=kwargs.get('quantity', 'singular')
+                                 )
     else:
         word = make_past_perfect(word,
-            negative=kwargs.get('negative', False),
-            question=kwargs.get('question', False),
-        )
+                                 negative=kwargs.get('negative', False),
+                                 question=kwargs.get('question', False),
+                                 )
 
     if kwargs.get('question', False):
         word = concat(word, 'y')
 
     if kwargs.get('person') == 3 and kwargs.get('quantity') == 'plural' and kwargs.get('question', False):
         word = make_past(word,
-            person=kwargs.get('person', 3)
-        )
+                         person=kwargs.get('person', 3)
+                         )
     else:
         word = make_past(word,
-            person=kwargs.get('person', 3),
-            quantity=kwargs.get('quantity', 'singular')
-        )
+                         person=kwargs.get('person', 3),
+                         quantity=kwargs.get('quantity', 'singular')
+                         )
 
     return word
 
@@ -1298,10 +1302,10 @@ def make_past_perfect_past_perfect(paramater_word, **kwargs):
 
     if not kwargs.get('question', False):
         word = make_past_perfect(word,
-            person=kwargs.get('person', 3),
-            quantity=kwargs.get('quantity', 'singular'),
-            question=kwargs.get('question', False)
-        )
+                                 person=kwargs.get('person', 3),
+                                 quantity=kwargs.get('quantity', 'singular'),
+                                 question=kwargs.get('question', False)
+                                 )
     else:
         if kwargs.get('person', 3) == 3 and kwargs.get('quantity', 'singular') == 'plural':
             word = make_plural(word)
@@ -1321,9 +1325,9 @@ def make_past_perfect_past_perfect(paramater_word, **kwargs):
             word = concat(word, minor)
             word = concat(word, 'y')
             word = make_past_perfect(word,
-                person=kwargs.get('person', 3),
-                quantity=kwargs.get('quantity', 'singular')
-            )
+                                     person=kwargs.get('person', 3),
+                                     quantity=kwargs.get('quantity', 'singular')
+                                     )
     return word
 
 
@@ -1335,32 +1339,32 @@ def make_past_perfect_future(parameter_word, **kwargs):
 
     if kwargs.get('person') == 3 and kwargs.get('quantity') == 'plural' and kwargs.get('question', False):
         word = make_future(word,
-            negative=kwargs.get('negative', False),
-            question=kwargs.get('question', False),
-            person=kwargs.get('person', 3),
-            quantity=kwargs.get('quantity', 'singular')
-        )
+                           negative=kwargs.get('negative', False),
+                           question=kwargs.get('question', False),
+                           person=kwargs.get('person', 3),
+                           quantity=kwargs.get('quantity', 'singular')
+                           )
     else:
         word = make_future(word,
-            negative=kwargs.get('negative', False),
-            question=kwargs.get('question', False),
-        )
+                           negative=kwargs.get('negative', False),
+                           question=kwargs.get('question', False),
+                           )
 
     if kwargs.get('person') == 3 and kwargs.get('quantity') == 'plural' and kwargs.get('question', False):
         word = concat(word, 'm')
         word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
         word = concat(word, 'y')
         word = make_past_perfect(word,
-            person=kwargs.get('person', 3)
-        )
+                                 person=kwargs.get('person', 3)
+                                 )
     else:
         if kwargs.get('question', False):
             word = concat(word, 'y')
 
         word = make_past_perfect(word,
-            person=kwargs.get('person', 3),
-            quantity=kwargs.get('quantity', 'singular')
-        )
+                                 person=kwargs.get('person', 3),
+                                 quantity=kwargs.get('quantity', 'singular')
+                                 )
 
     return word
 
@@ -1373,32 +1377,32 @@ def make_past_future(parameter_word, **kwargs):
 
     if kwargs.get('person') == 3 and kwargs.get('quantity') == 'plural' and kwargs.get('question', False):
         word = make_future(word,
-            negative=kwargs.get('negative', False),
-            question=kwargs.get('question', False),
-            person=kwargs.get('person', 3),
-            quantity=kwargs.get('quantity', 'singular')
-        )
+                           negative=kwargs.get('negative', False),
+                           question=kwargs.get('question', False),
+                           person=kwargs.get('person', 3),
+                           quantity=kwargs.get('quantity', 'singular')
+                           )
     else:
         word = make_future(word,
-            negative=kwargs.get('negative', False),
-            question=kwargs.get('question', False)
-        )
+                           negative=kwargs.get('negative', False),
+                           question=kwargs.get('question', False)
+                           )
 
     if kwargs.get('person') == 3 and kwargs.get('quantity') == 'plural' and kwargs.get('question', False):
         word = concat(word, 'm')
         word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
         word = concat(word, 'y')
         word = make_past(word,
-            person=kwargs.get('person', 3)
-        )
+                         person=kwargs.get('person', 3)
+                         )
     else:
         if kwargs.get('question', False):
             word = concat(word, 'y')
 
         word = make_past(word,
-            person=kwargs.get('person', 3),
-            quantity=kwargs.get('quantity', 'singular')
-        )
+                         person=kwargs.get('person', 3),
+                         quantity=kwargs.get('quantity', 'singular')
+                         )
 
     return word
 

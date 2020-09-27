@@ -1,0 +1,13 @@
+README.md
+setup.py
+turkish_suffix_library/__init__.py
+turkish_suffix_library/consonants.py
+turkish_suffix_library/sample_verbs_list.py
+turkish_suffix_library/test_nouns.py
+turkish_suffix_library/test_verbs.py
+turkish_suffix_library/turkish.py
+turkish_suffix_library/turkish_string.py
+turkish_suffix_library.egg-info/PKG-INFO
+turkish_suffix_library.egg-info/SOURCES.txt
+turkish_suffix_library.egg-info/dependency_links.txt
+turkish_suffix_library.egg-info/top_level.txt

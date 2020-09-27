@@ -4,9 +4,10 @@ Turkish.py
 ### Turkish Suffix Library for Python
 
 ## Install 
+    pip install turkish-suffix-library
 
 ## Using
-    import turkish
+    from turkish_suffix_library import turkish
 
     print(turkish.make_genitive("Öykü", proper_noun=True))
     print(turkish.make_dative("Fatma", proper_noun=True))
