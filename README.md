@@ -6,25 +6,24 @@ Turkish.py
 ## Install 
 
 ## Using
-    
-    tr = turkish()
+    import turkish
 
-    print tr.makeGenitive("Öykü", { proper_noun : true } )
-    print tr.makeDative("Fatma", { proper_noun : true } )
-    print tr.makeDative("Yasin", { proper_noun : true } )
-    print tr.makeDative("ALİ", { proper_noun : true } )
-    print tr.makeAblative("Ali", { proper_noun : true } )
-    print tr.makeAccusative("Kaliningrad", { proper_noun : true } )
-    print tr.makeGenitive("ağaç", { proper_noun : false } )
-    print tr.makeAccusative("erik", { proper_noun : false } )
-    print tr.makeAccusative("Erik", { proper_noun : true } )
-    print tr.possessiveAffix("kavanoz", { person : "1", quantity : "singular" } )
-    print tr.possessiveAffix("kavanoz", {  person : "2", quantity : "singular"} )
-    print tr.possessiveAffix("kavanoz", {  person : "3", quantity : "singular"} )
-    print tr.possessiveAffix("halter", {  person : "1", quantity : "plural"} )
-    print tr.possessiveAffix("halter", {  person : "2", quantity : "plural"} )
-    print tr.possessiveAffix("halter", {  person : "3", quantity : "plural"} )
-    print tr.possessiveAffix("Kenya", {  person : "3", quantity : "plural"} )
+    print(turkish.make_genitive("Öykü", proper_noun=True))
+    print(turkish.make_dative("Fatma", proper_noun=True))
+    print(turkish.make_dative("Yasin", proper_noun=True))
+    print(turkish.make_dative("ALİ", proper_noun=True))
+    print(turkish.make_abblative("Ali", proper_noun=True  ))
+    print(turkish.make_accusative("Kaliningrad", proper_noun=True))
+    print(turkish.make_genitive("ağaç", proper_noun=False))
+    print(turkish.make_cccusative("erik", proper_noun=False))
+    print(turkish.make_accusative("Erik", proper_noun=True))
+    print(turkish.possessive_affix("kavanoz", person=1, quantity="singular"))
+    print(turkish.possessive_affix("kavanoz", person=2, quantity="singular"))
+    print(turkish.possessive_affix("kavanoz", person=3, quantity="singular"))
+    print(turkish.possessive_affix("halter", person=1, quantity="plural"))
+    print(turkish.possessive_affix("halter", person=2, quantity="plural"))
+    print(turkish.possessive_affix("halter", person=3, quantity=plural))
+    print(turkish.possessive_affix("Kenya", person=3, quantity=plural))
         
 # Output
     
