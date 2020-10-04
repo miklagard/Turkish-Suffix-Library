@@ -1,9 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from turkish_suffix_library.turkish_string import is_upper, make_lower, make_upper, concat, from_upper_or_lower, \
-    last_vowel, last_letter
-from turkish_suffix_library.consonants import EXCEPTION_MISSING, HARD_CONSONANTS, MINOR_HARMONY, EXCEPTION_WORDS, \
-    VOWELS, MINOR_HARMONY_FOR_FUTURE
+import turkish_suffix_library.turkish_string as turkish_string
+import turkish_suffix_library.consonants as consonants
 
 
 def make_plural(parameter_word: str, **kwargs) -> str:
@@ -12,43 +10,43 @@ def make_plural(parameter_word: str, **kwargs) -> str:
     if 'proper_noun' in kwargs:
         word = f'{word}\''
 
-    if last_vowel(word)['tone'] == 'front':
-        return concat(word, 'lar')
+    if turkish_string.last_vowel(word)['tone'] == 'front':
+        return turkish_string.concat(word, 'lar')
     else:
-        return concat(word, 'ler')
+        return turkish_string.concat(word, 'ler')
 
 
 # -i hali
-def make_accusative(parameter_word, **kwargs):  # not finished yet
-    # firslty exceptions for o (he/she/it)
+def make_accusative(parameter_word: str, **kwargs) -> str:  # not finished yet
+    # firstly exceptions for o (he/she/it)
     word = parameter_word
-    lower_word = make_lower(word)
+    lower_word = turkish_string.make_lower(word)
 
     proper_noun = kwargs.get('proper_noun', False)
 
     if lower_word == 'o':
         if proper_noun:
-            return_data = from_upper_or_lower('O\'nu', word)
+            return_data = turkish_string.from_upper_or_lower('O\'nu', word)
         else:
-            return_data = from_upper_or_lower('onu', word)
+            return_data = turkish_string.from_upper_or_lower('onu', word)
     else:
-        if lower_word in EXCEPTION_MISSING and proper_noun == True:
-            word = from_upper_or_lower(EXCEPTION_MISSING[lower_word], word)
-            lower_word = make_lower(word)
+        if lower_word in consonants.EXCEPTION_MISSING and proper_noun:
+            word = turkish_string.from_upper_or_lower(consonants.EXCEPTION_MISSING[lower_word], word)
 
-        actual_last_letter = last_letter(word)
-        actual_last_vowel = last_vowel(word)
+        actual_last_letter = turkish_string.last_letter(word)
+        actual_last_vowel = turkish_string.last_vowel(word)
 
         if proper_noun:
             word += '\''
 
         if 'vowel' in actual_last_letter:
-            word = concat(word, 'y')
-        elif 'discontinuous_hard_consonant' in actual_last_letter and proper_noun == False:
-            if actual_last_vowel['vowel_count'] > 1:
-                word = concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
+            word = turkish_string.concat(word, 'y')
+        elif 'discontinuous_hard_consonant' in actual_last_letter and not proper_noun:
+            word = turkish_string.concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
+        elif parameter_word in consonants.ARABIC_T:
+            word = turkish_string.concat(word[0:len(word) - 1], 'd')
 
-        word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
+        word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
 
         return_data = word
 
@@ -62,38 +60,37 @@ def make_dative(parameter_word: str, **kwargs) -> str:
 
     proper_noun = kwargs.get('proper_noun', False)
 
-    lower_word = make_lower(word)
+    lower_word = turkish_string.make_lower(word)
 
     if proper_noun:
         word += '\''
 
     if lower_word == 'ben' and proper_noun == False:
-        return_data = from_upper_or_lower('bana', word)
+        return_data = turkish_string.from_upper_or_lower('bana', word)
     elif lower_word == 'sen' and proper_noun == False:
-        return_data = from_upper_or_lower('sana', word)
+        return_data = turkish_string.from_upper_or_lower('sana', word)
     else:
-        if lower_word in EXCEPTION_MISSING and proper_noun == False:
-            word = from_upper_or_lower(EXCEPTION_MISSING[lower_word], word)
-            lower_word = make_lower(word)
+        if lower_word in consonants.EXCEPTION_MISSING and proper_noun == False:
+            word = turkish_string.from_upper_or_lower(consonants.EXCEPTION_MISSING[lower_word], word)
 
-        actual_last_letter = last_letter(word)
-        actual_last_vowel = last_vowel(word)
+        actual_last_letter = turkish_string.last_letter(word)
+        actual_last_vowel = turkish_string.last_vowel(word)
 
         if 'vowel' in actual_last_letter:
-            word = concat(word, 'y')
+            word = turkish_string.concat(word, 'y')
         elif 'discontinuous_hard_consonant_for_suffix' in actual_last_letter:
             if actual_last_vowel['vowel_count'] > 1 and proper_noun == False:
-                word = concat(word[0:len(word) - 1], actual_last_letter['soften_consonant_for_suffix'])
+                word = turkish_string.concat(word[0:len(word) - 1], actual_last_letter['soften_consonant_for_suffix'])
 
         if actual_last_vowel['tone'] == 'front':
-            word = concat(word, 'a')
+            word = turkish_string.concat(word, 'a')
         else:
-            word = concat(word, 'e')
+            word = turkish_string.concat(word, 'e')
 
         return_data = word
 
     if return_data.isupper():
-        return_data = make_upper(return_data)
+        return_data = turkish_string.make_upper(return_data)
 
     return return_data
 
@@ -102,28 +99,28 @@ def make_dative(parameter_word: str, **kwargs) -> str:
 def make_genitive(parameter_word: str, **kwargs) -> str:
     word = parameter_word
 
-    actual_last_letter = last_letter(word)
-    actual_last_vowel = last_vowel(word)
+    actual_last_letter = turkish_string.last_letter(word)
+    actual_last_vowel = turkish_string.last_vowel(word)
 
-    lower_word = make_lower(word)
+    lower_word = turkish_string.make_lower(word)
     proper_noun = kwargs.get('proper_noun', False)
 
     if proper_noun:
         word += '\''
 
-    if lower_word in EXCEPTION_MISSING:
-        word = from_upper_or_lower(EXCEPTION_MISSING[lower_word], word)
-        lower_word = make_lower(word)
+    if lower_word in consonants.EXCEPTION_MISSING:
+        word = turkish_string.from_upper_or_lower(consonants.EXCEPTION_MISSING[lower_word], word)
+        lower_word = turkish_string.make_lower(word)
 
     if 'hard_consonant' in actual_last_letter:
-        word = concat(word, 't')
+        word = turkish_string.concat(word, 't')
     else:
-        word = concat(word, 'd')
+        word = turkish_string.concat(word, 'd')
 
-    if actual_last_vowel['tone'] == 'front' and not word in EXCEPTION_WORDS:
-        word = concat(word, 'a')
+    if actual_last_vowel['tone'] == 'front' and not word in consonants.MAJOR_HAMONY_EXCEPTIONS:
+        word = turkish_string.concat(word, 'a')
     else:
-        word = concat(word, 'e')
+        word = turkish_string.concat(word, 'e')
 
     return word
 
@@ -132,22 +129,22 @@ def make_genitive(parameter_word: str, **kwargs) -> str:
 def make_ablative(parameter_word, **kwargs):
     word = parameter_word
 
-    actual_last_letter = last_letter(word)
-    actual_last_vowel = last_vowel(word)
-    proper_noun = kwargs.get('proper_noun', False)
+    actual_last_letter = turkish_string.last_letter(word)
+    actual_last_vowel = turkish_string.last_vowel(word)
+    proper_noun = kwargs.get('proper_noun')
 
     if proper_noun:
         word += '\''
 
-    if actual_last_letter['letter'] in HARD_CONSONANTS:
-        word = concat(word, 't')
+    if actual_last_letter['letter'] in consonants.HARD_CONSONANTS:
+        word = turkish_string.concat(word, 't')
     else:
-        word = concat(word, 'd')
+        word = turkish_string.concat(word, 'd')
 
     if actual_last_vowel['tone'] == 'front':
-        word = concat(word, 'an')
+        word = turkish_string.concat(word, 'an')
     else:
-        word = concat(word, 'en')
+        word = turkish_string.concat(word, 'en')
 
     return_data = word
 
@@ -158,22 +155,22 @@ def make_ablative(parameter_word, **kwargs):
 def make_locative(parameter_word, **kwargs):
     word = parameter_word
 
-    actual_last_letter = last_letter(word)
-    actual_last_vowel = last_vowel(word)
+    actual_last_letter = turkish_string.last_letter(word)
+    actual_last_vowel = turkish_string.last_vowel(word)
     proper_noun = kwargs.get('proper_noun', False)
 
     if proper_noun:
         word += '\''
 
-    if actual_last_letter['letter'] in HARD_CONSONANTS:
-        word = concat(word, 't')
+    if actual_last_letter['letter'] in consonants.HARD_CONSONANTS:
+        word = turkish_string.concat(word, 't')
     else:
-        word = concat(word, 'd')
+        word = turkish_string.concat(word, 'd')
 
     if actual_last_vowel['tone'] == 'front':
-        word = concat(word, 'a')
+        word = turkish_string.concat(word, 'a')
     else:
-        word = concat(word, 'e')
+        word = turkish_string.concat(word, 'e')
 
     return_data = word
 
@@ -186,67 +183,70 @@ def possessive_affix(parameter_word, **kwargs):
     word = parameter_word
 
     person = str(kwargs.get('person', 3))
-    quantity = kwargs.get('quantity', 'singular')
+    plural = kwargs.get('plural')
 
     proper_noun = kwargs.get('proper_noun', False)
 
-    if not (person == '3' and quantity == 'plural'):
-        actual_last_letter = last_letter(word)
-        actual_last_vowel = last_vowel(word)
+    if not (person == '3' and plural):
+        actual_last_letter = turkish_string.last_letter(word)
+        actual_last_vowel = turkish_string.last_vowel(word)
 
         if proper_noun:
             word += '\''
 
         elif 'discontinuous_hard_consonant' in actual_last_letter:
             if actual_last_vowel['vowel_count'] > 1:
-                word = concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
+                word = turkish_string.concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
 
-            if make_lower(word) in EXCEPTION_MISSING:
-                word = from_upper_or_lower(EXCEPTION_MISSING[make_lower(word)], word)
+            if turkish_string.make_lower(word) in consonants.EXCEPTION_MISSING:
+                word = turkish_string.from_upper_or_lower(
+                    consonants.EXCEPTION_MISSING[turkish_string.make_lower(word)],
+                    word
+                )
 
-    actual_last_letter = last_letter(word)
-    actual_last_vowel = last_vowel(word)
+    actual_last_letter = turkish_string.last_letter(word)
+    actual_last_vowel = turkish_string.last_vowel(word)
 
-    last_letter_is_vowel = actual_last_letter['letter'] in VOWELS
+    turkish_string.last_letter_is_vowel = actual_last_letter['letter'] in consonants.VOWELS
 
-    minor_harmony_letter = MINOR_HARMONY[actual_last_vowel['letter']]
+    minor_harmony_letter = consonants.MINOR_HARMONY[actual_last_vowel['letter']]
 
-    if quantity == 'singular':
-        if not last_letter_is_vowel:
-            word = concat(word, minor_harmony_letter)
+    if not plural:
+        if not turkish_string.last_letter_is_vowel:
+            word = turkish_string.concat(word, minor_harmony_letter)
 
         if person == '1':
-            word = concat(word, 'm')
+            word = turkish_string.concat(word, 'm')
 
         elif person == '2':
-            word = concat(word, 'n')
+            word = turkish_string.concat(word, 'n')
 
         elif person == '3':
-            word = concat(word, 's')
-            word = concat(word, minor_harmony_letter)
+            word = turkish_string.concat(word, 's')
+            word = turkish_string.concat(word, minor_harmony_letter)
     else:
         if person == '1':
-            if not last_letter_is_vowel:
-                word = concat(word, minor_harmony_letter)
+            if not turkish_string.last_letter_is_vowel:
+                word = turkish_string.concat(word, minor_harmony_letter)
 
-            word = concat(word, 'm')
-            word = concat(word, minor_harmony_letter)
-            word = concat(word, 'z')
+            word = turkish_string.concat(word, 'm')
+            word = turkish_string.concat(word, minor_harmony_letter)
+            word = turkish_string.concat(word, 'z')
 
         elif person == '2':
-            if not last_letter_is_vowel:
-                word = concat(word, minor_harmony_letter)
+            if not turkish_string.last_letter_is_vowel:
+                word = turkish_string.concat(word, minor_harmony_letter)
 
-            word = concat(word, 'n')
-            word = concat(word, minor_harmony_letter)
-            word = concat(word, 'z')
+            word = turkish_string.concat(word, 'n')
+            word = turkish_string.concat(word, minor_harmony_letter)
+            word = turkish_string.concat(word, 'z')
         else:
 
-            if make_lower(word) == 'ism':
-                word = from_upper_or_lower('isim', word)
+            if turkish_string.make_lower(word) == 'ism':
+                word = turkish_string.from_upper_or_lower('isim', word)
 
             word = make_plural(word)
-            word = concat(word, minor_harmony_letter)
+            word = turkish_string.concat(word, minor_harmony_letter)
 
     return word
 
@@ -256,15 +256,15 @@ def make_infinitive(parameter_word, **kwargs):
     word = parameter_word
 
     if kwargs.get('negative', False):
-        if last_vowel(word)['tone'] == 'front':
-            return_data = concat(word, 'mamak')
+        if turkish_string.last_vowel(word)['tone'] == 'front':
+            return_data = turkish_string.concat(word, 'mamak')
         else:
-            return_data = concat(word, 'memek')
+            return_data = turkish_string.concat(word, 'memek')
     else:
-        if last_vowel(word)['tone'] == 'front':
-            return_data = concat(word, 'mak')
+        if turkish_string.last_vowel(word)['tone'] == 'front':
+            return_data = turkish_string.concat(word, 'mak')
         else:
-            return_data = concat(word, 'mek')
+            return_data = turkish_string.concat(word, 'mek')
 
     return return_data
 
@@ -275,59 +275,59 @@ def make_infinitive(parameter_word, **kwargs):
 def make_present_continuous(parameter_word, **kwargs):
     word = parameter_word
 
-    actual_last_letter = last_letter(word)
-    actual_last_vowel = last_vowel(word)
+    actual_last_letter = turkish_string.last_letter(word)
+    actual_last_vowel = turkish_string.last_vowel(word)
 
-    last_letter_is_vowel = actual_last_letter['letter'] in VOWELS
+    turkish_string.last_letter_is_vowel = actual_last_letter['letter'] in consonants.VOWELS
 
     if not kwargs.get('negative', False):
         # if 'discontinuous_hard_consonant' in actual_last_letter and actual_last_vowel['vowel_count'] > 1:
-        #	word = concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
+        #	word = turkish_string.concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
 
         if word == 'git':
             word = 'gid'
 
-        if last_letter_is_vowel:
-            word = concat(word[:-1], MINOR_HARMONY[word[-1]])
+        if turkish_string.last_letter_is_vowel:
+            word = turkish_string.concat(word[:-1], consonants.MINOR_HARMONY[word[-1]])
         else:
-            word = concat(word, MINOR_HARMONY[actual_last_vowel['letter']])
+            word = turkish_string.concat(word, consonants.MINOR_HARMONY[actual_last_vowel['letter']])
     else:
-        word = concat(word, 'm')
-        word = concat(word, MINOR_HARMONY[actual_last_vowel['letter']])
+        word = turkish_string.concat(word, 'm')
+        word = turkish_string.concat(word, consonants.MINOR_HARMONY[actual_last_vowel['letter']])
 
-    word = concat(word, 'yor')
+    word = turkish_string.concat(word, 'yor')
 
-    if kwargs.get('question', False):
-        if kwargs.get('quantity', 'singular') == 'singular':
+    if kwargs.get('question'):
+        if not kwargs.get('plural'):
             if kwargs.get('person', 3) == 1:
-                word = concat(word, ' muyum')
+                word = turkish_string.concat(word, ' muyum')
             elif kwargs.get('person', 3) == 2:
-                word = concat(word, ' musun')
+                word = turkish_string.concat(word, ' musun')
             elif kwargs.get('person', 3) == 3:
-                word = concat(word, ' mu')
-        elif kwargs.get('quantity', 'singular') == 'plural':
+                word = turkish_string.concat(word, ' mu')
+        elif kwargs.get('plural'):
             if kwargs.get('person', 3) == 1:
-                word = concat(word, ' muyuz')
+                word = turkish_string.concat(word, ' muyuz')
             elif kwargs.get('person', 3) == 2:
-                word = concat(word, ' musunuz')
+                word = turkish_string.concat(word, ' musunuz')
             elif kwargs.get('person', 3) == 3:
                 word = make_plural(word)
-                word = concat(word, ' m')
-                if last_vowel(word)['tone'] == 'front':
-                    word = concat(word, 'ı')
+                word = turkish_string.concat(word, ' m')
+                if turkish_string.last_vowel(word)['tone'] == 'front':
+                    word = turkish_string.concat(word, 'ı')
                 else:
-                    word = concat(word, 'i')
+                    word = turkish_string.concat(word, 'i')
     else:
-        if kwargs.get('quantity', 'singular') == 'singular':
+        if not kwargs.get('plural'):
             if kwargs.get('person', 3) == 1:
-                word = concat(word, 'um')
+                word = turkish_string.concat(word, 'um')
             elif kwargs.get('person', 3) == 2:
-                word = concat(word, 'sun')
-        elif kwargs.get('quantity', 'singular') == 'plural':
+                word = turkish_string.concat(word, 'sun')
+        elif kwargs.get('plural'):
             if kwargs.get('person', 3) == 1:
-                word = concat(word, 'uz')
+                word = turkish_string.concat(word, 'uz')
             elif kwargs.get('person', 3) == 2:
-                word = concat(word, 'sunuz')
+                word = turkish_string.concat(word, 'sunuz')
             elif kwargs.get('person', 3) == 3:
                 word = make_plural(word)
 
@@ -342,79 +342,79 @@ def make_present_continuous_alternative(parameter_word, **kwargs):
     word = parameter_word
 
     if kwargs.get('negative', False):
-        if last_vowel(word)['tone'] == 'front':
-            word = concat(word, 'ma')
+        if turkish_string.last_vowel(word)['tone'] == 'front':
+            word = turkish_string.concat(word, 'ma')
         else:
-            word = concat(word, 'me')
+            word = turkish_string.concat(word, 'me')
 
     word = make_infinitive(word)
 
-    if last_vowel(word)['tone'] == 'front':
-        word = concat(word, 'ta')
+    if turkish_string.last_vowel(word)['tone'] == 'front':
+        word = turkish_string.concat(word, 'ta')
     else:
-        word = concat(word, 'te')
+        word = turkish_string.concat(word, 'te')
 
     if not kwargs.get('question', False):
-        if kwargs.get('quantity', 'singular') == 'singular':
+        if not kwargs.get('plural'):
             if kwargs.get('person', 3) == 1:
-                word = concat(word, 'y')
-                word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
-                word = concat(word, 'm')
+                word = turkish_string.concat(word, 'y')
+                word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
+                word = turkish_string.concat(word, 'm')
             elif kwargs.get('person', 3) == 2:
-                word = concat(word, 's')
-                word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
-                word = concat(word, 'n')
-        elif kwargs.get('quantity', 'singular') == 'plural':
+                word = turkish_string.concat(word, 's')
+                word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
+                word = turkish_string.concat(word, 'n')
+        elif kwargs.get('plural'):
             if kwargs.get('person', 3) == 1:
-                word = concat(word, 'y')
-                word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
-                word = concat(word, 'z')
+                word = turkish_string.concat(word, 'y')
+                word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
+                word = turkish_string.concat(word, 'z')
             elif kwargs.get('person', 3) == 2:
-                word = concat(word, 's')
-                word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
-                word = concat(word, 'n')
-                word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
-                word = concat(word, 'z')
+                word = turkish_string.concat(word, 's')
+                word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
+                word = turkish_string.concat(word, 'n')
+                word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
+                word = turkish_string.concat(word, 'z')
             elif kwargs.get('person', 3) == 3:
                 word = make_plural(word)
     elif kwargs.get('question', False):
-        if kwargs.get('quantity', 'singular') == 'singular':
+        if not kwargs.get('plural'):
             if kwargs.get('person', 3) == 1:
-                word = concat(word, ' ')
-                word = concat(word, 'm')
-                word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
-                word = concat(word, 'y')
-                word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
-                word = concat(word, 'm')
+                word = turkish_string.concat(word, ' ')
+                word = turkish_string.concat(word, 'm')
+                word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
+                word = turkish_string.concat(word, 'y')
+                word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
+                word = turkish_string.concat(word, 'm')
             elif kwargs.get('person', 3) == 2:
-                word = concat(word, ' ')
-                word = concat(word, 'm')
-                word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
-                word = concat(word, 's')
-                word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
-                word = concat(word, 'n')
-        elif kwargs.get('quantity', 'singular') == 'plural':
+                word = turkish_string.concat(word, ' ')
+                word = turkish_string.concat(word, 'm')
+                word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
+                word = turkish_string.concat(word, 's')
+                word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
+                word = turkish_string.concat(word, 'n')
+        elif kwargs.get('plural'):
             if kwargs.get('person', 3) == 1:
-                word = concat(word, ' ')
-                word = concat(word, 'm')
-                word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
-                word = concat(word, 'y')
-                word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
-                word = concat(word, 'z')
+                word = turkish_string.concat(word, ' ')
+                word = turkish_string.concat(word, 'm')
+                word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
+                word = turkish_string.concat(word, 'y')
+                word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
+                word = turkish_string.concat(word, 'z')
             elif kwargs.get('person', 3) == 2:
-                word = concat(word, ' ')
-                word = concat(word, 'm')
-                word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
-                word = concat(word, 's')
-                word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
-                word = concat(word, 'n')
-                word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
-                word = concat(word, 'z')
+                word = turkish_string.concat(word, ' ')
+                word = turkish_string.concat(word, 'm')
+                word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
+                word = turkish_string.concat(word, 's')
+                word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
+                word = turkish_string.concat(word, 'n')
+                word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
+                word = turkish_string.concat(word, 'z')
             elif kwargs.get('person', 3) == 3:
                 word = make_plural(word)
-                word = concat(word, ' ')
-                word = concat(word, 'm')
-                word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
+                word = turkish_string.concat(word, ' ')
+                word = turkish_string.concat(word, 'm')
+                word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
 
     return word
 
@@ -422,197 +422,197 @@ def make_present_continuous_alternative(parameter_word, **kwargs):
 # Geniş zaman
 def make_present_simple(parameter_word, **kwargs):
     word = parameter_word
-    actual_last_letter = last_letter(word)
-    actual_last_vowel = last_vowel(word)
+    actual_last_letter = turkish_string.last_letter(word)
+    actual_last_vowel = turkish_string.last_vowel(word)
 
-    last_letter_is_vowel = actual_last_letter['letter'] in VOWELS
+    turkish_string.last_letter_is_vowel = actual_last_letter['letter'] in consonants.VOWELS
 
-    minor_harmony_letter = MINOR_HARMONY[actual_last_vowel['letter']]
-    minor_harmony_letterFF = MINOR_HARMONY_FOR_FUTURE[actual_last_vowel['letter']]
-    minorHA = MINOR_HARMONY_FOR_FUTURE[minor_harmony_letter]
+    minor_harmony_letter = consonants.MINOR_HARMONY[actual_last_vowel['letter']]
+    minor_harmony_letterFF = consonants.MINOR_HARMONY_FOR_FUTURE[actual_last_vowel['letter']]
+    minorHA = consonants.MINOR_HARMONY_FOR_FUTURE[minor_harmony_letter]
 
     if not kwargs.get('negative', False):
         if 'discontinuous_hard_consonant' in actual_last_letter and actual_last_vowel['vowel_count'] > 1:
-            word = concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
+            word = turkish_string.concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
         if word == 'git':
             word = 'gid'
 
     if kwargs.get('question', False):
         if not kwargs.get('negative', False):
             if word in ['al', 'kal']:
-                word = concat(word, 'ır')
+                word = turkish_string.concat(word, 'ır')
             else:
-                if not last_letter_is_vowel:
-                    word = concat(word, minor_harmony_letterFF)
+                if not turkish_string.last_letter_is_vowel:
+                    word = turkish_string.concat(word, minor_harmony_letterFF)
 
-                word = concat(word, 'r')
+                word = turkish_string.concat(word, 'r')
 
-            if kwargs.get('quantity', 'singular') == 'singular':
+            if not kwargs.get('plural'):
                 if kwargs.get('person', 3) == 1:
-                    word = concat(word, ' ')
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'y')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'm')
+                    word = turkish_string.concat(word, ' ')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'y')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'm')
                 elif kwargs.get('person', 3) == 2:
-                    word = concat(word, ' ')
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 's')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'n')
+                    word = turkish_string.concat(word, ' ')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 's')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'n')
                 elif kwargs.get('person', 3) == 3:
-                    word = concat(word, ' ')
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letter)
-            elif kwargs.get('quantity', 'singular') == 'plural':
+                    word = turkish_string.concat(word, ' ')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+            elif kwargs.get('plural'):
                 if kwargs.get('person', 3) == 1:
-                    word = concat(word, ' ')
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'y')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'z')
+                    word = turkish_string.concat(word, ' ')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'y')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'z')
                 elif kwargs.get('person', 3) == 2:
-                    word = concat(word, ' ')
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 's')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'n')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'z')
+                    word = turkish_string.concat(word, ' ')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 's')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'n')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'z')
                 elif kwargs.get('person', 3) == 3:
                     word = make_plural(word)
-                    word = concat(word, ' ')
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, ' ')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letter)
         elif kwargs.get('negative', False) == True:
-            actual_last_vowel = last_vowel(word)
+            actual_last_vowel = turkish_string.last_vowel(word)
 
-            if last_vowel(word)['tone'] == 'front':
+            if turkish_string.last_vowel(word)['tone'] == 'front':
                 minor_harmony_letterFF = 'a'
             else:
                 minor_harmony_letterFF = 'e'
 
-            word = concat(word, 'm')
-            word = concat(word, minor_harmony_letterFF)
-            word = concat(word, 'z')
+            word = turkish_string.concat(word, 'm')
+            word = turkish_string.concat(word, minor_harmony_letterFF)
+            word = turkish_string.concat(word, 'z')
 
-            if kwargs.get('quantity', 'singular') == 'singular':
+            if not kwargs.get('plural'):
                 if kwargs.get('person', 3) == 1:
-                    word = concat(word, ' ')
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'y')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'm')
+                    word = turkish_string.concat(word, ' ')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'y')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'm')
                 elif kwargs.get('person', 3) == 2:
-                    word = concat(word, ' ')
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 's')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'n')
+                    word = turkish_string.concat(word, ' ')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 's')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'n')
                 elif kwargs.get('person', 3) == 3:
-                    word = concat(word, ' ')
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letter)
-            elif kwargs.get('quantity', 'singular') == 'plural':
+                    word = turkish_string.concat(word, ' ')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+            elif kwargs.get('plural'):
                 if kwargs.get('person', 3) == 1:
-                    word = concat(word, ' ')
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'y')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'z')
+                    word = turkish_string.concat(word, ' ')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'y')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'z')
                 elif kwargs.get('person', 3) == 2:
-                    word = concat(word, ' ')
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 's')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'n')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'z')
+                    word = turkish_string.concat(word, ' ')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 's')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'n')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'z')
                 elif kwargs.get('person', 3) == 3:
                     word = make_plural(word)
-                    word = concat(word, ' ')
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, ' ')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letter)
     elif not kwargs.get('question', False):
         if not kwargs.get('negative', False):
             if word in ['al', 'kal']:
-                word = concat(word, 'ır')
+                word = turkish_string.concat(word, 'ır')
             else:
-                if not last_letter_is_vowel:
-                    word = concat(word, minor_harmony_letterFF)
+                if not turkish_string.last_letter_is_vowel:
+                    word = turkish_string.concat(word, minor_harmony_letterFF)
 
-                word = concat(word, 'r')
+                word = turkish_string.concat(word, 'r')
 
-            if kwargs.get('quantity', 'singular') == 'singular':
+            if not kwargs.get('plural'):
                 if kwargs.get('person', 3) == 1:
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'm')
                 elif kwargs.get('person', 3) == 2:
-                    word = concat(word, 's')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'n')
-            elif kwargs.get('quantity', 'singular') == 'plural':
+                    word = turkish_string.concat(word, 's')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'n')
+            elif kwargs.get('plural'):
                 if kwargs.get('person', 3) == 1:
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'z')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'z')
                 elif kwargs.get('person', 3) == 2:
-                    word = concat(word, 's')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'n')
-                    word = concat(word, minor_harmony_letter)
-                    word = concat(word, 'z')
+                    word = turkish_string.concat(word, 's')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'n')
+                    word = turkish_string.concat(word, minor_harmony_letter)
+                    word = turkish_string.concat(word, 'z')
                 elif kwargs.get('person', 3) == 3:
                     word = make_plural(word)
         elif kwargs.get('negative', False) == True:
-            if last_vowel(word)['tone'] == 'front':
+            if turkish_string.last_vowel(word)['tone'] == 'front':
                 minor_harmony_letterFF = 'a'
             else:
                 minor_harmony_letterFF = 'e'
 
-            if kwargs.get('quantity', 'singular') == 'singular':
+            if not kwargs.get('plural'):
                 if kwargs.get('person', 3) == 1:
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letterFF)
-                    word = concat(word, 'm')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letterFF)
+                    word = turkish_string.concat(word, 'm')
                 elif kwargs.get('person', 3) == 2:
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letterFF)
-                    word = concat(word, 'z')
-                    word = concat(word, 's')
-                    word = concat(word, MINOR_HARMONY[minorHA])
-                    word = concat(word, 'n')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letterFF)
+                    word = turkish_string.concat(word, 'z')
+                    word = turkish_string.concat(word, 's')
+                    word = turkish_string.concat(word, consonants.MINOR_HARMONY[minorHA])
+                    word = turkish_string.concat(word, 'n')
                 elif kwargs.get('person', 3) == 3:
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letterFF)
-                    word = concat(word, 'z')
-            elif kwargs.get('quantity', 'singular') == 'plural':
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letterFF)
+                    word = turkish_string.concat(word, 'z')
+            elif kwargs.get('plural'):
                 if kwargs.get('person', 3) == 1:
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letterFF)
-                    word = concat(word, 'y')
-                    word = concat(word, MINOR_HARMONY[minorHA])
-                    word = concat(word, 'z')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letterFF)
+                    word = turkish_string.concat(word, 'y')
+                    word = turkish_string.concat(word, consonants.MINOR_HARMONY[minorHA])
+                    word = turkish_string.concat(word, 'z')
                 elif kwargs.get('person', 3) == 2:
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letterFF)
-                    word = concat(word, 'z')
-                    word = concat(word, 's')
-                    word = concat(word, MINOR_HARMONY[minorHA])
-                    word = concat(word, 'n')
-                    word = concat(word, MINOR_HARMONY[minorHA])
-                    word = concat(word, 'z')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letterFF)
+                    word = turkish_string.concat(word, 'z')
+                    word = turkish_string.concat(word, 's')
+                    word = turkish_string.concat(word, consonants.MINOR_HARMONY[minorHA])
+                    word = turkish_string.concat(word, 'n')
+                    word = turkish_string.concat(word, consonants.MINOR_HARMONY[minorHA])
+                    word = turkish_string.concat(word, 'z')
                 elif kwargs.get('person', 3) == 3:
-                    word = concat(word, 'm')
-                    word = concat(word, minor_harmony_letterFF)
-                    word = concat(word, 'z')
+                    word = turkish_string.concat(word, 'm')
+                    word = turkish_string.concat(word, minor_harmony_letterFF)
+                    word = turkish_string.concat(word, 'z')
                     word = make_plural(word)
 
     return word
@@ -623,13 +623,13 @@ def make_future(parameter_word, **kwargs):
     word = parameter_word
 
     if kwargs.get('negative', False):
-        if last_vowel(word)['tone'] == 'front':
-            word = concat(word, 'ma')
+        if turkish_string.last_vowel(word)['tone'] == 'front':
+            word = turkish_string.concat(word, 'ma')
         else:
-            word = concat(word, 'me')
+            word = turkish_string.concat(word, 'me')
 
-    actual_last_letter = last_letter(word)
-    actual_last_vowel = last_vowel(word)
+    actual_last_letter = turkish_string.last_letter(word)
+    actual_last_vowel = turkish_string.last_vowel(word)
 
     if 'vowel' in actual_last_letter:
         if word == 'de':
@@ -637,176 +637,176 @@ def make_future(parameter_word, **kwargs):
         elif word == 'ye':
             word = 'yi'
 
-        word = concat(word, 'y')
+        word = turkish_string.concat(word, 'y')
     elif 'discontinuous_hard_consonant' in actual_last_letter \
             and actual_last_vowel['vowel_count'] > 1 \
             and not kwargs.get('negative', False):
-        word = concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
+        word = turkish_string.concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
 
     if not kwargs.get('negative', False):
         if word == 'git':
             word = 'gid'
 
     if kwargs.get('question', False):
-        if last_vowel(word)['tone'] == 'front':
-            if kwargs.get('person', 3) == 3 and kwargs.get('quantity', 'singular') == 'plural':
-                word = concat(word, 'acaklar ')
+        if turkish_string.last_vowel(word)['tone'] == 'front':
+            if kwargs.get('person', 3) == 3 and kwargs.get('plural'):
+                word = turkish_string.concat(word, 'acaklar ')
             else:
-                word = concat(word, 'acak ')
+                word = turkish_string.concat(word, 'acak ')
 
-            if kwargs.get('quantity', 'singular') == 'singular':
+            if not kwargs.get('plural'):
                 if kwargs.get('person', 3) == 1:
-                    word = concat(word, 'mıyım')
+                    word = turkish_string.concat(word, 'mıyım')
                 elif kwargs.get('person', 3) == 2:
-                    word = concat(word, 'mısın')
+                    word = turkish_string.concat(word, 'mısın')
                 elif kwargs.get('person', 3) == 3:
-                    word = concat(word, 'mı')
-            elif kwargs.get('quantity', 'singular') == 'plural':
+                    word = turkish_string.concat(word, 'mı')
+            elif kwargs.get('plural'):
                 if kwargs.get('person', 3) == 1:
-                    word = concat(word, 'mıyız')
+                    word = turkish_string.concat(word, 'mıyız')
                 elif kwargs.get('person', 3) == 2:
-                    word = concat(word, 'mısınız')
+                    word = turkish_string.concat(word, 'mısınız')
                 elif kwargs.get('person', 3) == 3:
-                    word = concat(word, 'mı')
+                    word = turkish_string.concat(word, 'mı')
         else:
-            if kwargs.get('person', 3) == 3 and kwargs.get('quantity', 'singular') == 'plural':
-                word = concat(word, 'ecekler ')
+            if kwargs.get('person', 3) == 3 and kwargs.get('plural'):
+                word = turkish_string.concat(word, 'ecekler ')
             else:
-                word = concat(word, 'ecek ')
+                word = turkish_string.concat(word, 'ecek ')
 
-            if kwargs.get('quantity', 'singular') == 'singular':
+            if not kwargs.get('plural'):
                 if kwargs.get('person', 3) == 1:
-                    word = concat(word, 'miyim')
+                    word = turkish_string.concat(word, 'miyim')
                 elif kwargs.get('person', 3) == 2:
-                    word = concat(word, 'misin')
+                    word = turkish_string.concat(word, 'misin')
                 elif kwargs.get('person', 3) == 3:
-                    word = concat(word, 'mi')
-            elif kwargs.get('quantity', 'singular'):
+                    word = turkish_string.concat(word, 'mi')
+            else:
                 if kwargs.get('person', 3) == 1:
-                    word = concat(word, 'miyiz')
+                    word = turkish_string.concat(word, 'miyiz')
                 elif kwargs.get('person', 3) == 2:
-                    word = concat(word, 'misiniz')
+                    word = turkish_string.concat(word, 'misiniz')
                 elif kwargs.get('person', 3) == 3:
-                    word = concat(word, 'mi')
+                    word = turkish_string.concat(word, 'mi')
     elif not kwargs.get('question', False):
-        if last_vowel(word)['tone'] == 'front':
-            if kwargs.get('quantity', 'singular') == 'singular':
+        if turkish_string.last_vowel(word)['tone'] == 'front':
+            if not kwargs.get('plural'):
                 if kwargs.get('person', 3) == 1:
-                    word = concat(word, 'acağım')
+                    word = turkish_string.concat(word, 'acağım')
                 elif kwargs.get('person', 3) == 2:
-                    word = concat(word, 'acaksın')
+                    word = turkish_string.concat(word, 'acaksın')
                 elif kwargs.get('person', 3) == 3:
-                    word = concat(word, 'acak')
-            elif kwargs.get('quantity', 'singular') == 'plural':
+                    word = turkish_string.concat(word, 'acak')
+            elif kwargs.get('plural'):
                 if kwargs.get('person', 3) == 1:
-                    word = concat(word, 'acağız')
+                    word = turkish_string.concat(word, 'acağız')
                 elif kwargs.get('person', 3) == 2:
-                    word = concat(word, 'acaksınız')
+                    word = turkish_string.concat(word, 'acaksınız')
                 elif kwargs.get('person', 3) == 3:
-                    word = concat(word, 'acaklar')
+                    word = turkish_string.concat(word, 'acaklar')
         else:
-            if kwargs.get('quantity', 'singular') == 'singular':
+            if not kwargs.get('plural'):
                 if kwargs.get('person', 3) == 1:
-                    word = concat(word, 'eceğim')
+                    word = turkish_string.concat(word, 'eceğim')
                 elif kwargs.get('person', 3) == 2:
-                    word = concat(word, 'eceğiz')
+                    word = turkish_string.concat(word, 'eceğiz')
                 elif kwargs.get('person', 3) == 3:
-                    word = concat(word, 'ecek')
-            elif kwargs.get('quantity', 'plural') == 'plural':
+                    word = turkish_string.concat(word, 'ecek')
+            else:
                 if kwargs.get('person', 3) == 1:
-                    word = concat(word, 'eceğiz')
+                    word = turkish_string.concat(word, 'eceğiz')
                 elif kwargs.get('person', 3) == 2:
-                    word = concat(word, 'eceksiniz')
+                    word = turkish_string.concat(word, 'eceksiniz')
                 elif kwargs.get('person', 3) == 3:
-                    word = concat(word, 'ecekler')
+                    word = turkish_string.concat(word, 'ecekler')
 
     return word
 
 
 # Not the same with English past perfect tense
-# This usage is for past tense of an action which is heared/learned but not witnessed.
+# This usage is for past tense of an action which is learned but not witnessed.
 # mişli geçmiş zaman veya öğrenilen geçmiş zaman
 def make_past_perfect(parameter_word, **kwargs):
     word = parameter_word
 
     if kwargs.get('negative', False):
-        word = concat(word, 'm')
+        word = turkish_string.concat(word, 'm')
 
-        if last_vowel(word)['tone'] == 'front':
-            word = concat(word, 'a')
+        if turkish_string.last_vowel(word)['tone'] == 'front':
+            word = turkish_string.concat(word, 'a')
         else:
-            word = concat(word, 'e')
+            word = turkish_string.concat(word, 'e')
 
-    actual_last_vowel = last_vowel(word)
-    minor_harmony_letter = MINOR_HARMONY[actual_last_vowel['letter']]
+    actual_last_vowel = turkish_string.last_vowel(word)
+    minor_harmony_letter = consonants.MINOR_HARMONY[actual_last_vowel['letter']]
 
-    word = concat(word, 'm')
-    word = concat(word, minor_harmony_letter)
-    word = concat(word, 'ş')
+    word = turkish_string.concat(word, 'm')
+    word = turkish_string.concat(word, minor_harmony_letter)
+    word = turkish_string.concat(word, 'ş')
 
     if not kwargs.get('question', False):
-        if kwargs.get('quantity', 'singular') == 'singular':
+        if not kwargs.get('plural'):
             if kwargs.get('person', 3) == 1:
-                word = concat(word, minor_harmony_letter)
-                word = concat(word, 'm')
+                word = turkish_string.concat(word, minor_harmony_letter)
+                word = turkish_string.concat(word, 'm')
             elif kwargs.get('person', 3) == 2:
-                word = concat(word, 's')
-                word = concat(word, minor_harmony_letter)
-                word = concat(word, 'n')
-        elif kwargs.get('quantity', 'singular') == 'plural':
+                word = turkish_string.concat(word, 's')
+                word = turkish_string.concat(word, minor_harmony_letter)
+                word = turkish_string.concat(word, 'n')
+        elif kwargs.get('plural'):
             if kwargs.get('person', 3) == 1:
-                word = concat(word, minor_harmony_letter)
-                word = concat(word, 'z')
+                word = turkish_string.concat(word, minor_harmony_letter)
+                word = turkish_string.concat(word, 'z')
             elif kwargs.get('person', 3) == 2:
-                word = concat(word, 's')
-                word = concat(word, minor_harmony_letter)
-                word = concat(word, 'n')
-                word = concat(word, minor_harmony_letter)
-                word = concat(word, 'z')
+                word = turkish_string.concat(word, 's')
+                word = turkish_string.concat(word, minor_harmony_letter)
+                word = turkish_string.concat(word, 'n')
+                word = turkish_string.concat(word, minor_harmony_letter)
+                word = turkish_string.concat(word, 'z')
             elif kwargs.get('person', 3) == 3:
                 word = make_plural(word)
-    elif kwargs.get('question', False):
-        if kwargs.get('quantity', 'singular') == 'singular':
+    elif kwargs.get('question'):
+        if not kwargs.get('plural'):
             if kwargs.get('person', 3) == 1:
-                word = concat(word, ' ')
-                word = concat(word, 'm')
-                word = concat(word, minor_harmony_letter)
-                word = concat(word, 'y')
-                word = concat(word, minor_harmony_letter)
-                word = concat(word, 'm')
+                word = turkish_string.concat(word, ' ')
+                word = turkish_string.concat(word, 'm')
+                word = turkish_string.concat(word, minor_harmony_letter)
+                word = turkish_string.concat(word, 'y')
+                word = turkish_string.concat(word, minor_harmony_letter)
+                word = turkish_string.concat(word, 'm')
             elif kwargs.get('person', 3) == 2:
-                word = concat(word, ' ')
-                word = concat(word, 'm')
-                word = concat(word, minor_harmony_letter)
-                word = concat(word, 's')
-                word = concat(word, minor_harmony_letter)
-                word = concat(word, 'n')
+                word = turkish_string.concat(word, ' ')
+                word = turkish_string.concat(word, 'm')
+                word = turkish_string.concat(word, minor_harmony_letter)
+                word = turkish_string.concat(word, 's')
+                word = turkish_string.concat(word, minor_harmony_letter)
+                word = turkish_string.concat(word, 'n')
             elif kwargs.get('person', 3) == 3:
-                word = concat(word, ' ')
-                word = concat(word, 'm')
-                word = concat(word, minor_harmony_letter)
-        elif kwargs.get('quantity', 'singular') == 'plural':
+                word = turkish_string.concat(word, ' ')
+                word = turkish_string.concat(word, 'm')
+                word = turkish_string.concat(word, minor_harmony_letter)
+        elif kwargs.get('plural'):
             if kwargs.get('person', 3) == 1:
-                word = concat(word, ' ')
-                word = concat(word, 'm')
-                word = concat(word, minor_harmony_letter)
-                word = concat(word, 'y')
-                word = concat(word, minor_harmony_letter)
-                word = concat(word, 'z')
+                word = turkish_string.concat(word, ' ')
+                word = turkish_string.concat(word, 'm')
+                word = turkish_string.concat(word, minor_harmony_letter)
+                word = turkish_string.concat(word, 'y')
+                word = turkish_string.concat(word, minor_harmony_letter)
+                word = turkish_string.concat(word, 'z')
             elif kwargs.get('person', 3) == 2:
-                word = concat(word, ' ')
-                word = concat(word, 'm')
-                word = concat(word, minor_harmony_letter)
-                word = concat(word, 's')
-                word = concat(word, minor_harmony_letter)
-                word = concat(word, 'n')
-                word = concat(word, minor_harmony_letter)
-                word = concat(word, 'z')
+                word = turkish_string.concat(word, ' ')
+                word = turkish_string.concat(word, 'm')
+                word = turkish_string.concat(word, minor_harmony_letter)
+                word = turkish_string.concat(word, 's')
+                word = turkish_string.concat(word, minor_harmony_letter)
+                word = turkish_string.concat(word, 'n')
+                word = turkish_string.concat(word, minor_harmony_letter)
+                word = turkish_string.concat(word, 'z')
             elif kwargs.get('person', 3) == 3:
                 word = make_plural(word)
-                word = concat(word, ' ')
-                word = concat(word, 'm')
-                word = concat(word, minor_harmony_letter)
+                word = turkish_string.concat(word, ' ')
+                word = turkish_string.concat(word, 'm')
+                word = turkish_string.concat(word, minor_harmony_letter)
 
     return word
 
@@ -824,46 +824,46 @@ def unify_verbs(parameter_word, **kwargs):
     elif word == 'ye':
         word = 'yi'
 
-    actual_last_letter = last_letter(word)
-    actual_last_vowel = last_vowel(word)
-    get_aux_last_vowel = last_vowel(kwargs.get('auxiliary'))
-    minor_harmony_letter = MINOR_HARMONY[actual_last_vowel['letter']]
-    actual_last_letter = last_letter(word)
+    actual_last_letter = turkish_string.last_letter(word)
+    actual_last_vowel = turkish_string.last_vowel(word)
+    get_aux_turkish_string.last_vowel = turkish_string.last_vowel(kwargs.get('auxiliary'))
+    minor_harmony_letter = consonants.MINOR_HARMONY[actual_last_vowel['letter']]
+    actual_last_letter = turkish_string.last_letter(word)
 
     if 'vowel' in actual_last_letter:
-        word = concat(word, 'y')
+        word = turkish_string.concat(word, 'y')
     elif 'discontinuous_hard_consonant' in actual_last_letter and actual_last_vowel['vowel_count'] > 1:
-        word = concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
+        word = turkish_string.concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
 
     if not kwargs.get('negative', False):
         if kwargs.get('auxiliary') in ['ver', 'koy']:
-            word = concat(word, minor_harmony_letter)
+            word = turkish_string.concat(word, minor_harmony_letter)
         elif actual_last_vowel['tone'] == 'front':
-            word = concat(word, 'a')
+            word = turkish_string.concat(word, 'a')
         else:
-            word = concat(word, 'e')
+            word = turkish_string.concat(word, 'e')
 
-        word = concat(word, kwargs.get('auxiliary'))
+        word = turkish_string.concat(word, kwargs.get('auxiliary'))
     if kwargs.get('negative', False):
         if kwargs.get('auxiliary') == 'bil':
             if actual_last_vowel['tone'] == 'front':
-                word = concat(word, 'ama')
+                word = turkish_string.concat(word, 'ama')
             else:
-                word = concat(word, 'eme')
+                word = turkish_string.concat(word, 'eme')
         else:
             if kwargs.get('auxiliary') in ['ver', 'koy']:
-                word = concat(word, minor_harmony_letter)
+                word = turkish_string.concat(word, minor_harmony_letter)
             elif actual_last_vowel['tone'] == 'front':
-                word = concat(word, 'a')
+                word = turkish_string.concat(word, 'a')
             else:
-                word = concat(word, 'e')
+                word = turkish_string.concat(word, 'e')
 
-            word = concat(word, kwargs.get('auxiliary'))
+            word = turkish_string.concat(word, kwargs.get('auxiliary'))
 
-            if get_aux_last_vowel['tone'] == 'front':
-                word = concat(word, 'a')
+            if get_aux_turkish_string.last_vowel['tone'] == 'front':
+                word = turkish_string.concat(word, 'a')
             else:
-                word = concat(word, 'e')
+                word = turkish_string.concat(word, 'e')
 
     return word
 
@@ -871,7 +871,7 @@ def unify_verbs(parameter_word, **kwargs):
 # Gereklilik kipi (-meli, -malı)
 def make_must(parameter_word, **kwargs):
     word = parameter_word
-    actual_last_vowel = last_vowel(word)
+    actual_last_vowel = turkish_string.last_vowel(word)
 
     if actual_last_vowel['tone'] == 'front':
         letterA = 'a'
@@ -881,42 +881,42 @@ def make_must(parameter_word, **kwargs):
         letterI = 'i'
 
     if kwargs.get('negative', False):
-        word = concat(word, 'm')
-        word = concat(word, letterA)
+        word = turkish_string.concat(word, 'm')
+        word = turkish_string.concat(word, letterA)
 
-    word = concat(word, 'm')
-    word = concat(word, letterA)
-    word = concat(word, 'l')
-    word = concat(word, letterI)
+    word = turkish_string.concat(word, 'm')
+    word = turkish_string.concat(word, letterA)
+    word = turkish_string.concat(word, 'l')
+    word = turkish_string.concat(word, letterI)
 
-    if kwargs.get('person', 3) == 3 and kwargs.get('quantity', 'singular') == 'plural':
+    if kwargs.get('person', 3) == 3 and kwargs.get('plural'):
         word = make_plural(word)
 
     if kwargs.get('question', False):
-        word = concat(word, ' ')
-        word = concat(word, 'm')
-        word = concat(word, letterI)
+        word = turkish_string.concat(word, ' ')
+        word = turkish_string.concat(word, 'm')
+        word = turkish_string.concat(word, letterI)
 
-    if kwargs.get('quantity', 'singular') == 'singular':
+    if not kwargs.get('plural'):
         if kwargs.get('person', 3) == 1:
-            word = concat(word, 'y')
-            word = concat(word, letterI)
-            word = concat(word, 'm')
+            word = turkish_string.concat(word, 'y')
+            word = turkish_string.concat(word, letterI)
+            word = turkish_string.concat(word, 'm')
         elif kwargs.get('person', 3) == 2:
-            word = concat(word, 's')
-            word = concat(word, letterI)
-            word = concat(word, 'n')
-    elif kwargs.get('quantity', 'singular') == 'plural':
+            word = turkish_string.concat(word, 's')
+            word = turkish_string.concat(word, letterI)
+            word = turkish_string.concat(word, 'n')
+    elif kwargs.get('plural'):
         if kwargs.get('person', 3) == 1:
-            word = concat(word, 'y')
-            word = concat(word, letterI)
-            word = concat(word, 'z')
+            word = turkish_string.concat(word, 'y')
+            word = turkish_string.concat(word, letterI)
+            word = turkish_string.concat(word, 'z')
         elif kwargs.get('person', 3) == 2:
-            word = concat(word, 's')
-            word = concat(word, letterI)
-            word = concat(word, 'n')
-            word = concat(word, letterI)
-            word = concat(word, 'z')
+            word = turkish_string.concat(word, 's')
+            word = turkish_string.concat(word, letterI)
+            word = turkish_string.concat(word, 'n')
+            word = turkish_string.concat(word, letterI)
+            word = turkish_string.concat(word, 'z')
 
     return word
 
@@ -924,7 +924,7 @@ def make_must(parameter_word, **kwargs):
 # Dilek - Şart kipi (-se, -sa)
 def make_wish_condition(parameter_word, **kwargs):
     word = parameter_word
-    actual_last_vowel = last_vowel(word)
+    actual_last_vowel = turkish_string.last_vowel(word)
 
     if actual_last_vowel['tone'] == 'front':
         letterA = 'a'
@@ -934,31 +934,31 @@ def make_wish_condition(parameter_word, **kwargs):
         letterI = 'i'
 
     if kwargs.get('negative', False):
-        word = concat(word, 'm')
-        word = concat(word, letterA)
+        word = turkish_string.concat(word, 'm')
+        word = turkish_string.concat(word, letterA)
 
-    word = concat(word, 's')
-    word = concat(word, letterA)
+    word = turkish_string.concat(word, 's')
+    word = turkish_string.concat(word, letterA)
 
-    if kwargs.get('quantity', 'singular') == 'singular':
+    if not kwargs.get('plural'):
         if kwargs.get('person', 3) == 1:
-            word = concat(word, 'm')
+            word = turkish_string.concat(word, 'm')
         elif kwargs.get('person', 3) == 2:
-            word = concat(word, 'n')
+            word = turkish_string.concat(word, 'n')
     else:  # Plural
         if kwargs.get('person', 3) == 1:
-            word = concat(word, 'k')
+            word = turkish_string.concat(word, 'k')
         elif kwargs.get('person', 3) == 2:
-            word = concat(word, 'n')
-            word = concat(word, letterI)
-            word = concat(word, 'z')
+            word = turkish_string.concat(word, 'n')
+            word = turkish_string.concat(word, letterI)
+            word = turkish_string.concat(word, 'z')
         elif kwargs.get('person', 3) == 3:
             word = make_plural(word)
 
     if kwargs.get('question', False):
-        word = concat(word, ' ')
-        word = concat(word, 'm')
-        word = concat(word, letterI)
+        word = turkish_string.concat(word, ' ')
+        word = turkish_string.concat(word, 'm')
+        word = turkish_string.concat(word, letterI)
 
     return word
 
@@ -966,8 +966,8 @@ def make_wish_condition(parameter_word, **kwargs):
 # İstek kipi (geleyim, gelesin, gele, gelelim, gelesiniz, geleler)
 def make_wish(parameter_word, **kwargs):
     word = parameter_word
-    actual_last_letter = last_letter(word)
-    actual_last_vowel = last_vowel(word)
+    actual_last_letter = turkish_string.last_letter(word)
+    actual_last_vowel = turkish_string.last_vowel(word)
 
     if actual_last_vowel['tone'] == 'front':
         letterA = 'a'
@@ -977,10 +977,10 @@ def make_wish(parameter_word, **kwargs):
         letterI = 'i'
 
     if kwargs.get('negative', False):
-        word = concat(word, 'm')
-        word = concat(word, letterA)
-        word = concat(word, 'y')
-        word = concat(word, letterA)
+        word = turkish_string.concat(word, 'm')
+        word = turkish_string.concat(word, letterA)
+        word = turkish_string.concat(word, 'y')
+        word = turkish_string.concat(word, letterA)
     else:
         if word == 'de':
             word = 'di'
@@ -991,39 +991,39 @@ def make_wish(parameter_word, **kwargs):
             word = 'gid'
 
         if 'vowel' in actual_last_letter:
-            word = concat(word, 'y')
+            word = turkish_string.concat(word, 'y')
         elif 'discontinuous_hard_consonant' in actual_last_letter and actual_last_vowel['vowel_count'] > 1:
-            word = concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
+            word = turkish_string.concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
 
-        word = concat(word, letterA)
+        word = turkish_string.concat(word, letterA)
 
-    if kwargs.get('quantity', 'singular') == 'singular':
+    if not kwargs.get('plural', False):
         if kwargs.get('person', 3) == 1:
-            word = concat(word, 'y')
-            word = concat(word, letterI)
-            word = concat(word, 'm')
+            word = turkish_string.concat(word, 'y')
+            word = turkish_string.concat(word, letterI)
+            word = turkish_string.concat(word, 'm')
         elif kwargs.get('person', 3) == 2:
-            word = concat(word, 's')
-            word = concat(word, letterI)
-            word = concat(word, 'n')
+            word = turkish_string.concat(word, 's')
+            word = turkish_string.concat(word, letterI)
+            word = turkish_string.concat(word, 'n')
     else:
         if kwargs.get('person', 3) == 1:
-            word = concat(word, 'l')
-            word = concat(word, letterI)
-            word = concat(word, 'm')
+            word = turkish_string.concat(word, 'l')
+            word = turkish_string.concat(word, letterI)
+            word = turkish_string.concat(word, 'm')
         elif kwargs.get('person', 3) == 2:
-            word = concat(word, 's')
-            word = concat(word, letterI)
-            word = concat(word, 'n')
-            word = concat(word, letterI)
-            word = concat(word, 'z')
+            word = turkish_string.concat(word, 's')
+            word = turkish_string.concat(word, letterI)
+            word = turkish_string.concat(word, 'n')
+            word = turkish_string.concat(word, letterI)
+            word = turkish_string.concat(word, 'z')
         elif kwargs.get('person', 3) == 3:
             word = make_plural(word)
 
     if kwargs.get('question', False):
-        word = concat(word, ' ')
-        word = concat(word, 'm')
-        word = concat(word, letterI)
+        word = turkish_string.concat(word, ' ')
+        word = turkish_string.concat(word, 'm')
+        word = turkish_string.concat(word, letterI)
 
     return word
 
@@ -1035,31 +1035,31 @@ def make_wish(parameter_word, **kwargs):
 # For the second person, there is no suffix
 def make_command(parameter_word, **kwargs):
     word = parameter_word
-    actual_last_vowel = last_vowel(word)
+    actual_last_vowel = turkish_string.last_vowel(word)
 
-    # MINOR_HARMONY[last_vowel(word)['letter']]
+    # consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']]
 
     if kwargs.get('negative', False):
-        word = concat(word, 'm')
+        word = turkish_string.concat(word, 'm')
         if actual_last_vowel['tone'] == 'front':
-            word = concat(word, 'a')
+            word = turkish_string.concat(word, 'a')
         else:
-            word = concat(word, 'e')
+            word = turkish_string.concat(word, 'e')
 
-    actual_last_letter = last_letter(word)
-    actual_last_vowel = last_vowel(word)
-    minor = MINOR_HARMONY[last_vowel(word)['letter']]
+    actual_last_letter = turkish_string.last_letter(word)
+    actual_last_vowel = turkish_string.last_vowel(word)
+    minor = consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']]
 
-    if kwargs.get('quantity', 'singular') == 'singular':
+    if not kwargs.get('plural'):
         if kwargs.get('person', 2) == 3:
-            word = concat(word, 's')
-            word = concat(word, minor)
-            word = concat(word, 'n')
+            word = turkish_string.concat(word, 's')
+            word = turkish_string.concat(word, minor)
+            word = turkish_string.concat(word, 'n')
 
             if kwargs.get('question', False):
-                word = concat(word, ' ')
-                word = concat(word, 'm')
-                word = concat(word, minor)
+                word = turkish_string.concat(word, ' ')
+                word = turkish_string.concat(word, 'm')
+                word = turkish_string.concat(word, minor)
     else:  # Plural
         if kwargs.get('person', 2) == 2:
             if word == 'de':
@@ -1068,30 +1068,30 @@ def make_command(parameter_word, **kwargs):
                 word = 'yi'
 
             if 'vowel' in actual_last_letter:
-                word = concat(word, 'y')
+                word = turkish_string.concat(word, 'y')
             elif 'discontinuous_hard_consonant' in actual_last_letter and actual_last_vowel[
                 'vowel_count'] > 1 and kwargs.get(
-                    'negative', False) == False:
-                word = concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
+                'negative', False) == False:
+                word = turkish_string.concat(word[0:len(word) - 1], actual_last_letter['soften_consonant'])
 
             if word == 'git':
                 word = 'gid'
 
-            word = concat(word, minor)
-            word = concat(word, 'n')
+            word = turkish_string.concat(word, minor)
+            word = turkish_string.concat(word, 'n')
 
             if kwargs.get('formal', False):
-                word = concat(word, minor)
-                word = concat(word, 'z')
+                word = turkish_string.concat(word, minor)
+                word = turkish_string.concat(word, 'z')
         elif kwargs.get('person', 2) == 3:
-            word = concat(word, 's')
-            word = concat(word, minor)
-            word = concat(word, 'n')
+            word = turkish_string.concat(word, 's')
+            word = turkish_string.concat(word, minor)
+            word = turkish_string.concat(word, 'n')
             word = make_plural(word)
             if kwargs.get('question', False):
-                word = concat(word, ' ')
-                word = concat(word, 'm')
-                word = concat(word, minor)
+                word = turkish_string.concat(word, ' ')
+                word = turkish_string.concat(word, 'm')
+                word = turkish_string.concat(word, minor)
 
     return word
 
@@ -1100,61 +1100,61 @@ def make_command(parameter_word, **kwargs):
 # -di'li geçmiş zama
 def make_past(parameter_word, **kwargs):
     word = parameter_word
-    actual_last_vowel = last_vowel(word)
-    actual_last_letter = last_letter(word)
-    minor = MINOR_HARMONY[last_vowel(word)['letter']]
+    actual_last_vowel = turkish_string.last_vowel(word)
+    actual_last_letter = turkish_string.last_letter(word)
+    minor = consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']]
 
     if kwargs.get('negative', False):
-        word = concat(word, 'm')
+        word = turkish_string.concat(word, 'm')
         if actual_last_vowel['tone'] == 'front':
-            word = concat(word, 'a')
+            word = turkish_string.concat(word, 'a')
         else:
-            word = concat(word, 'e')
+            word = turkish_string.concat(word, 'e')
 
-    actual_last_vowel = last_vowel(word)
-    actual_last_letter = last_letter(word)
-    minor = MINOR_HARMONY[last_vowel(word)['letter']]
+    actual_last_vowel = turkish_string.last_vowel(word)
+    actual_last_letter = turkish_string.last_letter(word)
+    minor = consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']]
 
     if 'hard_consonant' not in actual_last_letter or 'vowel' in actual_last_letter:
         ps = 'd'
     else:
         ps = 't'
 
-    if kwargs.get('quantity', 'singular') == 'singular':
+    if not kwargs.get('plural'):
         if kwargs.get('person', 3) == 1:
-            word = concat(word, ps)
-            word = concat(word, minor)
-            word = concat(word, 'm')
+            word = turkish_string.concat(word, ps)
+            word = turkish_string.concat(word, minor)
+            word = turkish_string.concat(word, 'm')
         elif kwargs.get('person', 3) == 2:
-            word = concat(word, ps)
-            word = concat(word, minor)
-            word = concat(word, 'n')
+            word = turkish_string.concat(word, ps)
+            word = turkish_string.concat(word, minor)
+            word = turkish_string.concat(word, 'n')
         elif kwargs.get('person', 3) == 3:
-            word = concat(word, ps)
-            word = concat(word, minor)
+            word = turkish_string.concat(word, ps)
+            word = turkish_string.concat(word, minor)
     else:  # plural
         if kwargs.get('person', 3) == 1:
-            word = concat(word, ps)
-            word = concat(word, minor)
-            word = concat(word, 'k')
+            word = turkish_string.concat(word, ps)
+            word = turkish_string.concat(word, minor)
+            word = turkish_string.concat(word, 'k')
         elif kwargs.get('person', 3) == 2:
-            word = concat(word, ps)
-            word = concat(word, minor)
-            word = concat(word, 'n')
-            word = concat(word, minor)
-            word = concat(word, 'z')
+            word = turkish_string.concat(word, ps)
+            word = turkish_string.concat(word, minor)
+            word = turkish_string.concat(word, 'n')
+            word = turkish_string.concat(word, minor)
+            word = turkish_string.concat(word, 'z')
         elif kwargs.get('person', 3) == 3:
-            word = concat(word, ps)
-            word = concat(word, minor)
+            word = turkish_string.concat(word, ps)
+            word = turkish_string.concat(word, minor)
             word = make_plural(word)
 
     if kwargs.get('question', False):
-        actual_last_vowel = last_vowel(word)
-        minor = MINOR_HARMONY[last_vowel(word)['letter']]
+        actual_last_vowel = turkish_string.last_vowel(word)
+        minor = consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']]
 
-        word = concat(word, ' ')
-        word = concat(word, 'm')
-        word = concat(word, minor)
+        word = turkish_string.concat(word, ' ')
+        word = turkish_string.concat(word, 'm')
+        word = turkish_string.concat(word, minor)
 
     return word
 
@@ -1167,37 +1167,37 @@ def make_past_past(parameter_word, **kwargs):
 
     if kwargs.get('person', 3) == 3 \
             and kwargs.get('question', False) \
-            and kwargs.get('quantity', 'singular') == 'plural':
+            and kwargs.get('plural'):
         word = make_past(word,
                          person=3,
-                         quantity='singular',
+                         plural=False,
                          negative=kwargs.get('negative', False),
                          )
     else:
         word = make_past(word,
                          person=3,
-                         quantity='singular',
+                         plural=False,
                          negative=kwargs.get('negative', False),
                          question=kwargs.get('question', False)
                          )
 
-        word = concat(word, 'y')
+        word = turkish_string.concat(word, 'y')
 
     if kwargs.get('person', 3) == 3 \
             and kwargs.get('question', False) \
-            and kwargs.get('quantity', 'singular') == 'plural':
+            and kwargs.get('plural'):
         word = make_plural(word)
 
-        word = concat(word, ' ')
-        word = concat(word, 'm')
-        if last_vowel(word)['tone'] == 'front':
-            word = concat(word, 'ı')
+        word = turkish_string.concat(word, ' ')
+        word = turkish_string.concat(word, 'm')
+        if turkish_string.last_vowel(word)['tone'] == 'front':
+            word = turkish_string.concat(word, 'ı')
         else:
-            word = concat(word, 'i')
+            word = turkish_string.concat(word, 'i')
     else:
         word = make_past(word,
                          person=kwargs.get('person', 3),
-                         quantity=kwargs.get('quantity', 'singular')
+                         plural=kwargs.get('plural')
                          )
 
     return word
@@ -1215,11 +1215,11 @@ def make_past_condition(parameter_word, **kwargs):
                          negative=kwargs.get('negative', False)
                          )
 
-        word = concat(word, 'y')
+        word = turkish_string.concat(word, 'y')
 
         word = make_wish_condition(word,
                                    person=kwargs.get('person', 3),
-                                   quantity=kwargs.get('quantity', 'singular')
+                                   plural=kwargs.get('plural')
                                    )
     else:
         word = make_wish_condition(word,
@@ -1227,33 +1227,33 @@ def make_past_condition(parameter_word, **kwargs):
                                    negative=kwargs.get('negative', False)
                                    )
 
-        if kwargs.get('person', 3) == 3 and kwargs.get('quantity', 'singular') == 'plural':
+        if kwargs.get('person', 3) == 3 and kwargs.get('plural'):
             word = make_plural(word)
 
-        if last_vowel(word)['tone'] == 'front':
+        if turkish_string.last_vowel(word)['tone'] == 'front':
             letter = 'ı'
         else:
             letter = 'i'
 
-        word = concat(word, ' ')
-        word = concat(word, 'm')
-        word = concat(word, letter)
-        word = concat(word, 'y')
-        word = concat(word, 'd')
-        word = concat(word, letter)
+        word = turkish_string.concat(word, ' ')
+        word = turkish_string.concat(word, 'm')
+        word = turkish_string.concat(word, letter)
+        word = turkish_string.concat(word, 'y')
+        word = turkish_string.concat(word, 'd')
+        word = turkish_string.concat(word, letter)
 
-        if kwargs.get('quantity', 'singular') == 'singular':
+        if not kwargs.get('plural'):
             if kwargs.get('person', 3) == 1:
-                word = concat(word, 'm')
+                word = turkish_string.concat(word, 'm')
             elif kwargs.get('person', 3) == 2:
-                word = concat(word, 'n')
+                word = turkish_string.concat(word, 'n')
         else:
             if kwargs.get('person', 3) == 1:
-                word = concat(word, 'k')
+                word = turkish_string.concat(word, 'k')
             elif kwargs.get('person', 3) == 2:
-                word = concat(word, 'n')
-                word = concat(word, letter)
-                word = concat(word, 'z')
+                word = turkish_string.concat(word, 'n')
+                word = turkish_string.concat(word, letter)
+                word = turkish_string.concat(word, 'z')
     return word
 
 
@@ -1263,12 +1263,12 @@ def make_past_condition(parameter_word, **kwargs):
 def make_past_past_perfect(parameter_wrod, **kwargs):
     word = parameter_wrod
 
-    if kwargs.get('person') == 3 and kwargs.get('quantity') == 'plural' and kwargs.get('question', False):
+    if kwargs.get('person') == 3 and kwargs.get('plural') and kwargs.get('question'):
         word = make_past_perfect(word,
                                  negative=kwargs.get('negative', False),
                                  question=kwargs.get('question', False),
                                  person=kwargs.get('person', 3),
-                                 quantity=kwargs.get('quantity', 'singular')
+                                 plural=kwargs.get('plural')
                                  )
     else:
         word = make_past_perfect(word,
@@ -1277,16 +1277,16 @@ def make_past_past_perfect(parameter_wrod, **kwargs):
                                  )
 
     if kwargs.get('question', False):
-        word = concat(word, 'y')
+        word = turkish_string.concat(word, 'y')
 
-    if kwargs.get('person') == 3 and kwargs.get('quantity') == 'plural' and kwargs.get('question', False):
+    if kwargs.get('person') == 3 and kwargs.get('plural') and kwargs.get('question', False):
         word = make_past(word,
                          person=kwargs.get('person', 3)
                          )
     else:
         word = make_past(word,
                          person=kwargs.get('person', 3),
-                         quantity=kwargs.get('quantity', 'singular')
+                         plural=kwargs.get('plural')
                          )
 
     return word
@@ -1303,30 +1303,30 @@ def make_past_perfect_past_perfect(paramater_word, **kwargs):
     if not kwargs.get('question', False):
         word = make_past_perfect(word,
                                  person=kwargs.get('person', 3),
-                                 quantity=kwargs.get('quantity', 'singular'),
+                                 plural=kwargs.get('plural'),
                                  question=kwargs.get('question', False)
                                  )
     else:
-        if kwargs.get('person', 3) == 3 and kwargs.get('quantity', 'singular') == 'plural':
+        if kwargs.get('person', 3) == 3 and kwargs.get('plural'):
             word = make_plural(word)
-            minor = MINOR_HARMONY[last_vowel(word)['letter']]
+            minor = consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']]
 
-            word = concat(word, ' ')
-            word = concat(word, 'm')
-            word = concat(word, minor)
-            word = concat(word, 'y')
-            word = concat(word, 'm')
-            word = concat(word, minor)
-            word = concat(word, 'ş')
+            word = turkish_string.concat(word, ' ')
+            word = turkish_string.concat(word, 'm')
+            word = turkish_string.concat(word, minor)
+            word = turkish_string.concat(word, 'y')
+            word = turkish_string.concat(word, 'm')
+            word = turkish_string.concat(word, minor)
+            word = turkish_string.concat(word, 'ş')
         else:
-            minor = MINOR_HARMONY[last_vowel(word)['letter']]
-            word = concat(word, ' ')
-            word = concat(word, 'm')
-            word = concat(word, minor)
-            word = concat(word, 'y')
+            minor = consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']]
+            word = turkish_string.concat(word, ' ')
+            word = turkish_string.concat(word, 'm')
+            word = turkish_string.concat(word, minor)
+            word = turkish_string.concat(word, 'y')
             word = make_past_perfect(word,
                                      person=kwargs.get('person', 3),
-                                     quantity=kwargs.get('quantity', 'singular')
+                                     plural=kwargs.get('plural')
                                      )
     return word
 
@@ -1337,12 +1337,12 @@ def make_past_perfect_past_perfect(paramater_word, **kwargs):
 def make_past_perfect_future(parameter_word, **kwargs):
     word = parameter_word
 
-    if kwargs.get('person') == 3 and kwargs.get('quantity') == 'plural' and kwargs.get('question', False):
+    if kwargs.get('person') == 3 and kwargs.get('plural') and kwargs.get('question'):
         word = make_future(word,
                            negative=kwargs.get('negative', False),
                            question=kwargs.get('question', False),
                            person=kwargs.get('person', 3),
-                           quantity=kwargs.get('quantity', 'singular')
+                           plural=kwargs.get('plural')
                            )
     else:
         word = make_future(word,
@@ -1350,20 +1350,20 @@ def make_past_perfect_future(parameter_word, **kwargs):
                            question=kwargs.get('question', False),
                            )
 
-    if kwargs.get('person') == 3 and kwargs.get('quantity') == 'plural' and kwargs.get('question', False):
-        word = concat(word, 'm')
-        word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
-        word = concat(word, 'y')
+    if kwargs.get('person') == 3 and kwargs.get('plural') and kwargs.get('question'):
+        word = turkish_string.concat(word, 'm')
+        word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
+        word = turkish_string.concat(word, 'y')
         word = make_past_perfect(word,
                                  person=kwargs.get('person', 3)
                                  )
     else:
         if kwargs.get('question', False):
-            word = concat(word, 'y')
+            word = turkish_string.concat(word, 'y')
 
         word = make_past_perfect(word,
                                  person=kwargs.get('person', 3),
-                                 quantity=kwargs.get('quantity', 'singular')
+                                 plural=kwargs.get('plural')
                                  )
 
     return word
@@ -1375,12 +1375,12 @@ def make_past_perfect_future(parameter_word, **kwargs):
 def make_past_future(parameter_word, **kwargs):
     word = parameter_word
 
-    if kwargs.get('person') == 3 and kwargs.get('quantity') == 'plural' and kwargs.get('question', False):
+    if kwargs.get('person') == 3 and kwargs.get('plural') and kwargs.get('question', False):
         word = make_future(word,
                            negative=kwargs.get('negative', False),
                            question=kwargs.get('question', False),
                            person=kwargs.get('person', 3),
-                           quantity=kwargs.get('quantity', 'singular')
+                           plural=kwargs.get('plural')
                            )
     else:
         word = make_future(word,
@@ -1388,21 +1388,20 @@ def make_past_future(parameter_word, **kwargs):
                            question=kwargs.get('question', False)
                            )
 
-    if kwargs.get('person') == 3 and kwargs.get('quantity') == 'plural' and kwargs.get('question', False):
-        word = concat(word, 'm')
-        word = concat(word, MINOR_HARMONY[last_vowel(word)['letter']])
-        word = concat(word, 'y')
+    if kwargs.get('person') == 3 and kwargs.get('plural') and kwargs.get('question', False):
+        word = turkish_string.concat(word, 'm')
+        word = turkish_string.concat(word, consonants.MINOR_HARMONY[turkish_string.last_vowel(word)['letter']])
+        word = turkish_string.concat(word, 'y')
         word = make_past(word,
                          person=kwargs.get('person', 3)
                          )
     else:
         if kwargs.get('question', False):
-            word = concat(word, 'y')
+            word = turkish_string.concat(word, 'y')
 
         word = make_past(word,
                          person=kwargs.get('person', 3),
-                         quantity=kwargs.get('quantity', 'singular')
+                         plural=kwargs.get('plural')
                          )
 
     return word
-

@@ -18,3 +18,14 @@ print(turkish.possessive_affix('çanta', person=1, quantity='plural'))
 print(turkish.possessive_affix('çanta', person=2, quantity='plural'))
 print(turkish.possessive_affix('çanta', person=3, quantity='plural'))
 
+print(
+    turkish.make_ablative(
+        turkish.possessive_affix(
+            turkish.make_accusative('Merak'),
+            person=2
+        )
+    )
+)
+print(turkish.make_accusative('Şafak'))
+
+print(turkish.make_dative('murat'))

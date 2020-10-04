@@ -40,6 +40,7 @@ def from_upper_or_lower(new_word, reference_word):
 
 def last_vowel(word):
     word = make_lower(word)
+
     vowel_count = 0
 
     return_data = ''
@@ -53,7 +54,7 @@ def last_vowel(word):
             return_data = {'letter': letter, 'tone': 'back'}
 
     # fake return for exception behaviour in Turkish
-    if word in consonants.EXCEPTION_WORDS:
+    if word in consonants.MAJOR_HAMONY_EXCEPTIONS:
         if return_data['letter'] == 'o':
             return_data = {'letter': 'ö', 'tone': 'back'}
         elif return_data['letter'] == 'a':
@@ -65,6 +66,7 @@ def last_vowel(word):
         return_data = {'letter': '', 'tone': 'back'}
 
     return_data['vowel_count'] = vowel_count
+
     return return_data
 
 
@@ -80,14 +82,14 @@ def last_letter(word):
     
     if actual_last_letter in consonants.VOWELS:
         return_data['vowel'] = True
-        if actual_last_letter in consonants.FRONT_VOWELS:
+        if actual_last_letter in consonants.FRONT_VOWELS and word not in consonants.MAJOR_HAMONY_EXCEPTIONS:
             return_data['front_vowel'] = True
         else:
             return_data['back_vowel'] = True
     else:
         return_data['consonant'] = True
         
-        if actual_last_letter in consonants.DISCONTINUOUS_HARD_CONSONANTS:
+        if actual_last_letter in consonants.DISCONTINUOUS_HARD_CONSONANTS and word not in consonants.ARABIC_K:
             return_data['discontinuous_hard_consonant'] = True
             actual_last_letter = consonants.SOFTEN_DHC[
                 consonants.DISCONTINUOUS_HARD_CONSONANTS.index(actual_last_letter)
@@ -99,14 +101,14 @@ def last_letter(word):
     if actual_last_letter == '\'':
         actual_last_letter = word[len(word) - 2]
 
-    if actual_last_letter in consonants.HARD_CONSONANTS:
-            return_data['hard_consonant'] = True
+    if actual_last_letter in consonants.HARD_CONSONANTS and word not in consonants.ARABIC_K:
+        return_data['hard_consonant'] = True
 
-            if actual_last_letter in consonants.DISCONTINUOUS_HARD_CONSONANTS_AFTER_SUFFIX:
-                return_data['discontinuous_hard_consonant_for_suffix'] = True
-                actual_last_letter = consonants.SOFTEN_DHC_AFTER_SUFFIX[
-                    consonants.DISCONTINUOUS_HARD_CONSONANTS_AFTER_SUFFIX.index(actual_last_letter)
-                ]
-                return_data['soften_consonant_for_suffix'] = actual_last_letter
+        if actual_last_letter in consonants.DISCONTINUOUS_HARD_CONSONANTS_AFTER_SUFFIX:
+            return_data['discontinuous_hard_consonant_for_suffix'] = True
+            actual_last_letter = consonants.SOFTEN_DHC_AFTER_SUFFIX[
+                consonants.DISCONTINUOUS_HARD_CONSONANTS_AFTER_SUFFIX.index(actual_last_letter)
+            ]
+            return_data['soften_consonant_for_suffix'] = actual_last_letter
 
     return return_data

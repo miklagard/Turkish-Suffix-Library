@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from turkish_suffix_library.turkish_string import is_upper, make_lower, make_upper, concat, from_upper_or_lower, \
     last_vowel, last_letter
-from turkish_suffix_library.consonants import EXCEPTION_MISSING, HARD_CONSONANTS, MINOR_HARMONY, EXCEPTION_WORDS, \
+from turkish_suffix_library.consonants import EXCEPTION_MISSING, HARD_CONSONANTS, MINOR_HARMONY, MAJOR_HAMONY_EXCEPTIONS, \
     VOWELS, MINOR_HARMONY_FOR_FUTURE
 
 
@@ -120,7 +120,7 @@ def make_genitive(parameter_word: str, **kwargs) -> str:
     else:
         word = concat(word, 'd')
 
-    if actual_last_vowel['tone'] == 'front' and not word in EXCEPTION_WORDS:
+    if actual_last_vowel['tone'] == 'front' and not word in MAJOR_HAMONY_EXCEPTIONS:
         word = concat(word, 'a')
     else:
         word = concat(word, 'e')

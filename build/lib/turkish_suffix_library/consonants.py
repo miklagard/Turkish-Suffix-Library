@@ -39,7 +39,7 @@ MINOR_HARMONY_FOR_FUTURE = {
 
 # The exception words which has non-Turkish origins donn't fit for standard Turkish Major Wovel Harmony
 # beacuse of the vocal difference which doesn't exist in Turkish.
-EXCEPTION_WORDS = [
+MAJOR_HAMONY_EXCEPTIONS = [
     'ahval'
     , 'akropol'
     , 'alkol'

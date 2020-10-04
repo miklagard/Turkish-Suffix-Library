@@ -20,11 +20,11 @@ Turkish.py
     print(turkish.make_genitive("ağaç", proper_noun=False))
     print(turkish.make_cccusative("erik", proper_noun=False))
     print(turkish.make_accusative("Erik", proper_noun=True))
-    print(turkish.possessive_affix("kavanoz", person=1, quantity="singular"))
-    print(turkish.possessive_affix("kavanoz", person=2, quantity="singular"))
-    print(turkish.possessive_affix("kavanoz", person=3, quantity="singular"))
-    print(turkish.possessive_affix("halter", person=1, quantity="plural"))
-    print(turkish.possessive_affix("halter", person=2, quantity="plural"))
+    print(turkish.possessive_affix("kavanoz", person=1))
+    print(turkish.possessive_affix("kavanoz", person=2))
+    print(turkish.possessive_affix("kavanoz", person=3))
+    print(turkish.possessive_affix("halter", person=1,plural=True))
+    print(turkish.possessive_affix("halter", person=2,plural=True))
     print(turkish.possessive_affix("halter", person=3, quantity=plural))
     print(turkish.possessive_affix("Kenya", person=3, quantity=plural))
         
@@ -57,16 +57,16 @@ Turkish.py
     > gitmemek
 
     turkish.make_future('al', person=2, plural=True)  # Second person plural
-    > alacaksın
+    > alacaksınız
 
     turkish.make_present_simple('al', person=1)  # First person single
     > alırım
     
     turkish.make_past('al', person=3, plural=True)
-    > aldı
+    > aldılar
     
     turkish.make_command('al', person=3, plural=True)
-    > alsın
+    > alsınlar
     
     turkish.make_present_continuous('ver', person=1)
     > veriyorum
@@ -81,7 +81,7 @@ Turkish.py
     > anlatsa
     
     turkish.make_wish('sakla', person=3, plural=True)
-    > saklayasın
+    > saklayalar
     
     turkish.make_past_perfect('anla', person=3, question=True)
     > anlamış mı

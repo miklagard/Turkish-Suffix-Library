@@ -53,7 +53,7 @@ def last_vowel(word):
             return_data = {'letter': letter, 'tone': 'back'}
 
     # fake return for exception behaviour in Turkish
-    if word in consonants.EXCEPTION_WORDS:
+    if word in consonants.MAJOR_HAMONY_EXCEPTIONS:
         if return_data['letter'] == 'o':
             return_data = {'letter': 'ö', 'tone': 'back'}
         elif return_data['letter'] == 'a':
