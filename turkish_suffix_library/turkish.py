@@ -16,6 +16,9 @@ class Turkish:
     def to_string(self):
         return self.word
 
+    def __str__(self):
+        return self.word
+
     def plural(self, **kwargs):
         if 'proper_noun' in kwargs:
             self.word = f'{self.word}\''
@@ -864,7 +867,6 @@ class Turkish:
         elif self.word == 'ye':
             self.word = 'yi'
 
-        actual_last_letter = last_letter(self.word)
         actual_last_vowel = last_vowel(self.word)
         get_aux_last_vowel = last_vowel(kwargs.get('auxiliary'))
         minor_harmony_letter = MINOR_HARMONY[actual_last_vowel['letter']]
@@ -1141,8 +1143,6 @@ class Turkish:
             -di'li geçmiş zaman
         """
         actual_last_vowel = last_vowel(self.word)
-        actual_last_letter = last_letter(self.word)
-        minor = MINOR_HARMONY[last_vowel(self.word)['letter']]
 
         if kwargs.get('negative', False):
             self.word = concat(self.word, 'm')
@@ -1151,7 +1151,6 @@ class Turkish:
             else:
                 self.word = concat(self.word, 'e')
 
-        actual_last_vowel = last_vowel(self.word)
         actual_last_letter = last_letter(self.word)
         minor = MINOR_HARMONY[last_vowel(self.word)['letter']]
 

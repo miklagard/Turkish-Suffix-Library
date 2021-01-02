@@ -12,7 +12,7 @@ class VerbsTest:
         self.conn.execute('delete from verbs')
 
     def execute(self, cmd, **kwargs):
-        generated = eval("Turkish('%s').%s(**%s).to_string()" % (self.verb, cmd, kwargs))
+        generated = eval("Turkish('%s').%s(**%s)" % (self.verb, cmd, kwargs))
 
         plurality = kwargs.get("plural")
         negative = kwargs.get("negative", False)
