@@ -9,33 +9,33 @@ Turkish.py
 ## Using
 
 #### Nouns
-    from turkish_suffix_library import turkish
+    from turkish_suffix_library.turkish import Turkish
 
-    print(turkish.make_genitive("Öykü", proper_noun=True))
-    print(turkish.make_dative("Fatma", proper_noun=True))
-    print(turkish.make_dative("Yasin", proper_noun=True))
-    print(turkish.make_dative("ALİ", proper_noun=True))
-    print(turkish.make_abblative("Ali", proper_noun=True  ))
-    print(turkish.make_accusative("Kaliningrad", proper_noun=True))
-    print(turkish.make_genitive("ağaç", proper_noun=False))
-    print(turkish.make_cccusative("erik", proper_noun=False))
-    print(turkish.make_accusative("Erik", proper_noun=True))
-    print(turkish.possessive_affix("kavanoz", person=1))
-    print(turkish.possessive_affix("kavanoz", person=2))
-    print(turkish.possessive_affix("kavanoz", person=3))
-    print(turkish.possessive_affix("halter", person=1,plural=True))
-    print(turkish.possessive_affix("halter", person=2,plural=True))
-    print(turkish.possessive_affix("halter", person=3, quantity=plural))
-    print(turkish.possessive_affix("Kenya", person=3, quantity=plural))
+    print(Turkish('Öykü').genitive(proper_noun=True).to_string())
+    print(Turkish('Cem').dative(proper_noun=True).to_string())
+    print(Turkish('Nil').dative(proper_noun=True).to_string())
+    print(Turkish('ALİ').dative(proper_noun=True).to_string())
+    print(Turkish('Taylan').ablative(proper_noun=True).to_string())
+    print(Turkish('Amasya').accusative(proper_noun=True).to_string())
+    print(Turkish('ağaç').genitive(proper_noun=False).to_string())
+    print(Turkish('erik').accusative(proper_noun=False).to_string())
+    print(Turkish('Erik').accusative(proper_noun=True).to_string())
+    print(Turkish('kavanoz').possessive_affix(person=1).to_string())
+    print(Turkish('kavanoz').possessive_affix(person=2).to_string())
+    print(Turkish('kavanoz').possessive_affix(person=3).to_string())
+    print(Turkish('halter').possessive_affix(person=1, plural=True).to_string())
+    print(Turkish('halter').possessive_affix(person=2, plural=True).to_string())
+    print(Turkish('halter').possessive_affix(person=3, plural=True).to_string())
+    print(Turkish('Kenya').possessive_affix(person=3, plural=True).to_string())
         
 ##### Output
     
     Öykü'nün 
-    Fatma'ya 
-    Yasin'e 
+    Cem'e 
+    Nil'e 
     ALİ'YE 
-    Ali'den 
-    Kaliningrad'ı
+    Taylan'dan 
+    Amasya'yı
     ağacın
     eriği
     Erik'i
@@ -50,64 +50,69 @@ Turkish.py
 ### Verbs
     Parameters: person (1, 2, 3), negative (boolean), question (boolean), plural (boolean)
 
-    turkish.make_infinitive('git')
+    Turkish('git').infinitive().to_string()
     > gitmek 
     
-    turkish.make_infinitive('git', negative=True)
+    Turkish('git').infinitive(negative=True).to_string()
     > gitmemek
 
-    turkish.make_future('al', person=2, plural=True)  # Second person plural
+    Turkish('al').future(person=2, plural=True).to_string()  # Second person plural
     > alacaksınız
 
-    turkish.make_present_simple('al', person=1)  # First person single
+    Turkish('al').present_simple(person=1).to_string()  # First person single
     > alırım
     
-    turkish.make_past('al', person=3, plural=True)
+    Turkish('al').past(person=3, plural=True).to_string()
     > aldılar
     
-    turkish.make_command('al', person=3, plural=True)
+    Turkish('al').command(person=3, plural=True).to_string()
     > alsınlar
     
-    turkish.make_present_continuous('ver', person=1)
+    Turkish('ver').present_continuous(person=1).to_string()
     > veriyorum
     
-    turkish.make_present_continuous_alternative('ver', person=1)
+    Turkish('ver').present_continuous_alternative(person=1).to_string()
     > vermekteyim
     
-    turkish.make_must('ver', person=2)
+    Turkish('ver').must(person=2).to_string()
     > vermelisin
     
-    turkish.make_wish_condition('anlat', person=3)
+    Turkish('anlat').wish_condition(person=3).to_string()
     > anlatsa
     
-    turkish.make_wish('sakla', person=3, plural=True)
+    Turkish('sakla').wish(person=3, plural=True).to_string()
     > saklayalar
     
-    turkish.make_past_perfect('anla', person=3, question=True)
+    Turkish('anla').learned_past(person=3, question=True).to_string()
     > anlamış mı
     
-    turkish.make_past_past_perfect('sat', person=2, negative=True)
+    Turkish('sat').past_learned_past(person=2, negative=True).to_string()
     > satmamıştın
     
-    turkish.make_past_perfect_past_perfect('kork', person=3)
+    Turkish('kork').learned_past_learned_past(person=3).to_string()
     > korkmuşmuş
     
-    turkish.make_past_perfect_future('oyna', person=2, negative=True)
+    Turkish('oyna').learned_past_future(person=2, negative=True).to_string()
     > oynamayacakmışsın
     
-    turkish.make_past_future('oyna', person=2, negative=True, question=True)
+    Turkish('oyna').past_future(person=2, negative=True, question=True).to_string()
     > oynamayacak mıydın
     
-    turkish.make_past_past('oyna', person=2, negative=True)
+    Turkish('oyna').past_past(person=2, negative=True).to_string()
     > oynamadıydın
     
-    turkish.make_past_condition('gül', person=2)
+    Turkish('gül').past_condition(person=2).to_string()
     > güldüysen
 
 ## Turkish Grammar
- * Turkish is a highly agglutinative language, i.e., Turkish words have many grammatical suffixes or endings that determine meaning. Turkish vowels undergo vowel harmony. When a suffix is attached to a stem, the vowel in the suffix agrees in frontness or backness and in roundedness with the last vowel in the stem. Turkish has no gender.
+ * Turkish is a highly agglutinative language, i.e., Turkish words have many 
+   grammatical suffixes or endings that determine meaning. Turkish vowels 
+   undergo vowel harmony. When a suffix is attached to a stem, the vowel in 
+   the suffix agrees in frontness or backness and in roundedness with the last 
+   vowel in the stem. Turkish has no gender.
 
- * Turkish Language is a language with strict rules with only couple of exceptions which makes it very easy for simulating by coding.
+ * Turkish Language is a language with strict rules with an only couple of 
+   exceptions which makes it very easy for simulating by coding.
 
  * [More Info](http://en.wikipedia.org/wiki/Turkish_grammar)
 

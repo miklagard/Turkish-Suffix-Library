@@ -1405,4 +1405,3 @@ def make_past_future(parameter_word, **kwargs):
                          )
 
     return word
-

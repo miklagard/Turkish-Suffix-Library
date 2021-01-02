@@ -1,31 +1,19 @@
-from turkish_suffix_library import turkish
+from turkish_suffix_library.turkish import Turkish
 
-print(turkish.make_genitive('araba'))
-print(turkish.make_dative('araba'))
-print(turkish.make_ablative('araba'))
-print(turkish.make_accusative('araba'))
+print(Turkish('araba').genitive().to_string())
+print(Turkish('araba').dative().to_string())
+print(Turkish('araba').ablative().to_string())
+print(Turkish('araba').accusative().to_string())
 
-print(turkish.make_genitive('Cem', proper_noun=True))
-print(turkish.make_dative('Cem', proper_noun=True))
-print(turkish.make_ablative('Cem', proper_noun=True))
-print(turkish.make_accusative('Cem', proper_noun=True))
+print(Turkish('Cem').genitive(proper_noun=True).to_string())
+print(Turkish('Cem').dative(proper_noun=True).to_string())
+print(Turkish('Cem').ablative(proper_noun=True).to_string())
+print(Turkish('Cem').accusative(proper_noun=True).to_string())
 
-print(turkish.possessive_affix('çanta', person=1, quantity='singular'))
-print(turkish.possessive_affix('çanta', person=2, quantity='singular'))
-print(turkish.possessive_affix('çanta', person=3, quantity='singular'))
+print(Turkish('çanta').possessive_affix(person=1).to_string())
+print(Turkish('çanta').possessive_affix(person=2).to_string())
+print(Turkish('çanta').possessive_affix(person=3).to_string())
 
-print(turkish.possessive_affix('çanta', person=1, quantity='plural'))
-print(turkish.possessive_affix('çanta', person=2, quantity='plural'))
-print(turkish.possessive_affix('çanta', person=3, quantity='plural'))
-
-print(
-    turkish.make_ablative(
-        turkish.possessive_affix(
-            turkish.make_accusative('Merak'),
-            person=2
-        )
-    )
-)
-print(turkish.make_accusative('Şafak'))
-
-print(turkish.make_dative('murat'))
+print(Turkish('çanta').possessive_affix(person=1, plural=True).to_string())
+print(Turkish('çanta').possessive_affix(person=2, plural=True).to_string())
+print(Turkish('çanta').possessive_affix(person=3, plural=True).to_string())

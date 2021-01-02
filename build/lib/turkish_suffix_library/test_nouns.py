@@ -17,4 +17,3 @@ print(turkish.possessive_affix('çanta', person=3, quantity='singular'))
 print(turkish.possessive_affix('çanta', person=1, quantity='plural'))
 print(turkish.possessive_affix('çanta', person=2, quantity='plural'))
 print(turkish.possessive_affix('çanta', person=3, quantity='plural'))
-

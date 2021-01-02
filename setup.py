@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="turkish-suffix-library", # Replace with your own username
-    version="0.3.4",
+    name="turkish-suffix-library",
+    version="0.3.5",
     author="Cem Yildiz",
     author_email="cem.yildiz@ya.ru",
     description="Turkish suffix library",
