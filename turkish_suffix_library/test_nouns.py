@@ -8,7 +8,7 @@ print(Turkish('Cem').dative(proper_noun=True))
 print(Turkish('Cem').ablative(proper_noun=True))
 print(Turkish('Cem').accusative(proper_noun=True))
 
-print(Turkish('çanta').possessive(person=1))
+print(Turkish('çanta').plural().possessive(person=1).ablative().to_json())
 print(Turkish('çanta').possessive(person=2))
 print(Turkish('çanta').possessive(person=3))
 

@@ -25,7 +25,6 @@ def concat(string_left, string_right):
     
     return return_data
 
-
 def from_upper_or_lower(new_word, reference_word):
     if is_upper(reference_word[len(reference_word) - 1]):
         return_data = make_upper(new_word)
@@ -112,3 +111,35 @@ def last_letter(word):
             return_data['soften_consonant_for_suffix'] = actual_last_letter
 
     return return_data
+
+
+def soften(parameter_word, proper_noun=False, negative=False):
+    word = parameter_word
+
+    actual_last_letter = last_letter(word)
+    actual_last_vowel = last_vowel(word)
+
+    if proper_noun:
+        word += '\''
+
+    if 'discontinuous_hard_consonant' in actual_last_letter and not proper_noun:
+        if actual_last_vowel['vowel_count'] > 1:
+            word = concat(
+                word[0:len(word) - 1],
+                actual_last_letter['soften_consonant']
+            )
+
+    return word
+
+
+def exception_missing(parameter_word, proper_noun=False):
+    word = parameter_word
+
+    if not proper_noun:
+        if make_lower(word) in consonants.EXCEPTION_MISSING:
+            word = from_upper_or_lower(
+                consonants.EXCEPTION_MISSING[make_lower(word)],
+                word
+            )
+
+    return word
