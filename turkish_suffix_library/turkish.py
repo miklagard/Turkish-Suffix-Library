@@ -46,6 +46,10 @@ class Turkish:
                 self.word = from_upper_or_lower('O\'nu', self.word)
             else:
                 self.word = from_upper_or_lower('onu', self.word)
+        elif lower_word == 'bu' and not proper_noun:
+            self.word = from_upper_or_lower('bunu', self.word)
+        elif lower_word == 'şu' and not proper_noun:
+            self.word = from_upper_or_lower('şunu', self.word)
         else:
             if lower_word in EXCEPTION_MISSING and proper_noun == True:
                 self.word = from_upper_or_lower(
@@ -94,8 +98,17 @@ class Turkish:
             self.word = from_upper_or_lower('bana', self.word)
         elif lower_word == 'sen' and not proper_noun:
             self.word = from_upper_or_lower('sana', self.word)
+        elif lower_word == 'o' and not proper_noun:
+            if proper_noun:
+                self.word = from_upper_or_lower('O\'na', self.word)
+            else:
+                self.word = from_upper_or_lower('ona', self.word)
+        elif lower_word == 'bu' and not proper_noun:
+            self.word = from_upper_or_lower('buna', self.word)
+        elif lower_word == 'şu' and not proper_noun:
+            self.word = from_upper_or_lower('şuna', self.word)
         else:
-            if lower_word in EXCEPTION_MISSING and proper_noun == False:
+            if lower_word in EXCEPTION_MISSING and not proper_noun:
                 self.word = from_upper_or_lower(
                     EXCEPTION_MISSING[lower_word],
                     self.word
@@ -123,38 +136,6 @@ class Turkish:
 
         return Turkish(self.word)
 
-    def genitive(self, **kwargs):
-        """
-            -de hali
-        """
-        actual_last_letter = last_letter(self.word)
-        actual_last_vowel = last_vowel(self.word)
-
-        lower_word = make_lower(self.word)
-        proper_noun = kwargs.get('proper_noun', False)
-
-        if proper_noun:
-            self.word += '\''
-
-        if lower_word in EXCEPTION_MISSING:
-            self.word = from_upper_or_lower(
-                EXCEPTION_MISSING[lower_word],
-                self.word
-            )
-
-        if 'hard_consonant' in actual_last_letter:
-            self.word = concat(self.word, 't')
-        else:
-            self.word = concat(self.word, 'd')
-
-        if actual_last_vowel['tone'] == 'front' \
-                and not self.word in MAJOR_HAMONY_EXCEPTIONS:
-            self.word = concat(self.word, 'a')
-        else:
-            self.word = concat(self.word, 'e')
-
-        return Turkish(self.word)
-
     def ablative(self, **kwargs):
         """
             -den hali
@@ -162,19 +143,30 @@ class Turkish:
         actual_last_letter = last_letter(self.word)
         actual_last_vowel = last_vowel(self.word)
         proper_noun = kwargs.get('proper_noun', False)
+        lower_word = make_lower(self.word)
 
-        if proper_noun:
-            self.word += '\''
-
-        if actual_last_letter['letter'] in HARD_CONSONANTS:
-            self.word = concat(self.word, 't')
+        if lower_word == 'o' and not proper_noun:
+            if proper_noun:
+                self.word = from_upper_or_lower('O\'ndan', self.word)
+            else:
+                self.word = from_upper_or_lower('ondan', self.word)
+        elif lower_word == 'bu' and not proper_noun:
+            self.word = from_upper_or_lower('bundan', self.word)
+        elif lower_word == 'şu' and not proper_noun:
+            self.word = from_upper_or_lower('şundan', self.word)
         else:
-            self.word = concat(self.word, 'd')
+            if proper_noun:
+                self.word += '\''
 
-        if actual_last_vowel['tone'] == 'front':
-            self.word = concat(self.word, 'an')
-        else:
-            self.word = concat(self.word, 'en')
+            if actual_last_letter['letter'] in HARD_CONSONANTS:
+                self.word = concat(self.word, 't')
+            else:
+                self.word = concat(self.word, 'd')
+
+            if actual_last_vowel['tone'] == 'front':
+                self.word = concat(self.word, 'an')
+            else:
+                self.word = concat(self.word, 'en')
 
         return Turkish(self.word)
 
@@ -201,13 +193,55 @@ class Turkish:
 
         return Turkish(self.word)
 
-    def possessive_affix(self, **kwargs):
+    def genitive(self, **kwargs):
         """
-            İyelik ekleri (Not completed yet)
+            Iyelik aitlik eki
+            Ayakkabinin
+            Elif'in
         """
-        position = kwargs.get('position', 1)
 
+        proper_noun = kwargs.get('proper_noun', False)
+        actual_last_letter = last_letter(self.word)
+        actual_last_vowel = last_vowel(self.word)
+        minor_harmony_letter = MINOR_HARMONY[actual_last_vowel['letter']]
+
+        last_letter_is_vowel = actual_last_letter['letter'] in VOWELS
+
+        if proper_noun:
+            self.word += '\''
+
+            if last_letter_is_vowel:
+                self.word = concat(self.word, 'n')
+
+        else:
+            if last_letter_is_vowel:
+                self.word = concat(self.word, 'n')
+            else:
+                if 'discontinuous_hard_consonant' in actual_last_letter:
+                    if actual_last_vowel['vowel_count'] > 1:
+                        self.word = concat(
+                            self.word[0:len(self.word) - 1],
+                            actual_last_letter['soften_consonant']
+                        )
+
+                if make_lower(self.word) in EXCEPTION_MISSING:
+                    self.word = from_upper_or_lower(
+                        EXCEPTION_MISSING[make_lower(self.word)],
+                        self.word
+                    )
+
+        self.word = concat(self.word, minor_harmony_letter)
+        self.word = concat(self.word, 'n')
+
+        return Turkish(self.word)
+
+    def possessive(self, **kwargs):
+        """
+            Iyelik tamlanan eki
+            Ayakkabısı
+        """
         person = str(kwargs.get('person', 3))
+
         is_plural = kwargs.get('plural', False)
 
         proper_noun = kwargs.get('proper_noun', False)
@@ -240,17 +274,22 @@ class Turkish:
         minor_harmony_letter = MINOR_HARMONY[actual_last_vowel['letter']]
 
         if not is_plural:
-            if not last_letter_is_vowel:
-                self.word = concat(self.word, minor_harmony_letter)
-
             if person == '1':
+                if not last_letter_is_vowel:
+                    self.word = concat(self.word, minor_harmony_letter)
+
                 self.word = concat(self.word, 'm')
 
             elif person == '2':
+                if not last_letter_is_vowel:
+                    self.word = concat(self.word, minor_harmony_letter)
+
                 self.word = concat(self.word, 'n')
 
             elif person == '3':
-                self.word = concat(self.word, 's')
+                if last_letter_is_vowel:
+                    self.word = concat(self.word, 's')
+
                 self.word = concat(self.word, minor_harmony_letter)
         else:
             if person == '1':
@@ -269,7 +308,6 @@ class Turkish:
                 self.word = concat(self.word, minor_harmony_letter)
                 self.word = concat(self.word, 'z')
             else:
-
                 if make_lower(self.word) == 'ism':
                     self.word = from_upper_or_lower('isim', self.word)
 

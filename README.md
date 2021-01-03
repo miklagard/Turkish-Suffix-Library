@@ -11,6 +11,8 @@ Turkish.py
 #### Nouns
     from turkish_suffix_library.turkish import Turkish
 
+    print(f'{Turkish("Elif").genitive(proper_noun=True)} {Turkish('öküz').possessive(person=3)}.')
+
     print(Turkish('Öykü').genitive(proper_noun=True).to_string())
     print(Turkish('Cem').dative(proper_noun=True).to_string())
     print(Turkish('Nil').dative(proper_noun=True).to_string())
@@ -20,13 +22,13 @@ Turkish.py
     print(Turkish('ağaç').genitive(proper_noun=False).to_string())
     print(Turkish('erik').accusative(proper_noun=False).to_string())
     print(Turkish('Erik').accusative(proper_noun=True).to_string())
-    print(Turkish('kavanoz').possessive_affix(person=1).to_string())
-    print(Turkish('kavanoz').possessive_affix(person=2).to_string())
-    print(Turkish('kavanoz').possessive_affix(person=3).to_string())
-    print(Turkish('halter').possessive_affix(person=1, plural=True).to_string())
-    print(Turkish('halter').possessive_affix(person=2, plural=True).to_string())
-    print(Turkish('halter').possessive_affix(person=3, plural=True).to_string())
-    print(Turkish('Kenya').possessive_affix(person=3, plural=True).to_string())
+    print(Turkish('kavanoz').possessive(person=1).to_string())
+    print(Turkish('kavanoz').possessive(person=2).to_string())
+    print(Turkish('kavanoz').possessive(person=3).to_string())
+    print(Turkish('halter').possessive(person=1, plural=True).to_string())
+    print(Turkish('halter').possessive(person=2, plural=True).to_string())
+    print(Turkish('halter').possessive(person=3, plural=True).to_string())
+    print(Turkish('Kenya').possessive(person=3, plural=True).to_string())
         
 ##### Output
     
