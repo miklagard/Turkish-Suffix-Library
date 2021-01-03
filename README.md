@@ -11,7 +11,7 @@ Turkish.py
 #### Nouns
     from turkish_suffix_library.turkish import Turkish
 
-    print(f'{Turkish("Elif").genitive(proper_noun=True)} {Turkish('öküz').possessive(person=3)}.')
+    print(f'{Turkish("Elif").genitive(proper_noun=True)} {Turkish("öküz").possessive(person=3)}.')
 
     print(Turkish('Öykü').genitive(proper_noun=True).to_string())
     print(Turkish('Cem').dative(proper_noun=True).to_string())
@@ -31,12 +31,12 @@ Turkish.py
     print(Turkish('Kenya').possessive(person=3, plural=True).to_string())
         
 ##### Output
-    
-    Öykü'nün 
-    Cem'e 
-    Nil'e 
-    ALİ'YE 
-    Taylan'dan 
+    Elif'in öküzü.
+    Öykü'nün
+    Cem'e
+    Nil'e
+    ALİ'YE
+    Taylan'dan
     Amasya'yı
     ağacın
     eriği
@@ -47,7 +47,8 @@ Turkish.py
     halterimiz
     halteriniz
     halterleri
-    Kenyaları 
+    Kenyaları
+
 
 ### Verbs
     Parameters: person (1, 2, 3), negative (boolean), question (boolean), plural (boolean)
