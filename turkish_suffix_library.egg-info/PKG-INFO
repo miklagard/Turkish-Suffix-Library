@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: turkish-suffix-library
-Version: 0.4.1
+Version: 0.4.2
 Summary: Turkish suffix library
 Home-page: https://github.com/miklagard/Turkish-Suffix-Library
 Author: Cem Yildiz
@@ -21,22 +21,23 @@ Description: Turkish.py
         
             print(f'{Turkish("Elif").genitive(proper_noun=True)} {Turkish("öküz").possessive(person=3)}.')
         
-            print(Turkish('Öykü').genitive(proper_noun=True).to_string())
-            print(Turkish('Cem').dative(proper_noun=True).to_string())
-            print(Turkish('Nil').dative(proper_noun=True).to_string())
-            print(Turkish('ALİ').dative(proper_noun=True).to_string())
-            print(Turkish('Taylan').ablative(proper_noun=True).to_string())
-            print(Turkish('Amasya').accusative(proper_noun=True).to_string())
-            print(Turkish('ağaç').genitive(proper_noun=False).to_string())
-            print(Turkish('erik').accusative(proper_noun=False).to_string())
-            print(Turkish('Erik').accusative(proper_noun=True).to_string())
-            print(Turkish('kavanoz').possessive(person=1).to_string())
-            print(Turkish('kavanoz').possessive(person=2).to_string())
-            print(Turkish('kavanoz').possessive(person=3).to_string())
-            print(Turkish('halter').possessive(person=1, plural=True).to_string())
-            print(Turkish('halter').possessive(person=2, plural=True).to_string())
-            print(Turkish('halter').possessive(person=3, plural=True).to_string())
-            print(Turkish('Kenya').possessive(person=3, plural=True).to_string())
+            print(Turkish('Öykü').genitive(proper_noun=True))
+            print(Turkish('Cem').dative(proper_noun=True))
+            print(Turkish('Nil').dative(proper_noun=True))
+            print(Turkish('ALİ').dative(proper_noun=True))
+            print(Turkish('Taylan').ablative(proper_noun=True))
+            print(Turkish('Amasya').accusative(proper_noun=True))
+            print(Turkish('ağaç').genitive(proper_noun=False))
+            print(Turkish('erik').accusative(proper_noun=False))
+            print(Turkish('Erik').accusative(proper_noun=True))
+            print(Turkish('kavanoz').possessive(person=1))
+            print(Turkish('kavanoz').possessive(person=2))
+            print(Turkish('kavanoz').possessive(person=3))
+            print(Turkish('halter').possessive(person=1, plural=True))
+            print(Turkish('halter').possessive(person=2, plural=True))
+            print(Turkish('halter').possessive(person=3, plural=True))
+            print(Turkish('Kenya').possessive(person=3, plural=True))
+            print(Turkish('çanta').plural().possessive(person=1).ablative().to_json())
                 
         ##### Output
             Elif'in öküzü.
@@ -56,63 +57,64 @@ Description: Turkish.py
             halteriniz
             halterleri
             Kenyaları
+            {'result': 'çantalarımdan', 'stem': 'çanta', 'history': [{'action': 'plural', 'current': 'çantalar', 'kwargs': {}}, {'action': 'possessive', 'current': 'çantalarım', 'kwargs': {'person': 1}}, {'action': 'ablative', 'current': 'çantalarımdan', 'kwargs': {}}]}
         
         
         ### Verbs
             Parameters: person (1, 2, 3), negative (boolean), question (boolean), plural (boolean)
         
-            Turkish('git').infinitive().to_string()
+            Turkish('git').infinitive()
             > gitmek 
             
-            Turkish('git').infinitive(negative=True).to_string()
+            Turkish('git').infinitive(negative=True)
             > gitmemek
         
-            Turkish('al').future(person=2, plural=True).to_string()  # Second person plural
+            Turkish('al').future(person=2, plural=True)  # Second person plural
             > alacaksınız
         
-            Turkish('al').present_simple(person=1).to_string()  # First person single
+            Turkish('al').present_simple(person=1)  # First person single
             > alırım
             
-            Turkish('al').past(person=3, plural=True).to_string()
+            Turkish('al').past(person=3, plural=True)
             > aldılar
             
-            Turkish('al').command(person=3, plural=True).to_string()
+            Turkish('al').command(person=3, plural=True)
             > alsınlar
             
-            Turkish('ver').present_continuous(person=1).to_string()
+            Turkish('ver').present_continuous(person=1)
             > veriyorum
             
-            Turkish('ver').present_continuous_alternative(person=1).to_string()
+            Turkish('ver').present_continuous_alternative(person=1)
             > vermekteyim
             
-            Turkish('ver').must(person=2).to_string()
+            Turkish('ver').must(person=2)
             > vermelisin
             
-            Turkish('anlat').wish_condition(person=3).to_string()
+            Turkish('anlat').wish_condition(person=3)
             > anlatsa
             
-            Turkish('sakla').wish(person=3, plural=True).to_string()
+            Turkish('sakla').wish(person=3, plural=True)
             > saklayalar
             
-            Turkish('anla').learned_past(person=3, question=True).to_string()
+            Turkish('anla').learned_past(person=3, question=True)
             > anlamış mı
             
-            Turkish('sat').past_learned_past(person=2, negative=True).to_string()
+            Turkish('sat').past_learned_past(person=2, negative=True)
             > satmamıştın
             
-            Turkish('kork').learned_past_learned_past(person=3).to_string()
+            Turkish('kork').learned_past_learned_past(person=3)
             > korkmuşmuş
             
-            Turkish('oyna').learned_past_future(person=2, negative=True).to_string()
+            Turkish('oyna').learned_past_future(person=2, negative=True)
             > oynamayacakmışsın
             
-            Turkish('oyna').past_future(person=2, negative=True, question=True).to_string()
+            Turkish('oyna').past_future(person=2, negative=True, question=True)
             > oynamayacak mıydın
             
-            Turkish('oyna').past_past(person=2, negative=True).to_string()
+            Turkish('oyna').past_past(person=2, negative=True)
             > oynamadıydın
             
-            Turkish('gül').past_condition(person=2).to_string()
+            Turkish('gül').past_condition(person=2)
             > güldüysen
         
         ## Turkish Grammar
