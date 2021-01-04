@@ -25,6 +25,7 @@ def concat(string_left, string_right):
     
     return return_data
 
+
 def from_upper_or_lower(new_word, reference_word):
     if is_upper(reference_word[len(reference_word) - 1]):
         return_data = make_upper(new_word)
@@ -88,7 +89,7 @@ def last_letter(word):
     else:
         return_data['consonant'] = True
         
-        if actual_last_letter in consonants.DISCONTINUOUS_HARD_CONSONANTS and word not in consonants.ARABIC_K:
+        if actual_last_letter in consonants.DISCONTINUOUS_HARD_CONSONANTS:
             return_data['discontinuous_hard_consonant'] = True
             actual_last_letter = consonants.SOFTEN_DHC[
                 consonants.DISCONTINUOUS_HARD_CONSONANTS.index(actual_last_letter)
@@ -100,7 +101,7 @@ def last_letter(word):
     if actual_last_letter == '\'':
         actual_last_letter = word[len(word) - 2]
 
-    if actual_last_letter in consonants.HARD_CONSONANTS and word not in consonants.ARABIC_K:
+    if actual_last_letter in consonants.HARD_CONSONANTS and word:
         return_data['hard_consonant'] = True
 
         if actual_last_letter in consonants.DISCONTINUOUS_HARD_CONSONANTS_AFTER_SUFFIX:

@@ -228,6 +228,47 @@ class Turkish:
 
         return self.common_return(**kwargs)
 
+    def equalative(self, **kwargs):
+        """
+            Ismin esitlik hali: -ce, -ca etc.
+        """
+
+        if last_vowel(self.word)['tone'] == 'front':
+            letter = 'a'
+        else:
+            letter = 'e'
+
+        actual_last_letter = last_letter(self.word)
+
+        if actual_last_letter['letter'] in HARD_CONSONANTS:
+            self.word = concat(self.word, f'ç{letter}')
+        else:
+            self.word = concat(self.word, f'c{letter}')
+
+        return self.common_return(**kwargs)
+
+    def instrumental(self, **kwargs):
+        """
+            Ismin vasıta hali: -le, -la, -yle, -yla
+        """
+        if kwargs.get('proper_noun'):
+            self.word += '\''
+
+        if last_vowel(self.word)['tone'] == 'front':
+            letter = 'a'
+        else:
+            letter = 'e'
+
+        actual_last_letter = last_letter(self.word)
+        last_letter_is_vowel = actual_last_letter['letter'] in VOWELS
+
+        if last_letter_is_vowel:
+            self.word = concat(self.word, f'y')
+
+        self.word = concat(self.word, f'l{letter}')
+
+        return self.common_return(**kwargs)
+
     def possessive(self, **kwargs):
         """
             Iyelik tamlanan eki
