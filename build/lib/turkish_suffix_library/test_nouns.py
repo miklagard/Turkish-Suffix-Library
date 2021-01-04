@@ -9,11 +9,13 @@ print(Turkish('Cem').ablative(proper_noun=True))
 print(Turkish('Cem').accusative(proper_noun=True))
 
 print(Turkish('çanta').plural().possessive(person=1).ablative().to_json())
-print(Turkish('çanta').possessive(person=2))
-print(Turkish('çanta').possessive(person=3))
+print(Turkish('aparat').possessive(person=2))
+print(Turkish('batak').possessive(person=3))
 
-print(Turkish('çanta').possessive(person=1, plural=True))
+print(Turkish('idrak').possessive(person=1, plural=True))
 print(Turkish('çanta').possessive(person=2, plural=True))
 print(Turkish('çanta').possessive(person=3, plural=True))
 
 print(f'{Turkish("Elif").genitive(proper_noun=True)} {Turkish("Öküz").possessive(person=3)}.')
+
+print(Turkish('dört').ordinal())

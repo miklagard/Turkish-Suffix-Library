@@ -1420,3 +1420,35 @@ class Turkish:
             ).to_string()
 
         return self.common_return(**kwargs)
+
+    def ordinal(self, **kwargs):
+        """
+            Ordinal numbers: One->First, Two->Second etc.
+
+            bir-i-nci, iki-nci...
+
+            This rule is also valid for words:
+            * son (last) -> sonuncu
+            * ilk (first) -> ilkinci (ilk already means "first" but you can still put this suffix)
+        """
+
+        actual_last_letter = last_letter(self.word)
+        actual_last_vowel = last_vowel(self.word)
+        minor_harmony_letter = MINOR_HARMONY[actual_last_vowel['letter']]
+
+        last_letter_is_vowel = actual_last_letter['letter'] in VOWELS
+
+        if kwargs.get('proper_noun'):
+            self.word += '\''
+        elif actual_last_letter.get('letter') == 't':
+            self.word = concat(
+                self.word[0:len(self.word) - 1],
+                'd'
+            )
+
+        if not last_letter_is_vowel:
+            self.word = concat(self.word, f'{minor_harmony_letter}')
+
+        self.word = concat(self.word, f'nc{minor_harmony_letter}')
+
+        return self.common_return(**kwargs)
