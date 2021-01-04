@@ -122,33 +122,14 @@ def soften(parameter_word, proper_noun=False, negative=False):
 
     if proper_noun:
         word += '\''
-    elif 'discontinuous_hard_consonant' in actual_last_letter \
-            and (
-                word in consonants.ARABIC_T \
-                or word not in consonants.ARABIC_K
-            ):
+    elif 'discontinuous_hard_consonant' in actual_last_letter:
         if actual_last_vowel['vowel_count'] > 1:
-            word = concat(
-                word[0:len(word) - 1],
-                actual_last_letter['soften_consonant']
-            )
-
-    return word
-
-
-def harden(parameter_word, proper_noun=False, negative=False):
-    word = parameter_word
-
-    actual_last_letter = last_letter(word)
-    actual_last_vowel = last_vowel(word)
-
-    if proper_noun:
-        word += '\''
-    elif actual_last_letter.get('hard_consonant'):
-        word = concat(
-            word[0:len(word) - 1],
-            actual_last_letter['soften_consonant']
-        )
+            if word not in consonants.ARABIC_K or actual_last_letter.get('letter') != 'k':
+                if word in consonants.ARABIC_T or actual_last_letter.get('letter') != 't':
+                    word = concat(
+                        word[0:len(word) - 1],
+                        actual_last_letter['soften_consonant']
+                    )
 
     return word
 

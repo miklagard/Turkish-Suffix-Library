@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: turkish-suffix-library
-Version: 0.4.6
+Version: 0.4.7
 Summary: Turkish suffix library
 Home-page: https://github.com/miklagard/Turkish-Suffix-Library
 Author: Cem Yildiz
@@ -19,45 +19,46 @@ Description: Turkish.py
         #### Nouns
             from turkish_suffix_library.turkish import Turkish
         
-            print(f'{Turkish("Elif").genitive(proper_noun=True)} {Turkish("öküz").possessive(person=3)}.')
-        
-            print(Turkish('Öykü').genitive(proper_noun=True))
-            print(Turkish('Cem').dative(proper_noun=True))
-            print(Turkish('Nil').dative(proper_noun=True))
-            print(Turkish('ALİ').dative(proper_noun=True))
-            print(Turkish('Taylan').ablative(proper_noun=True))
-            print(Turkish('Amasya').accusative(proper_noun=True))
-            print(Turkish('ağaç').genitive(proper_noun=False))
-            print(Turkish('erik').accusative(proper_noun=False))
-            print(Turkish('Erik').accusative(proper_noun=True))
-            print(Turkish('kavanoz').possessive(person=1))
-            print(Turkish('kavanoz').possessive(person=2))
-            print(Turkish('kavanoz').possessive(person=3))
-            print(Turkish('halter').possessive(person=1, plural=True))
-            print(Turkish('halter').possessive(person=2, plural=True))
-            print(Turkish('halter').possessive(person=3, plural=True))
-            print(Turkish('Kenya').possessive(person=3, plural=True))
+            print(Turkish('araba').dative())
+            print(Turkish('sebep').ablative())
+            print(Turkish('sebep').accusative())
+            print(Turkish('ecdat').accusative())
+           
             print(Turkish('çanta').plural().possessive(person=1).ablative().to_json())
+            print(Turkish('aparat').possessive(person=2))
+            print(Turkish('batak').possessive(person=3))
+           
+            print(Turkish('idrak').possessive(person=1, plural=True))
+            print(Turkish('ok').possessive(person=2, plural=True))
+            print(Turkish('çanta').possessive(person=3, plural=True))
+           
+            print(f'{Turkish("Elif").genitive(proper_noun=True)} {Turkish("Öküz").possessive(person=3)}.')
+           
+            print(Turkish('dört').ordinal())
+            print(Turkish('yedi').distributive())
                 
         ##### Output
-            Elif'in öküzü.
-            Öykü'nün
-            Cem'e
-            Nil'e
-            ALİ'YE
-            Taylan'dan
-            Amasya'yı
-            ağacın
-            eriği
-            Erik'i
-            kavanozum
-            kavanozun
-            kavanozu
-            halterimiz
-            halteriniz
-            halterleri
-            Kenyaları
-            {'result': 'çantalarımdan', 'stem': 'çanta', 'history': [{'action': 'plural', 'current': 'çantalar', 'kwargs': {}}, {'action': 'possessive', 'current': 'çantalarım', 'kwargs': {'person': 1}}, {'action': 'ablative', 'current': 'çantalarımdan', 'kwargs': {}}]}
+            arabaya
+            sebepten
+            sebebi
+            ecdadı
+            {
+                 'result': 'çantalarımdan', 
+                 'stem': 'çanta', 
+                 'history': [
+                    {'action': 'plural', 'current': 'çantalar', 'kwargs': {}}, 
+                    {'action': 'possessive', 'current': 'çantalarım', 'kwargs': {'person': 1}}, 
+                    {'action': 'ablative', 'current': 'çantalarımdan', 'kwargs': {}}
+                 ]
+            }
+            aparatın
+            batağı
+            idrakımız
+            okunuz
+            çantaları
+            Elif'in Öküzü.
+            dördüncü
+            yedişer
         
         
         ### Verbs

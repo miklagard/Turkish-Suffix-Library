@@ -1452,3 +1452,35 @@ class Turkish:
         self.word = concat(self.word, f'nc{minor_harmony_letter}')
 
         return self.common_return(**kwargs)
+
+    def distributive(self, **kwargs):
+        """
+            Distributive numbers: One->One each, Two->Two each.
+
+            bir-er, iki-şer...
+        """
+
+        actual_last_letter = last_letter(self.word)
+        actual_last_vowel = last_vowel(self.word)
+
+        if actual_last_vowel['tone'] == 'front':
+            letter = 'a'
+        else:
+            letter = 'e'
+
+        last_letter_is_vowel = actual_last_letter['letter'] in VOWELS
+
+        if kwargs.get('proper_noun'):
+            self.word += '\''
+        elif actual_last_letter.get('letter') == 't':
+            self.word = concat(
+                self.word[0:len(self.word) - 1],
+                'd'
+            )
+
+        if last_letter_is_vowel:
+            self.word = concat(self.word, f'ş')
+
+        self.word = concat(self.word, f'{letter}r')
+
+        return self.common_return(**kwargs)
