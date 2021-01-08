@@ -237,3 +237,19 @@ EXCEPTION_MISSING = {
     'karın': 'karn' #same with this, karın (your wife) or karın (stomach)? for karın (your wife) there is not a such exception
     #katli, katle, katli etc. it doesn't really have a nominative case but only with suffixes?
 }    
+
+
+N_CONNECTOR = [
+    'o', 'bu', 'şu'
+]
+
+# de + iyorum = diyorum
+VERBS_LOSING_VOWELS = {
+    'ye': 'yi',
+    'de': 'di'
+}
+
+# git -> gider, sat -> satar
+VERBS_HARDEN = {
+    'git': 'gid'
+}

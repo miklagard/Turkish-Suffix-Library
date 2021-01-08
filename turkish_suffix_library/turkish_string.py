@@ -70,6 +70,10 @@ def last_vowel(word):
     return return_data
 
 
+def change_last_letter(word, new_last_letter):
+    return concat(word[0:len(word) - 1], new_last_letter)
+
+
 def last_letter(word):
     word = make_lower(word)
     return_data = {}
