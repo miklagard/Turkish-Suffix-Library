@@ -18,3 +18,5 @@ print(f'{Turkish("Elif").genitive(proper_noun=True)} {Turkish("Öküz").possessi
 print(Turkish('dört').ordinal())
 print(Turkish('yedi').distributive())
 print(Turkish('kedi').instrumental())
+
+print(Turkish('al').passive().present_continuous(person=2, negative=True))

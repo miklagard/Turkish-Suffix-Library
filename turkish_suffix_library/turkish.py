@@ -8,7 +8,7 @@ from turkish_suffix_library.turkish_string import make_lower, \
 
 from turkish_suffix_library.consonants import HARD_CONSONANTS, \
     MINOR_HARMONY, VOWELS, MINOR_HARMONY_FOR_FUTURE, N_CONNECTOR, VERBS_LOSING_VOWELS, \
-    VERBS_HARDEN
+    VERBS_HARDEN, PASSIVE_EXCEPTION
 
 
 class Turkish:
@@ -1254,27 +1254,6 @@ class Turkish:
         return self.common_return(**kwargs)
 
     @proceed_letters
-    def adverb_while(self, **kwargs):
-        """
-            Giderken etc. (iken)
-
-            Generates adverb for "while"
-
-            Use this method after conjuncting the verb with tense and person
-
-            Person should be always 3rd person plural or 3rd person singular
-
-            Example:
-            Turkish('ver').present_continuous_alternative(person=3).adverb_while()
-        """
-        if kwargs['last_letter_is_vowel']:
-            self.word = concat(self.word, f'y')
-
-        self.word = concat(self.word, f'ken')
-
-        return self.common_return(**kwargs)
-
-    @proceed_letters
     def passive(self, **kwargs):
         """
             Turns verb into passive (edilgen):
@@ -1288,11 +1267,209 @@ class Turkish:
             Turkish('ver').passive().present_continuous_alternative(person=1)
             verilmekteyim
         """
-        letter_i = kwargs.get('letter_i')
+        self.word = VERBS_HARDEN.get(self.word, self.word)
 
+        minor = MINOR_HARMONY[kwargs['last_vowel']['letter']]
+
+        if kwargs['lower_word'] in PASSIVE_EXCEPTION:
+            self.word = PASSIVE_EXCEPTION.get(kwargs['lower_word'])
+        else:
+            if kwargs['last_letter_is_vowel']:
+                self.word = concat(self.word, f'n')
+
+            self.word = concat(self.word, f'{minor}l')
+
+        return self.common_return(**kwargs)
+
+    @proceed_letters
+    def adverb_verb_during_action(self, **kwargs):
+        """
+            Giderken etc. (iken)
+
+            Generates adverb-verb for "while", doing two things together:
+
+            He was smoking while sipping vodka.
+            Sigara icerken vodka yudumluyordu.
+
+            Use this method after conjuncting the verb with tense and person
+
+            Person should be always 3rd person plural or 3rd person singular
+
+            Example:
+            Turkish('ver').present_continuous_alternative(person=3).adverb_verb_during_action()
+        """
         if kwargs['last_letter_is_vowel']:
-            self.word = concat(self.word, f'n')
+            self.word = concat(self.word, f'y')
 
-        self.word = concat(self.word, f'{letter_i}l')
+        self.word = concat(self.word, f'ken')
+
+        return self.common_return(**kwargs)
+
+    @proceed_letters
+    def adverb_verb_continuity(self, **kwargs):
+        """
+            Git -> Gide gide etc. (-e)
+
+            Use this method without conjuncting
+        """
+        ae = kwargs.get('ae')
+
+        if kwargs.get('negative'):
+            self.word = f'm{ae}y'
+        else:
+            self.word = VERBS_HARDEN.get(self.word, self.word)
+
+            if kwargs['last_letter_is_vowel']:
+                self.word = concat(self.word, f'y')
+
+        self.word = concat(self.word, f'{ae}')
+
+        self.word = f'{self.word} {self.word}'
+
+        return self.common_return(**kwargs)
+
+    @proceed_letters
+    def adverb_verb_repeatedly(self, **kwargs):
+        """
+            Git -> Gide gide etc. (-e)
+
+            Use this method without conjuncting
+        """
+        ae = kwargs.get('ae')
+
+        self.word = self.past(
+            negative=kwargs.get('negative'),
+            person=1,
+            plural=True
+        ).to_string()
+
+        self.word = concat(self.word, f'ç{ae}')
+
+        return self.common_return(**kwargs)
+
+    @proceed_letters
+    def adverb_verb_after_action(self, **kwargs):
+        """
+            Gidince etc. (-nca)
+
+            Generates adverb-verb for "after"
+
+            Use this method without any conjuncting
+        """
+
+        ae = kwargs['ae']
+        letter_i = kwargs['letter_i']
+        minor = MINOR_HARMONY[kwargs['last_vowel']['letter']]
+        self.word = VERBS_HARDEN.get(self.word, self.word)
+
+        if kwargs.get('negative'):
+            self.word = concat(self.word, f'm{ae}y{letter_i}')
+        elif kwargs['last_letter_is_vowel']:
+            self.word = concat(self.word, f'y{minor}')
+
+        self.word = concat(self.word, f'nc{ae}')
+
+        return self.common_return(**kwargs)
+
+    @proceed_letters
+    def adverb_verb_after_action_alternative(self, **kwargs):
+        """
+            Gidip etc. (-p)
+
+            Generates adverb-verb for "after"
+
+            Use this method without any conjuncting
+        """
+
+        ae = kwargs['ae']
+        minor = MINOR_HARMONY[kwargs['last_vowel']['letter']]
+
+        if kwargs.get('negative'):
+            self.word = concat(self.word, f'm{ae}y')
+        elif kwargs['last_letter_is_vowel']:
+            self.word = concat(self.word, f'y')
+        else:
+            self.word = VERBS_HARDEN.get(self.word, self.word)
+
+        self.word = concat(self.word, f'{minor}p')
+
+        return self.common_return(**kwargs)
+
+    @proceed_letters
+    def adverb_verb_without_action(self, **kwargs):
+        """
+            Gitmeden etc. (-madan)
+
+            Generates adverb-verb for "without action"
+
+            Use this method without any conjuncting
+        """
+
+        ae = kwargs['ae']
+        self.word = concat(self.word, f'm{ae}d{ae}n')
+
+        return self.common_return(**kwargs)
+
+    @proceed_letters
+    def adverb_verb_without_action_alternative(self, **kwargs):
+        """
+            Gitmeksizin etc. (-meksizin)
+
+            Generates adverb-verb for "without action"
+
+            Use this method without any conjuncting
+        """
+
+        letter_i = kwargs['letter_i']
+        self.word = self.infinitive().to_string()
+        self.word = concat(self.word, f's{letter_i}z{letter_i}n')
+
+        return self.common_return(**kwargs)
+
+    @proceed_letters
+    def adverb_verb_by_action(self, **kwargs):
+        """
+            Giderek etc. (-erek)
+
+            Generates adverb-verb for "by action"
+
+            Use this method without any conjuncting
+        """
+
+        ae = kwargs['ae']
+        if kwargs.get('negative'):
+            self.word = concat(self.word, f'm{ae}y')
+        else:
+            self.word = VERBS_HARDEN.get(self.word, self.word)
+
+            if kwargs['last_letter_is_vowel']:
+                self.word = concat(self.word, 'y')
+
+        self.word = concat(self.word, f'{ae}r{ae}k')
+
+        return self.common_return(**kwargs)
+
+    @proceed_letters
+    def adverb_verb_since_action(self, **kwargs):
+        """
+            Gideli etc. (-eli)
+
+            Generates adverb-verb for "since action"
+
+            Use this method without any conjuncting
+        """
+
+        ae = kwargs['ae']
+        letter_i = kwargs['letter_i']
+
+        if kwargs.get('negative'):
+            self.word = concat(self.word, f'm{ae}y')
+        else:
+            self.word = VERBS_HARDEN.get(self.word, self.word)
+
+            if kwargs['last_letter_is_vowel']:
+                self.word = concat(self.word, 'y')
+
+        self.word = concat(self.word, f'{ae}l{letter_i}')
 
         return self.common_return(**kwargs)

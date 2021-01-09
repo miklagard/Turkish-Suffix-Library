@@ -205,7 +205,7 @@ MAJOR_HAMONY_EXCEPTIONS = (
     'sosyal',
     'spesiyal',
     'sual',
-    'tefal' # brand,
+    'tefal'  # brand,
     'termal',
     'terminal',
     'total',
@@ -251,5 +251,12 @@ VERBS_LOSING_VOWELS = {
 
 # git -> gider, sat -> satar
 VERBS_HARDEN = {
-    'git': 'gid'
+    'git': 'gid',
+    'et': 'ed'
+}
+
+# Passive verbs exceptions
+PASSIVE_EXCEPTION = {
+    'öl': 'ölün',
+    'al': 'alın',
 }
