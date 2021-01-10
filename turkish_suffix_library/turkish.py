@@ -1282,7 +1282,7 @@ class Turkish:
         return self.common_return(**kwargs)
 
     @proceed_letters
-    def adverb_verb_during_action(self, **kwargs):
+    def adverb_during_action(self, **kwargs):
         """
             Giderken etc. (iken)
 
@@ -1296,7 +1296,7 @@ class Turkish:
             Person should be always 3rd person plural or 3rd person singular
 
             Example:
-            Turkish('ver').present_continuous_alternative(person=3).adverb_verb_during_action()
+            Turkish('ver').present_continuous_alternative(person=3).adverb_during_action()
         """
         if kwargs['last_letter_is_vowel']:
             self.word = concat(self.word, f'y')
@@ -1306,7 +1306,7 @@ class Turkish:
         return self.common_return(**kwargs)
 
     @proceed_letters
-    def adverb_verb_continuity(self, **kwargs):
+    def adverb_continuity(self, **kwargs):
         """
             Git -> Gide gide etc. (-e)
 
@@ -1315,7 +1315,7 @@ class Turkish:
         ae = kwargs.get('ae')
 
         if kwargs.get('negative'):
-            self.word = f'm{ae}y'
+            self.word = concat(self.word, f'm{ae}y')
         else:
             self.word = VERBS_HARDEN.get(self.word, self.word)
 
@@ -1329,7 +1329,7 @@ class Turkish:
         return self.common_return(**kwargs)
 
     @proceed_letters
-    def adverb_verb_repeatedly(self, **kwargs):
+    def adverb_repeatedly(self, **kwargs):
         """
             Git -> Gide gide etc. (-e)
 
@@ -1348,7 +1348,7 @@ class Turkish:
         return self.common_return(**kwargs)
 
     @proceed_letters
-    def adverb_verb_after_action(self, **kwargs):
+    def adverb_after_action(self, **kwargs):
         """
             Gidince etc. (-nca)
 
@@ -1372,7 +1372,7 @@ class Turkish:
         return self.common_return(**kwargs)
 
     @proceed_letters
-    def adverb_verb_after_action_alternative(self, **kwargs):
+    def adverb_after_action_alternative(self, **kwargs):
         """
             Gidip etc. (-p)
 
@@ -1396,7 +1396,7 @@ class Turkish:
         return self.common_return(**kwargs)
 
     @proceed_letters
-    def adverb_verb_without_action(self, **kwargs):
+    def adverb_without_action(self, **kwargs):
         """
             Gitmeden etc. (-madan)
 
@@ -1411,7 +1411,7 @@ class Turkish:
         return self.common_return(**kwargs)
 
     @proceed_letters
-    def adverb_verb_without_action_alternative(self, **kwargs):
+    def adverb_without_action_alternative(self, **kwargs):
         """
             Gitmeksizin etc. (-meksizin)
 
@@ -1427,7 +1427,7 @@ class Turkish:
         return self.common_return(**kwargs)
 
     @proceed_letters
-    def adverb_verb_by_action(self, **kwargs):
+    def adverb_by_action(self, **kwargs):
         """
             Giderek etc. (-erek)
 
@@ -1450,7 +1450,7 @@ class Turkish:
         return self.common_return(**kwargs)
 
     @proceed_letters
-    def adverb_verb_since_action(self, **kwargs):
+    def adverb_since_action(self, **kwargs):
         """
             Gideli etc. (-eli)
 
