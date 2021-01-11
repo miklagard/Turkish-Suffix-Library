@@ -9,13 +9,28 @@ class Adverb(unittest.TestCase):
             'itiyorken'
         )
 
+        self.assertEqual(
+            Turkish('it').present_continuous(negative=True).adverb_during_action().to_string(),
+            'itmiyorken'
+        )
+
     def test_adverb_after_action(self):
+        self.assertEqual(
+            Turkish('gül').adverb_after_action().to_string(),
+            'gülünce'
+        )
+
         self.assertEqual(
             Turkish('gül').adverb_after_action(negative=True).to_string(),
             'gülmeyince'
         )
 
     def test_adverb_after_action_alternative(self):
+        self.assertEqual(
+            Turkish('git').adverb_after_action_alternative().to_string(),
+            'gidip'
+        )
+
         self.assertEqual(
             Turkish('git').adverb_after_action_alternative(negative=True).to_string(),
             'gitmeyip'
@@ -35,6 +50,11 @@ class Adverb(unittest.TestCase):
 
     def test_adverb_by_action(self):
         self.assertEqual(
+            Turkish('ata').adverb_by_action(negative=True).to_string(),
+            'atamayarak'
+        )
+
+        self.assertEqual(
             Turkish('ata').adverb_by_action().to_string(),
             'atayarak'
         )
@@ -45,13 +65,28 @@ class Adverb(unittest.TestCase):
             'anlata anlata'
         )
 
+        self.assertEqual(
+            Turkish('anlat').adverb_continuity(negative=True).to_string(),
+            'anlatmaya anlatmaya'
+        )
+
     def test_adverb_repeatedly(self):
         self.assertEqual(
             Turkish('vur').adverb_repeatedly().to_string(),
             'vurdukça'
         )
 
+        self.assertEqual(
+            Turkish('vur').adverb_repeatedly(negative=True).to_string(),
+            'vurmadıkça'
+        )
+
     def test_adverb_since_action(self):
+        self.assertEqual(
+            Turkish('ara').adverb_since_action().to_string(),
+            'arayalı'
+        )
+
         self.assertEqual(
             Turkish('ara').adverb_since_action(negative=True).to_string(),
             'aramayalı'

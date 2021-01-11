@@ -28,6 +28,8 @@ Turkish.py
    
     print(Turkish('dört').ordinal())
     print(Turkish('yedi').distributive())
+    Turkish('kedi').instrumental()
+
         
 ##### Output
     arabaya
@@ -51,7 +53,17 @@ Turkish.py
     Elif'in Öküzü.
     dördüncü
     yedişer
+    kediyle
 
+
+# Adverbs
+    Turkish('vur').adverb_repeatedly()
+    > vurdukça
+
+    Turkish('ara').adverb_since_action()
+    > arayalı
+
+    etc.
 
 ### Verbs
     Parameters: person (1, 2, 3), negative (boolean), question (boolean), plural (boolean)

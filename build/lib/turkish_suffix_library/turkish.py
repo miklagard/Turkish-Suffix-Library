@@ -1366,6 +1366,8 @@ class Turkish:
             self.word = concat(self.word, f'm{ae}y{letter_i}')
         elif kwargs['last_letter_is_vowel']:
             self.word = concat(self.word, f'y{minor}')
+        else:
+            self.word = concat(self.word, f'{minor}')
 
         self.word = concat(self.word, f'nc{ae}')
 
