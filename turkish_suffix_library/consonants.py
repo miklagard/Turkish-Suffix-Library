@@ -93,12 +93,16 @@ ARABIC_K = (
     'memluk',
     'merak',
     'mihrak',
+    'mülk',
     'müşfik',
     'müttefik',
     'nifak',
+    'sevk',
+    'sirk',
     'şerik',
     'taalluk',
-    'tarik'
+    'tarik',
+    'zevk'
 )
 
 # The exception words which has non-Turkish origins don't fit for standard Turkish Major Vowel Harmony
@@ -236,7 +240,7 @@ EXCEPTION_MISSING = {
     'koyun': 'koyn', # koyun (sheep) or koyun (bosom)? for koyun (sheep) there is no exception but for koyun (bosom) there is. aaaaargh turkish!!
     'karın': 'karn' #same with this, karın (your wife) or karın (stomach)? for karın (your wife) there is not a such exception
     #katli, katle, katli etc. it doesn't really have a nominative case but only with suffixes?
-}    
+}
 
 
 N_CONNECTOR = [
@@ -259,4 +263,9 @@ VERBS_HARDEN = {
 PASSIVE_EXCEPTION = {
     'öl': 'ölün',
     'al': 'alın',
+}
+
+# K -> G change in Persian originated words
+PERSIAN_K = {
+    'renk': 'reng'
 }
