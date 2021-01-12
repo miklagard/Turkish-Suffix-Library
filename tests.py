@@ -100,6 +100,16 @@ class Noun(unittest.TestCase):
             'arabaya'
         )
 
+        self.assertEqual(
+            Turkish('renk').dative().to_string(),
+            'renge'
+        )
+
+        self.assertEqual(
+            Turkish('bank').dative().to_string(),
+            'banka'
+        )
+
     def test_ablative(self):
         self.assertEqual(
             Turkish('sebep').ablative().to_string(),

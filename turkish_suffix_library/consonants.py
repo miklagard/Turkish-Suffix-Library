@@ -265,7 +265,34 @@ PASSIVE_EXCEPTION = {
     'al': 'alın',
 }
 
-# K -> G change in Persian originated words
-PERSIAN_K = {
-    'renk': 'reng'
+# K -> G change in some nouns ending with -nk (not all of them, for instance: link, bank)
+NK_G_CHANGE = {
+    'renk': 'reng',
+    'frank': 'frang',
+    'frenk': 'freng',
+    'prezevenk': 'prezeveng',
+    'rengarenk': 'rengareng',
+    'mürdesenk': 'mürdeseng',
+    'mühresenk': 'mühreseng',
+    'şekerrenk': 'şekerreng',
+    'plesenk': 'pleseng',
+    'denk': 'deng',
+    'persenk': 'perseng',
+    'çelenk': 'çeleng',
+    'filenk': 'fileng',
+    'fiyonk': 'fiyong',
+    'hevenk': 'heveng',
+    'kepenk': 'kepeng',
+    'ornitorenk': 'ornitoreng',
+    'külünk': 'külüng',
+    'pelenk': 'peleng',
+    'tırınk': 'tırıng',
+    'ahenk': 'aheng',
+    'krank': 'krang',
+    'skink': 'sking',
+    'cenk': 'ceng',
+    'zonk': 'zong',
+    'künk': 'küng',
+    'dink': 'ding',
+    'gonk': 'gong',
 }

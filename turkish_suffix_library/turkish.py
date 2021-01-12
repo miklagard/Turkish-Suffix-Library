@@ -8,7 +8,7 @@ from turkish_suffix_library.turkish_string import make_lower, \
 
 from turkish_suffix_library.consonants import HARD_CONSONANTS, \
     MINOR_HARMONY, VOWELS, MINOR_HARMONY_FOR_FUTURE, N_CONNECTOR, VERBS_LOSING_VOWELS, \
-    VERBS_HARDEN, PASSIVE_EXCEPTION
+    VERBS_HARDEN, PASSIVE_EXCEPTION, NK_G_CHANGE
 
 
 class Turkish:
@@ -90,6 +90,7 @@ class Turkish:
             else:
                 self.word = concat(self.word, 'y')
 
+        self.word = NK_G_CHANGE.get(make_lower(self.word), self.word)
         self.word = soften(self.word)
 
         self.word = concat(
@@ -118,6 +119,7 @@ class Turkish:
         elif lower_word == 'sen' and not proper_noun:
             self.word = from_upper_or_lower('sana', self.word)
         else:
+            self.word = NK_G_CHANGE.get(make_lower(self.word), self.word)
             self.word = exception_missing(self.word, proper_noun)
 
             actual_last_letter = last_letter(self.word)
@@ -204,6 +206,8 @@ class Turkish:
             if kwargs['last_letter_is_vowel']:
                 self.word = concat(self.word, 'n')
         else:
+            self.word = NK_G_CHANGE.get(make_lower(self.word), self.word)
+
             if kwargs['last_letter_is_vowel']:
                 self.word = concat(self.word, 'n')
             else:
@@ -275,30 +279,40 @@ class Turkish:
 
         if not is_plural:
             if person == '1':
+                self.word = NK_G_CHANGE.get(make_lower(self.word), self.word)
+
                 if not last_letter_is_vowel:
                     self.word = concat(self.word, minor_harmony_letter)
 
                 self.word = concat(self.word, 'm')
 
             elif person == '2':
+                self.word = NK_G_CHANGE.get(make_lower(self.word), self.word)
+
                 if not last_letter_is_vowel:
                     self.word = concat(self.word, minor_harmony_letter)
 
                 self.word = concat(self.word, 'n')
 
             elif person == '3':
+                self.word = NK_G_CHANGE.get(make_lower(self.word), self.word)
+
                 if last_letter_is_vowel:
                     self.word = concat(self.word, 's')
 
                 self.word = concat(self.word, minor_harmony_letter)
         else:
             if person == '1':
+                self.word = NK_G_CHANGE.get(make_lower(self.word), self.word)
+
                 if not last_letter_is_vowel:
                     self.word = concat(self.word, minor_harmony_letter)
 
                 self.word = concat(self.word, f'm{minor_harmony_letter}z')
 
             elif person == '2':
+                self.word = NK_G_CHANGE.get(make_lower(self.word), self.word)
+
                 if not last_letter_is_vowel:
                     self.word = concat(self.word, minor_harmony_letter)
 
@@ -756,6 +770,8 @@ class Turkish:
 
         self.word = soften(self.word)
         ae = kwargs['ae']
+
+        self.word = VERBS_HARDEN.get(self.word, self.word)
 
         if not kwargs.get('negative', False):
             if kwargs.get('auxiliary') in ['ver', 'koy']:
