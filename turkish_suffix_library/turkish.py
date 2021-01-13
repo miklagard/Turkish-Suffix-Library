@@ -362,8 +362,9 @@ class Turkish:
                     present_continuous_alternative
         """
         from_able = self.is_from_able()
+        negative = kwargs.get('negative', False)
 
-        if not kwargs.get('negative', False):
+        if not negative:
             self.word = VERBS_HARDEN.get(self.word, self.word)
 
             if kwargs['last_letter_is_vowel']:
@@ -376,10 +377,15 @@ class Turkish:
         else:
             if not from_able:
                 self.word = concat(self.word, 'm')
-                self.word = concat(
-                    self.word,
-                    MINOR_HARMONY[kwargs['last_vowel']['letter']]
-                )
+            else:
+                self.word = self.word[:-1]
+
+            vowel = last_vowel(self.word)
+
+            self.word = concat(
+                self.word,
+                MINOR_HARMONY[vowel['letter']]
+            )
 
         self.word = concat(self.word, 'yor')
 
