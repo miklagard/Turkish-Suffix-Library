@@ -113,7 +113,12 @@ class TurkishClass:
             self.change_last_letter(new_letter)
 
     def harden_verb(self):
-        self.word = self.from_upper_or_lower(VERBS_HARDEN.get(self.word, self.word))
+        lower = self.lower()
+
+        for hard in VERBS_HARDEN:
+            if hard == lower[-len(hard):]:
+                self.word = concat(self.word[:-len(hard)], VERBS_HARDEN[hard])
+
         return self.word
 
     def verbs_losing_vowels(self):

@@ -350,7 +350,7 @@ class Turkish(TurkishClass):
         elif kwargs.get('question', False):
             if not kwargs.get('plural', False):
                 if kwargs.get('person', 3) == 1:
-                    self.concat(f' m{self.minor}y')
+                    self.concat(f' m{self.minor()}y')
                     self.concat(f'{self.minor()}m')
                 elif kwargs.get('person', 3) == 2:
                     self.concat(f' m{self.minor()}s')

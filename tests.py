@@ -185,12 +185,5 @@ class Verb(unittest.TestCase):
             'alınmıyorsun'
         )
 
-print(Turkish('üşü').present_continuous_alternative(negative=True, question=True, person=1, plural=False))
-print(Turkish('üşü').present_continuous_alternative(negative=True, question=True, person=2, plural=False))
-print(Turkish('üşü').present_continuous_alternative(negative=True, question=True, person=3, plural=False))
-print(Turkish('üşü').present_continuous_alternative(negative=True, question=True, person=1, plural=True))
-print(Turkish('üşü').present_continuous_alternative(negative=True, question=True, person=2, plural=True))
-print(Turkish('üşü').present_continuous_alternative(negative=True, question=True, person=3, plural=True))
-
 if __name__ == '__main__':
     unittest.main()
