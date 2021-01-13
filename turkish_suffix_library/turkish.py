@@ -64,7 +64,7 @@ class Turkish:
     def is_from_able(self):
         if len(self.history):
             action = self.history[-1]['action']
-            auxiliary = self.history[-1]['kwargs']['auxiliary']
+            auxiliary = self.history[-1]['kwargs'].get('auxiliary')
 
             if action == 'unify_verbs' and auxiliary == 'bil':
                 return True
@@ -344,7 +344,9 @@ class Turkish:
 
         ae = kwargs.get('ae')
 
-        if kwargs.get('negative', False):
+        from_able = self.is_from_able()
+
+        if kwargs.get('negative', False) and not from_able:
             self.word = concat(self.word, f'm{ae}')
 
         self.word = concat(self.word, f'm{ae}k')
@@ -359,6 +361,7 @@ class Turkish:
             Note: For alternative usage of present continuous tense, check the function
                     present_continuous_alternative
         """
+        from_able = self.is_from_able()
 
         if not kwargs.get('negative', False):
             self.word = VERBS_HARDEN.get(self.word, self.word)
@@ -371,11 +374,12 @@ class Turkish:
                     MINOR_HARMONY[kwargs['last_vowel']['letter']]
                 )
         else:
-            self.word = concat(self.word, 'm')
-            self.word = concat(
-                self.word,
-                MINOR_HARMONY[kwargs['last_vowel']['letter']]
-            )
+            if not from_able:
+                self.word = concat(self.word, 'm')
+                self.word = concat(
+                    self.word,
+                    MINOR_HARMONY[kwargs['last_vowel']['letter']]
+                )
 
         self.word = concat(self.word, 'yor')
 
@@ -425,7 +429,10 @@ class Turkish:
                 * yapmaktayım
         """
         ae = kwargs.get('ae')
-        if kwargs.get('negative', False):
+
+        from_able = self.is_from_able()
+
+        if kwargs.get('negative', False) and not from_able:
             self.word = concat(self.word, f'm{ae}')
 
         self.word = self.infinitive().to_string()
@@ -649,7 +656,9 @@ class Turkish:
         """
         ae = kwargs['ae']
 
-        if kwargs.get('negative', False):
+        from_able = self.is_from_able()
+
+        if kwargs.get('negative', False) and not from_able:
             self.word = concat(self.word, f'm{ae}')
 
         if 'vowel' in kwargs['last_letter']:
@@ -745,7 +754,10 @@ class Turkish:
         """
 
         ae = kwargs['ae']
-        if kwargs.get('negative', False):
+
+        from_able = self.is_from_able()
+
+        if kwargs.get('negative', False) and not from_able:
             self.word = concat(self.word, f'm{ae}')
 
         minor = MINOR_HARMONY[kwargs['last_vowel']['letter']]
@@ -835,8 +847,9 @@ class Turkish:
 
         letter_a = kwargs['ae']
         letter_i = kwargs['letter_i']
+        from_able = self.is_from_able()
 
-        if kwargs.get('negative', False):
+        if kwargs.get('negative', False) and not from_able:
             self.word = concat(self.word, f'm{letter_a}')
 
         self.word = concat(self.word, f'm{letter_a}l{letter_i}')
@@ -868,7 +881,9 @@ class Turkish:
         letter_a = kwargs['ae']
         letter_i = kwargs['letter_i']
 
-        if kwargs.get('negative', False):
+        from_able = self.is_from_able()
+
+        if kwargs.get('negative', False) and not from_able:
             self.word = concat(self.word, f'm{letter_a}')
 
         self.word = concat(self.word, f's{letter_a}')
@@ -899,8 +914,12 @@ class Turkish:
         letter_a = kwargs['ae']
         letter_i = kwargs['letter_i']
 
+        from_able = self.is_from_able()
+
         if kwargs.get('negative', False):
-            self.word = concat(self.word, f'm{letter_a}y{letter_a}')
+            if not from_able:
+                self.word = concat(self.word, f'y{letter_a}')
+            self.word = concat(self.word, f'y{letter_a}')
         else:
             self.word = VERBS_LOSING_VOWELS.get(self.word, self.word)
 
@@ -943,7 +962,9 @@ class Turkish:
 
         ae = kwargs['ae']
 
-        if kwargs.get('negative', False):
+        from_able = self.is_from_able()
+
+        if kwargs.get('negative', False) and not from_able:
             self.word = concat(self.word, f'm{ae}')
 
         minor = MINOR_HARMONY[kwargs['last_vowel']['letter']]
@@ -986,7 +1007,9 @@ class Turkish:
         
         ae = kwargs['ae']
 
-        if kwargs.get('negative', False):
+        from_able = self.is_from_able()
+
+        if kwargs.get('negative', False) and not from_able:
             self.word = concat(self.word, f'm{ae}')
 
         actual_last_letter = last_letter(self.word)
@@ -1014,7 +1037,6 @@ class Turkish:
                 self.word = self.plural().to_string()
 
         if kwargs.get('question', False):
-            actual_last_vowel = last_vowel(self.word)
             minor = MINOR_HARMONY[last_vowel(self.word)['letter']]
 
             self.word = concat(self.word, f' m{minor}')
@@ -1362,8 +1384,12 @@ class Turkish:
         """
         ae = kwargs.get('ae')
 
+        from_able = self.is_from_able()
+
         if kwargs.get('negative'):
-            self.word = concat(self.word, f'm{ae}y')
+            if not from_able:
+                self.word = concat(self.word, f'm{ae}')
+            self.word = concat(self.word, f'y')
         else:
             self.word = VERBS_HARDEN.get(self.word, self.word)
 
@@ -1408,10 +1434,14 @@ class Turkish:
         ae = kwargs['ae']
         letter_i = kwargs['letter_i']
         minor = MINOR_HARMONY[kwargs['last_vowel']['letter']]
+        from_able = self.is_from_able()
+
         self.word = VERBS_HARDEN.get(self.word, self.word)
 
         if kwargs.get('negative'):
-            self.word = concat(self.word, f'm{ae}y{letter_i}')
+            if not from_able:
+                self.word = concat(self.word, f'm{ae}')
+            self.word = concat(self.word, f'y{letter_i}')
         elif kwargs['last_letter_is_vowel']:
             self.word = concat(self.word, f'y{minor}')
         else:
@@ -1434,8 +1464,12 @@ class Turkish:
         ae = kwargs['ae']
         minor = MINOR_HARMONY[kwargs['last_vowel']['letter']]
 
+        from_able = self.is_from_able()
+
         if kwargs.get('negative'):
-            self.word = concat(self.word, f'm{ae}y')
+            if not from_able:
+                self.word = concat(self.word, f'm{ae}')
+            self.word = concat(self.word, f'y')
         elif kwargs['last_letter_is_vowel']:
             self.word = concat(self.word, f'y')
         else:
@@ -1456,7 +1490,13 @@ class Turkish:
         """
 
         ae = kwargs['ae']
-        self.word = concat(self.word, f'm{ae}d{ae}n')
+
+        from_able = self.is_from_able()
+
+        if not from_able:
+            self.word = concat(self.word, f'm{ae}')
+
+        self.word = concat(self.word, f'd{ae}n')
 
         return self.common_return(**kwargs)
 
@@ -1487,8 +1527,14 @@ class Turkish:
         """
 
         ae = kwargs['ae']
+
+        from_able = self.is_from_able()
+
         if kwargs.get('negative'):
-            self.word = concat(self.word, f'm{ae}y')
+            if not from_able:
+                self.word = concat(self.word, f'm{ae}')
+
+            self.word = concat(self.word, f'y')
         else:
             self.word = VERBS_HARDEN.get(self.word, self.word)
 
@@ -1512,8 +1558,13 @@ class Turkish:
         ae = kwargs['ae']
         letter_i = kwargs['letter_i']
 
+        from_able = self.is_from_able()
+
         if kwargs.get('negative'):
-            self.word = concat(self.word, f'm{ae}y')
+            if not from_able:
+                self.word = concat(self.word, f'm{ae}')
+
+            self.word = concat(self.word, f'y')
         else:
             self.word = VERBS_HARDEN.get(self.word, self.word)
 

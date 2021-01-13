@@ -138,8 +138,9 @@ Turkish.py
 
 The most of the methods are not supported yet, under development
 
-Source code: https://github.com/miklagard/tr
-Demo: https://trstem.com
+* Source code: https://github.com/miklagard/tr
+
+* Demo: https://trstem.com
 
 ## Other Languages 
       C# Version

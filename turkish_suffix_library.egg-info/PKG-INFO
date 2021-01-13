@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: turkish-suffix-library
-Version: 0.5.4
+Version: 0.5.5
 Summary: Turkish suffix library
 Home-page: https://github.com/miklagard/Turkish-Suffix-Library
 Author: Cem Yildiz
@@ -146,8 +146,9 @@ Description: Turkish.py
         
         The most of the methods are not supported yet, under development
         
-        Source code: https://github.com/miklagard/tr
-        Demo: https://trstem.com
+        * Source code: https://github.com/miklagard/tr
+        
+        * Demo: https://trstem.com
         
         ## Other Languages 
               C# Version
