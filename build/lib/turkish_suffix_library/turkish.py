@@ -1,53 +1,11 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 import inspect
 
-from turkish_suffix_library.turkish_string import make_lower, \
-    make_upper, concat, from_upper_or_lower, \
-    last_vowel, last_letter, soften, exception_missing, change_last_letter
+from turkish_suffix_library.turkish_class import TurkishClass
 
-from turkish_suffix_library.consonants import HARD_CONSONANTS, \
-    MINOR_HARMONY, VOWELS, MINOR_HARMONY_FOR_FUTURE, N_CONNECTOR, VERBS_LOSING_VOWELS, \
-    VERBS_HARDEN, PASSIVE_EXCEPTION, NK_G_CHANGE
+from turkish_suffix_library.consonants import MINOR_HARMONY, MINOR_HARMONY_FOR_FUTURE, PASSIVE_EXCEPTION
 
 
-class Turkish:
-    def __init__(self, parameter_word: str, **kwargs):
-        self.word = parameter_word
-        self.stem = kwargs.get('stem', parameter_word)
-        self.history = kwargs.get('history', [])
-
-    def proceed_letters(func):
-        def wrapper(self, *args, **kwargs):
-            kwargs['last_vowel'] = last_vowel(self.word)
-            if kwargs['last_vowel']['tone'] == 'front':
-                kwargs['ae'] = 'a'
-                kwargs['letter_i'] = 'ı'
-            else:
-                kwargs['ae'] = 'e'
-                kwargs['letter_i'] = 'i'
-
-            kwargs['last_letter'] = last_letter(self.word)
-            kwargs['last_letter_is_vowel'] = kwargs['last_letter']['letter'] in VOWELS
-            kwargs['lower_word'] = make_lower(self.word)
-
-            return func(self, *args, **kwargs)
-
-        return wrapper
-
-    def to_string(self):
-        return self.word
-
-    def to_json(self):
-        return {
-            'result': self.word,
-            'stem': self.stem,
-            'history': self.history
-        }
-
-    def __str__(self):
-        return self.word
-
+class Turkish(TurkishClass):
     def common_return(self, **kwargs):
         self.history.append({
             'action': inspect.stack()[1][3],
@@ -61,52 +19,37 @@ class Turkish:
             history=self.history
         )
 
-    def is_from_able(self):
-        if len(self.history):
-            action = self.history[-1]['action']
-            auxiliary = self.history[-1]['kwargs'].get('auxiliary')
-
-            if action == 'unify_verbs' and auxiliary == 'bil':
-                return True
-
-        return False
-
-    @proceed_letters
     def plural(self, **kwargs):
-        ae = kwargs.get('ae')
-        self.word = concat(self.word, f'l{ae}r')
+        self.concat(f'l{self.letter_a()}r')
 
         return self.common_return(**{})
+    
+    def apostrophes(self, **kwargs):
+        if kwargs.get('proper_noun'):
+            self.concat("'")
+            return True
+        else:
+            return False
 
-    @proceed_letters
     def accusative(self, **kwargs):
         """
             -i hali
             (not finished yet)
         """
 
-        proper_noun = kwargs.get('proper_noun')
+        if not self.apostrophes(**kwargs):
+            self.word = self.exception_missing(kwargs.get('proper_noun'))
 
-        if proper_noun:
-            self.word += '\''
-        else:
-            self.word = exception_missing(self.word, proper_noun)
-
-        actual_last_letter = last_letter(self.word)
-
-        if 'vowel' in actual_last_letter:
-            if kwargs.get('lower_word') in N_CONNECTOR:
-                self.word = concat(self.word, 'n')
+        if self.last_letter_is_vowel():
+            if self.n_connector():
+                self.concat('n')
             else:
-                self.word = concat(self.word, 'y')
+                self.concat('y')
 
-        self.word = NK_G_CHANGE.get(make_lower(self.word), self.word)
-        self.word = soften(self.word)
+        self.ng_change()
+        self.soften()
 
-        self.word = concat(
-            self.word,
-            MINOR_HARMONY[last_vowel(self.word)['letter']]
-        )
+        self.concat(self.minor())
 
         return self.common_return(**kwargs)
 
@@ -117,89 +60,61 @@ class Turkish:
 
         # firstly exceptions for ben (I) and you (sen)
 
-        proper_noun = kwargs.get('proper_noun', False)
+        lower_word = self.lower()
 
-        lower_word = make_lower(self.word)
-
-        if proper_noun:
-            self.word += '\''
+        proper_noun = self.apostrophes(**kwargs)
 
         if lower_word == 'ben' and not proper_noun:
-            self.word = from_upper_or_lower('bana', self.word)
+            self.word = self.from_upper_or_lower('bana')
         elif lower_word == 'sen' and not proper_noun:
-            self.word = from_upper_or_lower('sana', self.word)
+            self.word = self.from_upper_or_lower('sana')
         else:
-            self.word = NK_G_CHANGE.get(make_lower(self.word), self.word)
-            self.word = exception_missing(self.word, proper_noun)
+            self.ng_change()
+            self.word = self.exception_missing(proper_noun)
 
-            actual_last_letter = last_letter(self.word)
-            actual_last_vowel = last_vowel(self.word)
-
-            if 'vowel' in actual_last_letter:
-                if lower_word in N_CONNECTOR:
-                    self.word = concat(self.word, 'n')
+            if self.last_letter_is_vowel():
+                if self.n_connector():
+                    self.concat('n')
                 else:
-                    self.word = concat(self.word, 'y')
+                    self.concat('y')
 
-            self.word = soften(self.word)
+            self.soften()
 
-            if actual_last_vowel['tone'] == 'front':
-                self.word = concat(self.word, 'a')
-            else:
-                self.word = concat(self.word, 'e')
-
-        if self.word.isupper():
-            self.word = make_upper(self.word)
+            self.concat(self.letter_a())
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def ablative(self, **kwargs):
         """
             -den hali
         """
-        proper_noun = kwargs.get('proper_noun')
-        ae = kwargs['ae']
+        self.apostrophes(**kwargs)
+        ae = self.letter_a()
 
-        if proper_noun:
-            self.word += '\''
+        if self.n_connector():
+            self.concat('n')
 
-        if kwargs.get('lower_word') in N_CONNECTOR:
-            self.word = concat(self.word, 'n')
+        self.if_ends_with_hard('t', 'd')
 
-        if kwargs.get('last_letter')['letter'] in HARD_CONSONANTS:
-            self.word = concat(self.word, 't')
-        else:
-            self.word = concat(self.word, 'd')
-
-        self.word = concat(self.word, f'{ae}n')
+        self.concat(f'{ae}n')
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def locative(self, **kwargs):
         """
             -de hali
         """
-        proper_noun = kwargs.get('proper_noun')
-        ae = kwargs['ae']
+        self.apostrophes(**kwargs)
 
-        if proper_noun:
-            self.word += '\''
+        if self.n_connector():
+            self.concat('n')
 
-        if kwargs['lower_word'] in N_CONNECTOR:
-            self.word = concat(self.word, 'n')
+        self.if_ends_with_hard('t', 'd')
 
-        if kwargs['last_letter']['letter'] in HARD_CONSONANTS:
-            self.word = concat(self.word, 't')
-        else:
-            self.word = concat(self.word, 'd')
-
-        self.word = concat(self.word, ae)
+        self.concat(self.letter_a())
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def genitive(self, **kwargs):
         """
             Iyelik aitlik eki
@@ -207,57 +122,51 @@ class Turkish:
             Elif'in
         """
 
-        proper_noun = kwargs.get('proper_noun')
-        minor_harmony_letter = MINOR_HARMONY[kwargs['last_vowel']['letter']]
+        last_letter_is_vowel = self.last_letter_is_vowel()
+        proper_noun = self.apostrophes(**kwargs)
+        minor = self.minor()
 
         if proper_noun:
-            self.word += '\''
-
-            if kwargs['last_letter_is_vowel']:
-                self.word = concat(self.word, 'n')
+            if last_letter_is_vowel:
+                self.concat('n')
         else:
-            self.word = NK_G_CHANGE.get(make_lower(self.word), self.word)
+            self.ng_change()
 
-            if kwargs['last_letter_is_vowel']:
-                self.word = concat(self.word, 'n')
+            if last_letter_is_vowel:
+                self.concat('n')
             else:
-                self.word = soften(self.word)
+                self.soften()
 
-                self.word = exception_missing(self.word, proper_noun)
+                self.exception_missing(proper_noun)
 
-        self.word = concat(self.word, f'{minor_harmony_letter}n')
+        self.concat(f'{minor}n')
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def equalative(self, **kwargs):
         """
             Ismin esitlik hali: -ce, -ca etc.
         """
 
-        ae = kwargs.get('ae')
-
-        if kwargs['last_letter']['letter'] in HARD_CONSONANTS:
-            self.word = concat(self.word, f'ç{ae}')
-        else:
-            self.word = concat(self.word, f'c{ae}')
+        self.if_ends_with_hard('ç', 'c')
+        self.concat(self.letter_a())
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def instrumental(self, **kwargs):
         """
             Ismin vasıta hali: -le, -la, -yle, -yla
         """
-        if kwargs.get('proper_noun'):
-            self.word += '\''
+        is_vowel = self.last_letter_is_vowel()
 
-        ae = kwargs.get('ae')
+        self.apostrophes(**kwargs)
 
-        if kwargs['last_letter_is_vowel']:
-            self.word = concat(self.word, f'y')
+        ae = self.letter_a()
 
-        self.word = concat(self.word, f'l{ae}')
+        if is_vowel:
+            self.concat('y')
+
+        self.concat(f'l{ae}')
 
         return self.common_return(**kwargs)
 
@@ -270,90 +179,81 @@ class Turkish:
 
         is_plural = kwargs.get('plural', False)
 
-        proper_noun = kwargs.get('proper_noun', False)
+        proper_noun = self.apostrophes(**kwargs)
 
         if not (person == '3' and is_plural):
-            if proper_noun:
-                self.word += '\''
-            else:
-                self.word = soften(self.word)
+            if not proper_noun:
+                self.soften()
 
-                self.word = exception_missing(self.word, proper_noun)
+                self.exception_missing(proper_noun)
 
-        actual_last_letter = last_letter(self.word)
-        actual_last_vowel = last_vowel(self.word)
-
-        last_letter_is_vowel = actual_last_letter['letter'] in VOWELS
-
-        minor_harmony_letter = MINOR_HARMONY[actual_last_vowel['letter']]
+        minor = self.minor()
 
         if not is_plural:
             if person == '1':
-                self.word = NK_G_CHANGE.get(make_lower(self.word), self.word)
+                self.ng_change()
 
-                if not last_letter_is_vowel:
-                    self.word = concat(self.word, minor_harmony_letter)
+                if not self.last_letter_is_vowel():
+                    self.concat(minor)
 
-                self.word = concat(self.word, 'm')
+                self.concat('m')
 
             elif person == '2':
-                self.word = NK_G_CHANGE.get(make_lower(self.word), self.word)
+                self.ng_change()
 
-                if not last_letter_is_vowel:
-                    self.word = concat(self.word, minor_harmony_letter)
+                if not self.last_letter_is_vowel():
+                    self.concat(minor)
 
-                self.word = concat(self.word, 'n')
+                self.concat('n')
 
             elif person == '3':
-                self.word = NK_G_CHANGE.get(make_lower(self.word), self.word)
+                self.ng_change()
 
-                if last_letter_is_vowel:
-                    self.word = concat(self.word, 's')
+                if self.last_letter_is_vowel():
+                    self.concat('s')
 
-                self.word = concat(self.word, minor_harmony_letter)
+                self.concat(minor)
         else:
             if person == '1':
-                self.word = NK_G_CHANGE.get(make_lower(self.word), self.word)
+                self.ng_change()
 
-                if not last_letter_is_vowel:
-                    self.word = concat(self.word, minor_harmony_letter)
+                if not self.last_letter_is_vowel():
+                    self.concat(minor)
 
-                self.word = concat(self.word, f'm{minor_harmony_letter}z')
+                self.concat(f'm{minor}z')
 
             elif person == '2':
-                self.word = NK_G_CHANGE.get(make_lower(self.word), self.word)
+                self.ng_change()
 
-                if not last_letter_is_vowel:
-                    self.word = concat(self.word, minor_harmony_letter)
+                if not self.last_letter_is_vowel():
+                    self.concat(minor)
 
-                self.word = concat(self.word, f'n{minor_harmony_letter}z')
+                self.concat(f'n{minor}z')
             else:
-                if make_lower(self.word) == 'ism':
-                    self.word = from_upper_or_lower('isim', self.word)
+                if self.lower() == 'ism':
+                    self.from_upper_or_lower('isim')
 
                 self.word = self.plural().to_string()
-                self.word = concat(self.word, minor_harmony_letter)
+                self.concat(minor)
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def infinitive(self, **kwargs):
         """
             Mastar eki
         """
 
-        ae = kwargs.get('ae')
+        ae = self.letter_a()
 
         from_able = self.is_from_able()
 
         if kwargs.get('negative', False) and not from_able:
-            self.word = concat(self.word, f'm{ae}')
+            self.concat(f'm{ae}')
 
-        self.word = concat(self.word, f'm{ae}k')
+        self.concat(f'm{ae}k')
 
         return self.common_return(**kwargs)
-
-    @proceed_letters
+    
     def present_continuous(self, **kwargs):
         """
             Şimdiki zaman
@@ -365,67 +265,55 @@ class Turkish:
         negative = kwargs.get('negative', False)
 
         if not negative:
-            self.word = VERBS_HARDEN.get(self.word, self.word)
+            self.harden_verb()
 
-            if kwargs['last_letter_is_vowel']:
-                self.word = change_last_letter(self.word, MINOR_HARMONY[self.word[-1]])
+            if self.last_letter_is_vowel():
+                self.change_last_letter(self.minor())
             else:
-                self.word = concat(
-                    self.word,
-                    MINOR_HARMONY[kwargs['last_vowel']['letter']]
-                )
+                self.concat(self.minor())
         else:
             if not from_able:
-                self.word = concat(self.word, 'm')
+                self.concat('m')
             else:
                 self.word = self.word[:-1]
 
-            vowel = last_vowel(self.word)
+            self.concat(self.minor())
 
-            self.word = concat(
-                self.word,
-                MINOR_HARMONY[vowel['letter']]
-            )
-
-        self.word = concat(self.word, 'yor')
+        self.concat('yor')
 
         if kwargs.get('question', False):
             if not kwargs.get('plural', False):
                 if kwargs.get('person', 3) == 1:
-                    self.word = concat(self.word, ' muyum')
+                    self.concat(' muyum')
                 elif kwargs.get('person', 3) == 2:
-                    self.word = concat(self.word, ' musun')
+                    self.concat(' musun')
                 elif kwargs.get('person', 3) == 3:
-                    self.word = concat(self.word, ' mu')
+                    self.concat(' mu')
             else:
                 if kwargs.get('person', 3) == 1:
-                    self.word = concat(self.word, ' muyuz')
+                    self.concat(' muyuz')
                 elif kwargs.get('person', 3) == 2:
-                    self.word = concat(self.word, ' musunuz')
+                    self.concat(' musunuz')
                 elif kwargs.get('person', 3) == 3:
                     self.word = self.plural().to_string()
-                    self.word = concat(self.word, ' m')
-                    if last_vowel(self.word)['tone'] == 'front':
-                        self.word = concat(self.word, 'ı')
-                    else:
-                        self.word = concat(self.word, 'i')
+                    self.concat(' m')
+                    self.concat(self.letter_i())
         else:
             if not kwargs.get('plural', False):
                 if kwargs.get('person', 3) == 1:
-                    self.word = concat(self.word, 'um')
+                    self.concat('um')
                 elif kwargs.get('person', 3) == 2:
-                    self.word = concat(self.word, 'sun')
+                    self.concat('sun')
             else:
                 if kwargs.get('person', 3) == 1:
-                    self.word = concat(self.word, 'uz')
+                    self.concat('uz')
                 elif kwargs.get('person', 3) == 2:
-                    self.word = concat(self.word, 'sunuz')
+                    self.concat('sunuz')
                 elif kwargs.get('person', 3) == 3:
                     self.word = self.plural().to_string()
 
         return self.common_return(**kwargs)
-
-    @proceed_letters
+    
     def present_continuous_alternative(self, **kwargs):
         """
             There are two ways to express 'present continuous tense in Turkish '
@@ -434,326 +322,252 @@ class Turkish:
                 * aramaktayım
                 * yapmaktayım
         """
-        ae = kwargs.get('ae')
+        ae = self.letter_a()
 
         from_able = self.is_from_able()
 
         if kwargs.get('negative', False) and not from_able:
-            self.word = concat(self.word, f'm{ae}')
+            self.concat(f'm{ae}')
 
         self.word = self.infinitive().to_string()
 
-        self.word = concat(self.word, f't{ae}')
+        self.concat(f't{ae}')
 
         if not kwargs.get('question', False):
             if not kwargs.get('plural', False):
                 if kwargs.get('person', 3) == 1:
-                    self.word = concat(self.word, 'y')
-                    self.word = concat(
-                        self.word,
-                        MINOR_HARMONY[last_vowel(self.word)['letter']]
-                    )
-                    self.word = concat(self.word, 'm')
+                    self.concat(f'y{self.minor()}m')
                 elif kwargs.get('person', 3) == 2:
-                    self.word = concat(self.word, 's')
-                    self.word = concat(
-                        self.word,
-                        MINOR_HARMONY[last_vowel(self.word)['letter']]
-                    )
-                    self.word = concat(self.word, 'n')
+                    self.concat(f's{self.minor()}n')
             else:
                 if kwargs.get('person', 3) == 1:
-                    self.word = concat(self.word, 'y')
-                    self.word = concat(self.word, MINOR_HARMONY[last_vowel(self.word)['letter']])
-                    self.word = concat(self.word, 'z')
+                    self.concat(f'y{self.minor()}z')
                 elif kwargs.get('person', 3) == 2:
-                    self.word = concat(self.word, 's')
-                    self.word = concat(self.word, MINOR_HARMONY[last_vowel(self.word)['letter']])
-                    self.word = concat(self.word, 'n')
-                    self.word = concat(self.word, MINOR_HARMONY[last_vowel(self.word)['letter']])
-                    self.word = concat(self.word, 'z')
+                    self.concat(f's{self.minor()}n')
+                    self.concat(f'{self.minor()}z')
                 elif kwargs.get('person', 3) == 3:
                     self.word = self.plural().to_string()
         elif kwargs.get('question', False):
             if not kwargs.get('plural', False):
                 if kwargs.get('person', 3) == 1:
-                    self.word = concat(self.word, ' m')
-                    self.word = concat(self.word, MINOR_HARMONY[last_vowel(self.word)['letter']])
-                    self.word = concat(self.word, 'y')
-                    self.word = concat(self.word, MINOR_HARMONY[last_vowel(self.word)['letter']])
-                    self.word = concat(self.word, 'm')
+                    self.concat(f' m{self.minor}y')
+                    self.concat(f'{self.minor()}m')
                 elif kwargs.get('person', 3) == 2:
-                    self.word = concat(self.word, ' m')
-                    self.word = concat(self.word, MINOR_HARMONY[last_vowel(self.word)['letter']])
-                    self.word = concat(self.word, 's')
-                    self.word = concat(self.word, MINOR_HARMONY[last_vowel(self.word)['letter']])
-                    self.word = concat(self.word, 'n')
+                    self.concat(f' m{self.minor()}s')
+                    self.concat(f' {self.minor()}n')
             else:  # plural
                 if kwargs.get('person', 3) == 1:
-                    self.word = concat(self.word, ' m')
-                    self.word = concat(self.word, MINOR_HARMONY[last_vowel(self.word)['letter']])
-                    self.word = concat(self.word, 'y')
-                    self.word = concat(self.word, MINOR_HARMONY[last_vowel(self.word)['letter']])
-                    self.word = concat(self.word, 'z')
+                    self.concat(f' m{self.minor()}y')
+                    self.concat(f'{self.minor()}z')
                 elif kwargs.get('person', 3) == 2:
-                    self.word = concat(self.word, ' m')
-                    self.word = concat(self.word, MINOR_HARMONY[last_vowel(self.word)['letter']])
-                    self.word = concat(self.word, 's')
-                    self.word = concat(self.word, MINOR_HARMONY[last_vowel(self.word)['letter']])
-                    self.word = concat(self.word, 'n')
-                    self.word = concat(self.word, MINOR_HARMONY[last_vowel(self.word)['letter']])
-                    self.word = concat(self.word, 'z')
+                    self.concat(f' m{self.minor()}')
+                    self.concat(f's{self.minor()}n')
+                    self.concat(f'{self.minor()}z')
                 elif kwargs.get('person', 3) == 3:
                     self.word = self.plural().to_string()
-                    self.word = concat(self.word, ' m')
-                    self.word = concat(self.word, MINOR_HARMONY[last_vowel(self.word)['letter']])
+                    self.concat(f' m{self.minor()}')
 
         return self.common_return(**kwargs)
-
-    @proceed_letters
+    
     def present_simple(self, **kwargs):
         """
             Geniş zaman
         """
-        minor = MINOR_HARMONY[kwargs['last_vowel']['letter']]
-        minor_harmony_letter_for_future = MINOR_HARMONY_FOR_FUTURE[kwargs['last_vowel']['letter']]
+        minor = self.minor()
+        minor_harmony_letter_for_future = MINOR_HARMONY_FOR_FUTURE[self.last_vowel()['letter']]
         minor_harmony_for_future = MINOR_HARMONY_FOR_FUTURE[minor]
 
         ver_bil = self.word[-3:] in ('ver', 'bil')
         from_able = self.is_from_able()
 
         if not kwargs.get('negative', False):
-            self.word = soften(self.word)
+            self.soften()
 
-            self.word = VERBS_HARDEN.get(self.word, self.word)
+            self.harden_verb()
 
         if kwargs.get('question', False):
             if not kwargs.get('negative', False):
 
                 if self.word in ['al', 'kal']:
-                    self.word = concat(self.word, 'ır')
+                    self.concat('ır')
                 else:
-                    if not kwargs['last_letter_is_vowel']:
+                    if not self.last_letter_is_vowel():
                         if ver_bil:
-                            self.word = concat(self.word, 'i')
+                            self.concat('i')
                         else:
-                            self.word = concat(self.word, minor_harmony_letter_for_future)
+                            self.concat(minor_harmony_letter_for_future)
 
-                    self.word = concat(self.word, 'r')
+                    self.concat('r')
 
                 if not kwargs.get('plural', False):
                     if kwargs.get('person', 3) == 1:
-                        self.word = concat(self.word, f' m{minor}y{minor}m')
+                        self.concat(f' m{minor}y{minor}m')
                     elif kwargs.get('person', 3) == 2:
-                        self.word = concat(self.word, f' m{minor}s{minor}n')
+                        self.concat(f' m{minor}s{minor}n')
                     elif kwargs.get('person', 3) == 3:
-                        self.word = concat(self.word, f' m{minor}')
+                        self.concat(f' m{minor}')
                 else:
                     if kwargs.get('person', 3) == 1:
-                        self.word = concat(self.word, f' m{minor}y{minor}z')
+                        self.concat(f' m{minor}y{minor}z')
                     elif kwargs.get('person', 3) == 2:
-                        self.word = concat(self.word, f' m{minor}s{minor}n{minor}z')
+                        self.concat(f' m{minor}s{minor}n{minor}z')
                     elif kwargs.get('person', 3) == 3:
-                        self.word = concat(self.word, f' m{minor}')
+                        self.concat(f' m{minor}')
             elif kwargs.get('negative', False):
-                if last_vowel(self.word)['tone'] == 'front':
-                    minor_harmony_letter_for_future = 'a'
-                else:
-                    minor_harmony_letter_for_future = 'e'
-
+                ae = self.letter_a()
+                
                 if not from_able:
-                    self.word = concat(self.word, f'm{minor_harmony_letter_for_future}')
-                self.word = concat(self.word, f'z')
+                    self.concat(f'm{ae}')
+
+                self.concat(f'z')
 
                 if not kwargs.get('plural', False):
                     if kwargs.get('person', 3) == 1:
-                        self.word = concat(self.word, f' m{minor}y{minor}m')
+                        self.concat(f' m{minor}y{minor}m')
                     elif kwargs.get('person', 3) == 2:
-                        self.word = concat(self.word, f' m{minor}s{minor}n')
+                        self.concat(f' m{minor}s{minor}n')
                     elif kwargs.get('person', 3) == 3:
-                        self.word = concat(self.word, f' m{minor}')
+                        self.concat(f' m{minor}')
                 elif kwargs.get('plural', False):
                     if kwargs.get('person', 3) == 1:
-                        self.word = concat(self.word, f' m{minor}y{minor}z')
+                        self.concat(f' m{minor}y{minor}z')
                     elif kwargs.get('person', 3) == 2:
-                        self.word = concat(self.word, f' m{minor}s{minor}n{minor}z')
+                        self.concat(f' m{minor}s{minor}n{minor}z')
                     elif kwargs.get('person', 3) == 3:
                         self.word = self.plural().to_string()
-                        self.word = concat(self.word, f' m{minor}')
+                        self.concat(f' m{minor}')
         elif not kwargs.get('question', False):
             if not kwargs.get('negative', False):
                 if self.word in ['al', 'kal']:
-                    self.word = concat(self.word, 'ır')
+                    self.concat('ır')
                 else:
-                    if not kwargs['last_letter_is_vowel']:
+                    if not self.last_letter_is_vowel():
                         if self.word[-3:] in ('ver', 'bil'):
-                            self.word = concat(self.word, 'i')
+                            self.concat('i')
                         else:
-                            self.word = concat(self.word, minor_harmony_letter_for_future)
+                            self.concat(minor_harmony_letter_for_future)
 
-                    self.word = concat(self.word, 'r')
+                    self.concat('r')
 
                 if not kwargs.get('plural', False):
                     if kwargs.get('person', 3) == 1:
-                        self.word = concat(self.word, f'{minor}m')
+                        self.concat(f'{minor}m')
                     elif kwargs.get('person', 3) == 2:
-                        self.word = concat(self.word, f's{minor}n')
+                        self.concat(f's{minor}n')
                 else:
                     if kwargs.get('person', 3) == 1:
-                        self.word = concat(self.word, f'{minor}z')
+                        self.concat(f'{minor}z')
                     elif kwargs.get('person', 3) == 2:
-                        self.word = concat(self.word, f's{minor}n{minor}z')
+                        self.concat(f's{minor}n{minor}z')
                     elif kwargs.get('person', 3) == 3:
                         self.word = self.plural().to_string()
             elif kwargs.get('negative', False):
-                if last_vowel(self.word)['tone'] == 'front':
-                    minor_harmony_letter_for_future = 'a'
-                else:
-                    minor_harmony_letter_for_future = 'e'
+                ae = self.letter_a()
 
                 if not kwargs.get('plural', False):
                     if kwargs.get('person', 3) == 1:
                         if not from_able:
-                            self.word = concat(self.word, f'm{minor_harmony_letter_for_future}')
+                            self.concat(f'm{ae}')
                         else:
-                            self.word = concat(self.word, f'm')
+                            self.concat(f'm')
                     elif kwargs.get('person', 3) == 2:
                         if not from_able:
-                            self.word = concat(self.word, 'm')
-                            self.word = concat(self.word, minor_harmony_letter_for_future)
-                        self.word = concat(self.word, 'z')
-                        self.word = concat(self.word, 's')
-                        self.word = concat(self.word, MINOR_HARMONY[minor_harmony_for_future])
-                        self.word = concat(self.word, 'n')
+                            self.concat('m')
+                            self.concat(ae)
+                        self.concat('z')
+                        self.concat('s')
+                        self.concat(MINOR_HARMONY[minor_harmony_for_future])
+                        self.concat('n')
                     elif kwargs.get('person', 3) == 3:
                         if not from_able:
-                            self.word = concat(self.word, f'm{minor_harmony_letter_for_future}')
-                        self.word = concat(self.word, f'z')
+                            self.concat(f'm{ae}')
+                        self.concat(f'z')
                 else:
                     if kwargs.get('person', 3) == 1:
                         if not from_able:
-                            self.word = concat(self.word, 'm')
-                            self.word = concat(self.word, minor_harmony_letter_for_future)
-                        self.word = concat(self.word, 'y')
-                        self.word = concat(self.word, MINOR_HARMONY[minor_harmony_for_future])
-                        self.word = concat(self.word, 'z')
+                            self.concat(f'm{ae}')
+                        self.concat('y')
+                        self.concat(MINOR_HARMONY[minor_harmony_for_future])
+                        self.concat('z')
                     elif kwargs.get('person', 3) == 2:
                         if not from_able:
-                            self.word = concat(self.word, 'm')
-                            self.word = concat(self.word, minor_harmony_letter_for_future)
-                        self.word = concat(self.word, 'z')
-                        self.word = concat(self.word, 's')
-                        self.word = concat(self.word, MINOR_HARMONY[minor_harmony_for_future])
-                        self.word = concat(self.word, 'n')
-                        self.word = concat(self.word, MINOR_HARMONY[minor_harmony_for_future])
-                        self.word = concat(self.word, 'z')
+                            self.concat('m{ae}')
+                        self.concat('z')
+                        self.concat('s')
+                        self.concat(MINOR_HARMONY[ae])
+                        self.concat('n')
+                        self.concat(MINOR_HARMONY[ae])
+                        self.concat('z')
                     elif kwargs.get('person', 3) == 3:
                         if not from_able:
-                            self.word = concat(self.word, f'm{minor_harmony_letter_for_future}')
-                        self.word = concat(self.word, f'z')
+                            self.concat(f'm{minor_harmony_letter_for_future}')
+                        self.concat(f'z')
                         self.word = self.plural().to_string()
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def future(self, **kwargs):
         """
             Gelecek zaman
         """
-        ae = kwargs['ae']
+        ae = self.letter_a()
 
         from_able = self.is_from_able()
 
         if kwargs.get('negative', False) and not from_able:
-            self.word = concat(self.word, f'm{ae}')
+            self.concat(f'm{ae}')
 
-        last_letter_is_vowel = last_letter(self.word)['letter'] in VOWELS
+        if self.last_letter_is_vowel():
+            self.verbs_losing_vowels()
+            self.concat('y')
 
-        if last_letter_is_vowel:
-            self.word = VERBS_LOSING_VOWELS.get(self.word, self.word)
-            self.word = concat(self.word, 'y')
-
-        self.word = soften(self.word)
+        self.soften()
 
         if not kwargs.get('negative', False):
-            self.word = VERBS_HARDEN.get(self.word, self.word)
+            self.harden_verb()
+        
+        letter_a = self.letter_a()
+        letter_i = self.letter_i()
 
         if kwargs.get('question', False):
-            if last_vowel(self.word)['tone'] == 'front':
-                if kwargs.get('person', 3) == 3 and kwargs.get('plural', False):
-                    self.word = concat(self.word, 'acaklar ')
-                else:
-                    self.word = concat(self.word, 'acak ')
-
-                if not kwargs.get('plural', False):
-                    if kwargs.get('person', 3) == 1:
-                        self.word = concat(self.word, 'mıyım')
-                    elif kwargs.get('person', 3) == 2:
-                        self.word = concat(self.word, 'mısın')
-                    elif kwargs.get('person', 3) == 3:
-                        self.word = concat(self.word, 'mı')
-                else:
-                    if kwargs.get('person', 3) == 1:
-                        self.word = concat(self.word, 'mıyız')
-                    elif kwargs.get('person', 3) == 2:
-                        self.word = concat(self.word, 'mısınız')
-                    elif kwargs.get('person', 3) == 3:
-                        self.word = concat(self.word, 'mı')
+            if kwargs.get('person', 3) == 3 and kwargs.get('plural', False):
+                self.concat(f'{letter_a}c{letter_a}kl{letter_a}r ')
             else:
-                if kwargs.get('person', 3) == 3 and kwargs.get('plural', False):
-                    self.word = concat(self.word, 'ecekler ')
-                else:
-                    self.word = concat(self.word, 'ecek ')
+                self.concat(f'{letter_a}c{letter_a}k ')
 
-                if not kwargs.get('plural', False):
-                    if kwargs.get('person', 3) == 1:
-                        self.word = concat(self.word, 'miyim')
-                    elif kwargs.get('person', 3) == 2:
-                        self.word = concat(self.word, 'misin')
-                    elif kwargs.get('person', 3) == 3:
-                        self.word = concat(self.word, 'mi')
-                else:
-                    if kwargs.get('person', 3) == 1:
-                        self.word = concat(self.word, 'miyiz')
-                    elif kwargs.get('person', 3) == 2:
-                        self.word = concat(self.word, 'misiniz')
-                    elif kwargs.get('person', 3) == 3:
-                        self.word = concat(self.word, 'mi')
+            if not kwargs.get('plural', False):
+                if kwargs.get('person', 3) == 1:
+                    self.concat(f'm{letter_i}y{letter_i}m')
+                elif kwargs.get('person', 3) == 2:
+                    self.concat(f'm{letter_i}s{letter_i}n')
+                elif kwargs.get('person', 3) == 3:
+                    self.concat(f'm{letter_i}')
+            else:
+                if kwargs.get('person', 3) == 1:
+                    self.concat(f'm{letter_i}y{letter_i}z')
+                elif kwargs.get('person', 3) == 2:
+                    self.concat(f'm{letter_i}s{letter_i}n{letter_i}z')
+                elif kwargs.get('person', 3) == 3:
+                    self.concat(f'm{letter_i}')
+
         elif not kwargs.get('question', False):
-            if last_vowel(self.word)['tone'] == 'front':
-                if not kwargs.get('plural', False):
-                    if kwargs.get('person', 3) == 1:
-                        self.word = concat(self.word, 'acağım')
-                    elif kwargs.get('person', 3) == 2:
-                        self.word = concat(self.word, 'acaksın')
-                    elif kwargs.get('person', 3) == 3:
-                        self.word = concat(self.word, 'acak')
-                else:
-                    if kwargs.get('person', 3) == 1:
-                        self.word = concat(self.word, 'acağız')
-                    elif kwargs.get('person', 3) == 2:
-                        self.word = concat(self.word, 'acaksınız')
-                    elif kwargs.get('person', 3) == 3:
-                        self.word = concat(self.word, 'acaklar')
+            if not kwargs.get('plural', False):
+                if kwargs.get('person', 3) == 1:
+                    self.concat(f'{letter_a}c{letter_a}ğ{letter_i}m')
+                elif kwargs.get('person', 3) == 2:
+                    self.concat(f'{letter_a}c{letter_a}ks{letter_i}n')
+                elif kwargs.get('person', 3) == 3:
+                    self.concat(f'{letter_a}c{letter_a}k')
             else:
-                if not kwargs.get('plural', False):
-                    if kwargs.get('person', 3) == 1:
-                        self.word = concat(self.word, 'eceğim')
-                    elif kwargs.get('person', 3) == 2:
-                        self.word = concat(self.word, 'eceğiz')
-                    elif kwargs.get('person', 3) == 3:
-                        self.word = concat(self.word, 'ecek')
-                else:
-                    if kwargs.get('person', 3) == 1:
-                        self.word = concat(self.word, 'eceğiz')
-                    elif kwargs.get('person', 3) == 2:
-                        self.word = concat(self.word, 'eceksiniz')
-                    elif kwargs.get('person', 3) == 3:
-                        self.word = concat(self.word, 'ecekler')
+                if kwargs.get('person', 3) == 1:
+                    self.concat(f'{letter_a}c{letter_a}ğ{letter_i}z')
+                elif kwargs.get('person', 3) == 2:
+                    self.concat(f'{letter_a}c{letter_a}ks{letter_i}n{letter_i}z')
+                elif kwargs.get('person', 3) == 3:
+                    self.concat(f'{letter_a}c{letter_a}kl{letter_a}r')
 
         return self.common_return(**kwargs)
-
-    @proceed_letters
+    
     def learned_past(self, **kwargs):
         """
             Not the same with English past perfect tense
@@ -761,50 +575,49 @@ class Turkish:
             mişli geçmiş zaman veya öğrenilen geçmiş zaman
         """
 
-        ae = kwargs['ae']
+        ae = self.letter_a()
 
         from_able = self.is_from_able()
 
         if kwargs.get('negative', False) and not from_able:
-            self.word = concat(self.word, f'm{ae}')
+            self.concat(f'm{ae}')
 
-        minor = MINOR_HARMONY[kwargs['last_vowel']['letter']]
+        minor = self.minor()
 
-        self.word = concat(self.word, f'm{minor}ş')
+        self.concat(f'm{minor}ş')
 
         if not kwargs.get('question', False):
             if not kwargs.get('plural', False):
                 if kwargs.get('person', 3) == 1:
-                    self.word = concat(self.word, f'{minor}m')
+                    self.concat(f'{minor}m')
                 elif kwargs.get('person', 3) == 2:
-                    self.word = concat(self.word, f's{minor}n')
+                    self.concat(f's{minor}n')
             else:
                 if kwargs.get('person', 3) == 1:
-                    self.word = concat(self.word, f'{minor}z')
+                    self.concat(f'{minor}z')
                 elif kwargs.get('person', 3) == 2:
-                    self.word = concat(self.word, f's{minor}n{minor}z')
+                    self.concat(f's{minor}n{minor}z')
                 elif kwargs.get('person', 3) == 3:
                     self.word = self.plural().to_string()
         elif kwargs.get('question', False):
             if not kwargs.get('plural', False):
                 if kwargs.get('person', 3) == 1:
-                    self.word = concat(self.word, f' m{minor}y{minor}m')
+                    self.concat(f' m{minor}y{minor}m')
                 elif kwargs.get('person', 3) == 2:
-                    self.word = concat(self.word, f' m{minor}s{minor}n')
+                    self.concat(f' m{minor}s{minor}n')
                 elif kwargs.get('person', 3) == 3:
-                    self.word = concat(self.word, f' m{minor}')
+                    self.concat(f' m{minor}')
             else:
                 if kwargs.get('person', 3) == 1:
-                    self.word = concat(self.word, f' m{minor}y{minor}z')
+                    self.concat(f' m{minor}y{minor}z')
                 elif kwargs.get('person', 3) == 2:
-                    self.word = concat(self.word, f' m{minor}s{minor}n{minor}z')
+                    self.concat(f' m{minor}s{minor}n{minor}z')
                 elif kwargs.get('person', 3) == 3:
                     self.word = self.plural().to_string()
-                    self.word = concat(self.word, f' m{minor}')
+                    self.concat(f' m{minor}')
 
         return self.common_return(**kwargs)
-
-    @proceed_letters
+    
     def unify_verbs(self, **kwargs):
         """
             Unified verbs (Birleşik fiiler) (Not a suffix but for 'can-bil' modal verb, this is necessary)
@@ -813,152 +626,148 @@ class Turkish:
             Continuity - Süreklilik: gidedur, bakakal, alıkoy (dur, kal, gel, koy)
             Approach - Yaklaşma: (yaz) düzeyaz
         """
-        self.word = VERBS_LOSING_VOWELS.get(self.word, self.word)
+        self.verbs_losing_vowels()
 
-        minor = MINOR_HARMONY[kwargs['last_vowel']['letter']]
+        minor = self.minor()
 
-        if kwargs['last_letter_is_vowel']:
-            self.word = concat(self.word, 'y')
+        self.concat_if_ends_with_vowel('y')
 
-        self.word = soften(self.word)
-        ae = kwargs['ae']
+        self.soften()
+        ae = self.letter_a()
 
-        self.word = VERBS_HARDEN.get(self.word, self.word)
+        self.harden_verb()
 
         if not kwargs.get('negative', False):
             if kwargs.get('auxiliary') in ['ver', 'koy']:
-                self.word = concat(self.word, minor)
+                self.concat(minor)
             else:
-                self.word = concat(self.word, ae)
+                self.concat(ae)
 
-            self.word = concat(self.word, kwargs.get('auxiliary'))
+            self.concat(kwargs.get('auxiliary'))
         if kwargs.get('negative', False):
             if kwargs.get('auxiliary') == 'bil':
-                self.word = concat(self.word, f'{ae}m{ae}')
+                self.concat(f'{ae}m{ae}')
             else:
                 if kwargs.get('auxiliary') in ['ver', 'koy']:
-                    self.word = concat(self.word, minor)
+                    self.concat(minor)
                 else:
-                    self.word = concat(self.word, ae)
+                    self.concat(ae)
 
-                self.word = concat(self.word, kwargs.get('auxiliary'))
+                self.concat(kwargs.get('auxiliary'))
 
-                self.word = concat(self.word, ae)
+                self.concat(ae)
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
+    
     def must(self, **kwargs):
         """
             Gereklilik kipi
         """
 
-        letter_a = kwargs['ae']
-        letter_i = kwargs['letter_i']
+        letter_a = self.letter_a()
+        letter_i = self.letter_i()
         from_able = self.is_from_able()
 
         if kwargs.get('negative', False) and not from_able:
-            self.word = concat(self.word, f'm{letter_a}')
+            self.concat(f'm{letter_a}')
 
-        self.word = concat(self.word, f'm{letter_a}l{letter_i}')
+        self.concat(f'm{letter_a}l{letter_i}')
         
         if kwargs.get('person', 3) == 3 and kwargs.get('plural', False):
             self.word = self.plural().to_string()
 
         if kwargs.get('question', False):
-            self.word = concat(self.word, f' m{letter_i}')
+            self.concat(f' m{letter_i}')
 
         if not kwargs.get('plural', False):
             if kwargs.get('person', 3) == 1:
-                self.word = concat(self.word, f'y{letter_i}m')
+                self.concat(f'y{letter_i}m')
             elif kwargs.get('person', 3) == 2:
-                self.word = concat(self.word, f's{letter_i}n')
+                self.concat(f's{letter_i}n')
         else:
             if kwargs.get('person', 3) == 1:
-                self.word = concat(self.word, f'y{letter_i}z')
+                self.concat(f'y{letter_i}z')
             elif kwargs.get('person', 3) == 2:
-                self.word = concat(self.word, f's{letter_i}n{letter_i}z')
+                self.concat(f's{letter_i}n{letter_i}z')
 
         return self.common_return(**kwargs)
-
-    @proceed_letters
+    
     def wish_condition(self, **kwargs):
         """
             Dilek - Şart kipi (-se, -sa)
         """
-        letter_a = kwargs['ae']
-        letter_i = kwargs['letter_i']
+        letter_a = self.letter_a()
+        letter_i = self.letter_i()
 
         from_able = self.is_from_able()
 
         if kwargs.get('negative', False) and not from_able:
-            self.word = concat(self.word, f'm{letter_a}')
+            self.concat(f'm{letter_a}')
 
-        self.word = concat(self.word, f's{letter_a}')
+        self.concat(f's{letter_a}')
 
         if not kwargs.get('plural', False):
             if kwargs.get('person', 3) == 1:
-                self.word = concat(self.word, 'm')
+                self.concat('m')
             elif kwargs.get('person', 3) == 2:
-                self.word = concat(self.word, 'n')
+                self.concat('n')
         else:  # Plural
             if kwargs.get('person', 3) == 1:
-                self.word = concat(self.word, 'k')
+                self.concat('k')
             elif kwargs.get('person', 3) == 2:
-                self.word = concat(self.word, f'n{letter_i}z')
+                self.concat(f'n{letter_i}z')
             elif kwargs.get('person', 3) == 3:
                 self.word = self.plural().to_string()
 
         if kwargs.get('question', False):
-            self.word = concat(self.word, f' m{letter_i}')
+            self.concat(f' m{letter_i}')
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
+    
     def wish(self, **kwargs):
         """
             İstek kipi (geleyim, gelesin, gele, gelelim, gelesiniz, geleler)
         """
-        letter_a = kwargs['ae']
-        letter_i = kwargs['letter_i']
+        letter_a = self.letter_a()
+        letter_i = self.letter_i()
 
         from_able = self.is_from_able()
 
         if kwargs.get('negative', False):
             if not from_able:
-                self.word = concat(self.word, f'y{letter_a}')
-            self.word = concat(self.word, f'y{letter_a}')
+                self.concat(f'y{letter_a}')
+            self.concat(f'y{letter_a}')
         else:
-            self.word = VERBS_LOSING_VOWELS.get(self.word, self.word)
+            self.verbs_losing_vowels()
 
-            self.word = VERBS_HARDEN.get(self.word, self.word)
+            self.harden_verb()
 
-            if kwargs['last_letter_is_vowel']:
-                self.word = concat(self.word, 'y')
+            self.concat_if_ends_with_vowel('y')
 
-            self.word = soften(self.word)
+            self.soften()
 
-            self.word = concat(self.word, letter_a)
+            self.concat(letter_a)
 
         if not kwargs.get('plural', False):
             if kwargs.get('person', 3) == 1:
-                self.word = concat(self.word, f'y{letter_i}m')
+                self.concat(f'y{letter_i}m')
             elif kwargs.get('person', 3) == 2:
-                self.word = concat(self.word, f's{letter_i}n')
+                self.concat(f's{letter_i}n')
         else:
             if kwargs.get('person', 3) == 1:
-                self.word = concat(self.word, f'l{letter_i}m')
+                self.concat(f'l{letter_i}m')
             elif kwargs.get('person', 3) == 2:
-                self.word = concat(self.word, f's{letter_i}n{letter_i}z')
+                self.concat(f's{letter_i}n{letter_i}z')
             elif kwargs.get('person', 3) == 3:
                 self.word = self.plural().to_string()
 
         if kwargs.get('question', False):
-            self.word = concat(self.word, f' m{letter_i}')
+            self.concat(f' m{letter_i}')
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def command(self, **kwargs):
         """
             Make the verb command
@@ -968,86 +777,83 @@ class Turkish:
             For the second person, there is no suffix
         """
 
-        ae = kwargs['ae']
+        ae = self.letter_a()
 
         from_able = self.is_from_able()
 
         if kwargs.get('negative', False) and not from_able:
-            self.word = concat(self.word, f'm{ae}')
+            self.concat(f'm{ae}')
 
-        minor = MINOR_HARMONY[kwargs['last_vowel']['letter']]
+        minor = self.minor()
 
         if not kwargs.get('plural', False):
             if kwargs.get('person', 2) == 3:
-                self.word = concat(self.word, f's{minor}n')
+                self.concat(f's{minor}n')
 
                 if kwargs.get('question', False):
-                    self.word = concat(self.word, f' m{minor}')
+                    self.concat(f' m{minor}')
         else:  # Plural
             if kwargs.get('person', 2) == 2:
-                self.word = VERBS_LOSING_VOWELS.get(self.word, self.word)
+                self.verbs_losing_vowels()
 
-                if kwargs['last_letter_is_vowel']:
-                    self.word = concat(self.word, 'y')
+                self.concat_if_ends_with_vowel('y')
 
-                self.word = soften(self.word, False, kwargs.get('negative', False))
+                self.soften()
 
-                self.word = VERBS_HARDEN.get(self.word, self.word)
+                self.harden_verb()
 
-                self.word = concat(self.word, f'{minor}n')
+                self.concat(f'{minor}n')
 
                 if kwargs.get('formal', False):
-                    self.word = concat(self.word, f'{minor}z')
+                    self.concat(f'{minor}z')
             elif kwargs.get('person', 2) == 3:
-                self.word = concat(self.word, f's{minor}n')
+                self.concat(f's{minor}n')
                 self.word = self.plural().to_string()
                 if kwargs.get('question', False):
-                    self.word = concat(self.word, f' m{minor}')
+                    self.concat(f' m{minor}')
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def past(self, **kwargs):
         """
             Past tense
             -di'li geçmiş zaman
         """
         
-        ae = kwargs['ae']
+        ae = self.letter_a()
 
         from_able = self.is_from_able()
 
         if kwargs.get('negative', False) and not from_able:
-            self.word = concat(self.word, f'm{ae}')
+            self.concat(f'm{ae}')
 
-        actual_last_letter = last_letter(self.word)
-        minor = MINOR_HARMONY[last_vowel(self.word)['letter']]
+        minor = self.minor()
 
-        if 'hard_consonant' not in actual_last_letter or 'vowel' in actual_last_letter:
+        if self.last_letter_is_vowel() or not self.last_letter_is_hard():
             ps = 'd'
         else:
             ps = 't'
 
         if not kwargs.get('plural', False):
             if kwargs.get('person', 3) == 1:
-                self.word = concat(self.word, f'{ps}{minor}m')
+                self.concat(f'{ps}{minor}m')
             elif kwargs.get('person', 3) == 2:
-                self.word = concat(self.word, f'{ps}{minor}n')
+                self.concat(f'{ps}{minor}n')
             elif kwargs.get('person', 3) == 3:
-                self.word = concat(self.word, f'{ps}{minor}')
+                self.concat(f'{ps}{minor}')
         else:  # plural
             if kwargs.get('person', 3) == 1:
-                self.word = concat(self.word, f'{ps}{minor}k')
+                self.concat(f'{ps}{minor}k')
             elif kwargs.get('person', 3) == 2:
-                self.word = concat(self.word, f'{ps}{minor}n{minor}z')
+                self.concat(f'{ps}{minor}n{minor}z')
             elif kwargs.get('person', 3) == 3:
-                self.word = concat(self.word, f'{ps}{minor}')
+                self.concat(f'{ps}{minor}')
                 self.word = self.plural().to_string()
 
         if kwargs.get('question', False):
-            minor = MINOR_HARMONY[last_vowel(self.word)['letter']]
+            minor = self.minor()
 
-            self.word = concat(self.word, f' m{minor}')
+            self.concat(f' m{minor}')
 
         return self.common_return(**kwargs)
 
@@ -1074,7 +880,7 @@ class Turkish:
                 question=kwargs.get('question', False)
             ).to_string()
 
-            self.word = concat(self.word, 'y')
+            self.concat('y')
 
         if kwargs.get('person', 3) == 3 \
                 and kwargs.get('question', False) \
@@ -1082,12 +888,8 @@ class Turkish:
 
             self.word = self.plural().to_string()
 
-            self.word = concat(self.word, ' m')
-
-            if last_vowel(self.word)['tone'] == 'front':
-                self.word = concat(self.word, 'ı')
-            else:
-                self.word = concat(self.word, 'i')
+            self.concat(' m')
+            self.concat(self.letter_i())
         else:
             self.word = self.past(
                 person=kwargs.get('person', 3),
@@ -1109,7 +911,7 @@ class Turkish:
                 negative=kwargs.get('negative', False)
             ).to_string()
 
-            self.word = concat(self.word, 'y')
+            self.concat('y')
 
             self.word = self.wish_condition(
                 person=kwargs.get('person', 3),
@@ -1124,23 +926,20 @@ class Turkish:
             if kwargs.get('person', 3) == 3 and kwargs.get('plural', False):
                 self.word = self.plural().to_string()
 
-            if last_vowel(self.word)['tone'] == 'front':
-                letter = 'ı'
-            else:
-                letter = 'i'
+            letter_i = self.letter_i()
 
-            self.word = concat(self.word, f' m{letter}yd{letter}')
+            self.concat(f' m{letter_i}yd{letter_i}')
 
             if not kwargs.get('plural', False):
                 if kwargs.get('person', 3) == 1:
-                    self.word = concat(self.word, 'm')
+                    self.concat('m')
                 elif kwargs.get('person', 3) == 2:
-                    self.word = concat(self.word, 'n')
+                    self.concat('n')
             else:
                 if kwargs.get('person', 3) == 1:
-                    self.word = concat(self.word, 'k')
+                    self.concat('k')
                 elif kwargs.get('person', 3) == 2:
-                    self.word = concat(self.word, f'n{letter}z')
+                    self.concat(f'n{letter_i}z')
 
         return self.common_return(**kwargs)
 
@@ -1165,7 +964,7 @@ class Turkish:
             ).to_string()
 
         if kwargs.get('question', False):
-            self.word = concat(self.word, 'y')
+            self.concat('y')
 
         if kwargs.get('person') == 3 and kwargs.get('plural', False) and kwargs.get('question', False):
             self.word = self.past(person=kwargs.get('person', 3)).to_string()
@@ -1196,12 +995,12 @@ class Turkish:
         else:
             if kwargs.get('person', 3) == 3 and kwargs.get('plural', False):
                 self.word = self.plural().to_string()
-                minor = MINOR_HARMONY[last_vowel(self.word)['letter']]
+                minor = self.minor()
 
-                self.word = concat(self.word, f' m{minor}ym{minor}ş')
+                self.concat(f' m{minor}ym{minor}ş')
             else:
-                minor = MINOR_HARMONY[last_vowel(self.word)['letter']]
-                self.word = concat(self.word, f' m{minor}y')
+                minor = self.minor()
+                self.concat(f' m{minor}y')
                 self.word = self.learned_past(
                     person=kwargs.get('person', 3),
                     plural=kwargs.get('plural', False)
@@ -1230,13 +1029,13 @@ class Turkish:
             ).to_string()
 
         if kwargs.get('person') == 3 and kwargs.get('plural', False) and kwargs.get('question', False):
-            self.word = concat(self.word, 'm')
-            self.word = concat(self.word, MINOR_HARMONY[last_vowel(self.word)['letter']])
-            self.word = concat(self.word, 'y')
+            self.concat('m')
+            self.concat(self.minor())
+            self.concat('y')
             self.word = self.learned_past(person=kwargs.get('person', 3)).to_string()
         else:
             if kwargs.get('question', False):
-                self.word = concat(self.word, 'y')
+                self.concat('y')
 
             self.word = self.learned_past(
                 person=kwargs.get('person', 3),
@@ -1266,13 +1065,13 @@ class Turkish:
             ).to_string()
 
         if kwargs.get('person') == 3 and kwargs.get('plural', False) and kwargs.get('question', False):
-            self.word = concat(self.word, 'm')
-            self.word = concat(self.word, MINOR_HARMONY[last_vowel(self.word)['letter']])
-            self.word = concat(self.word, 'y')
+            self.concat('m')
+            self.concat(self.minor())
+            self.concat('y')
             self.word = self.past(person=kwargs.get('person', 3)).to_string()
         else:
             if kwargs.get('question', False):
-                self.word = concat(self.word, 'y')
+                self.concat('y')
 
             self.word = self.past(
                 person=kwargs.get('person', 3),
@@ -1281,7 +1080,6 @@ class Turkish:
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def ordinal(self, **kwargs):
         """
             Ordinal numbers: One->First, Two->Second etc.
@@ -1293,23 +1091,17 @@ class Turkish:
             * ilk (first) -> ilkinci (ilk already means "first" but you can still put this suffix)
         """
 
-        minor_harmony_letter = MINOR_HARMONY[kwargs['last_vowel']['letter']]
+        minor = self.minor()
 
-        last_letter_is_vowel = kwargs['last_letter']['letter'] in VOWELS
+        self.if_ends_with('t', 'd')
 
-        if kwargs.get('proper_noun'):
-            self.word += '\''
-        elif kwargs['last_letter'].get('letter') == 't':
-            self.word = change_last_letter(self.word, 'd')
+        if not self.last_letter_is_vowel():
+            self.concat(minor)
 
-        if not last_letter_is_vowel:
-            self.word = concat(self.word, f'{minor_harmony_letter}')
-
-        self.word = concat(self.word, f'nc{minor_harmony_letter}')
+        self.concat(f'nc{minor}')
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def distributive(self, **kwargs):
         """
             Distributive numbers: One->One each, Two->Two each.
@@ -1317,21 +1109,17 @@ class Turkish:
             bir-er, iki-şer...
         """
 
-        ae = kwargs.get('ae')
+        ae = self.letter_a()
 
-        if kwargs.get('proper_noun'):
-            self.word += '\''
-        elif kwargs['last_letter'].get('letter') == 't':
-            self.word = change_last_letter(self.word, 'd')
+        self.if_ends_with('t', 'd')
 
-        if kwargs.get('last_letter_is_vowel'):
-            self.word = concat(self.word, f'ş')
+        if self.last_letter_is_vowel():
+            self.concat('ş')
 
-        self.word = concat(self.word, f'{ae}r')
+        self.concat(f'{ae}r')
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def passive(self, **kwargs):
         """
             Turns verb into passive (edilgen):
@@ -1345,21 +1133,21 @@ class Turkish:
             Turkish('ver').passive().present_continuous_alternative(person=1)
             verilmekteyim
         """
-        self.word = VERBS_HARDEN.get(self.word, self.word)
+        self.harden_verb()
 
-        minor = MINOR_HARMONY[kwargs['last_vowel']['letter']]
+        minor = self.minor()
+        lower_word = self.lower()
 
-        if kwargs['lower_word'] in PASSIVE_EXCEPTION:
-            self.word = PASSIVE_EXCEPTION.get(kwargs['lower_word'])
+        if lower_word in PASSIVE_EXCEPTION:
+            self.from_upper_or_lower(PASSIVE_EXCEPTION.get(lower_word))
         else:
-            if kwargs['last_letter_is_vowel']:
-                self.word = concat(self.word, f'n')
+            if self.last_letter_is_vowel():
+                self.concat('n')
 
-            self.word = concat(self.word, f'{minor}l')
+            self.concat(f'{minor}l')
 
         return self.common_return(**kwargs)
-
-    @proceed_letters
+    
     def adverb_during_action(self, **kwargs):
         """
             Giderken etc. (iken)
@@ -1376,48 +1164,45 @@ class Turkish:
             Example:
             Turkish('ver').present_continuous_alternative(person=3).adverb_during_action()
         """
-        if kwargs['last_letter_is_vowel']:
-            self.word = concat(self.word, f'y')
+        self.concat_if_ends_with_vowel('y')
 
-        self.word = concat(self.word, f'ken')
+        self.concat(f'ken')
 
         return self.common_return(**kwargs)
-
-    @proceed_letters
+    
     def adverb_continuity(self, **kwargs):
         """
             Git -> Gide gide etc. (-e)
 
             Use this method without conjuncting
         """
-        ae = kwargs.get('ae')
+        ae = self.letter_a()
 
         from_able = self.is_from_able()
 
         if kwargs.get('negative'):
             if not from_able:
-                self.word = concat(self.word, f'm{ae}')
-            self.word = concat(self.word, f'y')
+                self.concat(f'm{ae}')
+
+            self.concat('y')
         else:
-            self.word = VERBS_HARDEN.get(self.word, self.word)
+            self.harden_verb()
 
-            if kwargs['last_letter_is_vowel']:
-                self.word = concat(self.word, f'y')
+            self.concat_if_ends_with_vowel('y')
 
-        self.word = concat(self.word, f'{ae}')
+        self.concat(ae)
 
         self.word = f'{self.word} {self.word}'
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def adverb_repeatedly(self, **kwargs):
         """
             Git -> Gide gide etc. (-e)
 
             Use this method without conjuncting
         """
-        ae = kwargs.get('ae')
+        ae = self.letter_a()
 
         self.word = self.past(
             negative=kwargs.get('negative'),
@@ -1425,11 +1210,10 @@ class Turkish:
             plural=True
         ).to_string()
 
-        self.word = concat(self.word, f'ç{ae}')
+        self.concat(f'ç{ae}')
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def adverb_after_action(self, **kwargs):
         """
             Gidince etc. (-nca)
@@ -1439,27 +1223,27 @@ class Turkish:
             Use this method without any conjuncting
         """
 
-        ae = kwargs['ae']
-        letter_i = kwargs['letter_i']
-        minor = MINOR_HARMONY[kwargs['last_vowel']['letter']]
+        ae = self.letter_a()
+        letter_i = self.letter_i()
+        minor = self.minor()
         from_able = self.is_from_able()
 
-        self.word = VERBS_HARDEN.get(self.word, self.word)
+        self.harden_verb()
 
         if kwargs.get('negative'):
             if not from_able:
-                self.word = concat(self.word, f'm{ae}')
-            self.word = concat(self.word, f'y{letter_i}')
-        elif kwargs['last_letter_is_vowel']:
-            self.word = concat(self.word, f'y{minor}')
+                self.concat(f'm{ae}')
+            
+            self.concat(f'y{letter_i}')
+        elif self.last_letter_is_vowel():
+            self.concat(f'y{minor}')
         else:
-            self.word = concat(self.word, f'{minor}')
+            self.concat(f'{minor}')
 
-        self.word = concat(self.word, f'nc{ae}')
+        self.concat(f'nc{ae}')
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def adverb_after_action_alternative(self, **kwargs):
         """
             Gidip etc. (-p)
@@ -1469,25 +1253,25 @@ class Turkish:
             Use this method without any conjuncting
         """
 
-        ae = kwargs['ae']
-        minor = MINOR_HARMONY[kwargs['last_vowel']['letter']]
+        ae = self.letter_a()
+        minor = self.minor()
 
         from_able = self.is_from_able()
 
         if kwargs.get('negative'):
             if not from_able:
-                self.word = concat(self.word, f'm{ae}')
-            self.word = concat(self.word, f'y')
-        elif kwargs['last_letter_is_vowel']:
-            self.word = concat(self.word, f'y')
-        else:
-            self.word = VERBS_HARDEN.get(self.word, self.word)
+                self.concat(f'm{ae}')
 
-        self.word = concat(self.word, f'{minor}p')
+            self.concat('y')
+        elif self.last_letter_is_vowel():
+            self.concat('y')
+        else:
+            self.harden_verb()
+
+        self.concat(f'{minor}p')
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def adverb_without_action(self, **kwargs):
         """
             Gitmeden etc. (-madan)
@@ -1497,18 +1281,17 @@ class Turkish:
             Use this method without any conjuncting
         """
 
-        ae = kwargs['ae']
+        ae = self.letter_a()
 
         from_able = self.is_from_able()
 
         if not from_able:
-            self.word = concat(self.word, f'm{ae}')
+            self.concat(f'm{ae}')
 
-        self.word = concat(self.word, f'd{ae}n')
+        self.concat(f'd{ae}n')
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def adverb_without_action_alternative(self, **kwargs):
         """
             Gitmeksizin etc. (-meksizin)
@@ -1518,13 +1301,12 @@ class Turkish:
             Use this method without any conjuncting
         """
 
-        letter_i = kwargs['letter_i']
+        letter_i = self.letter_i()
         self.word = self.infinitive().to_string()
-        self.word = concat(self.word, f's{letter_i}z{letter_i}n')
+        self.concat(f's{letter_i}z{letter_i}n')
 
         return self.common_return(**kwargs)
 
-    @proceed_letters
     def adverb_by_action(self, **kwargs):
         """
             Giderek etc. (-erek)
@@ -1534,26 +1316,22 @@ class Turkish:
             Use this method without any conjuncting
         """
 
-        ae = kwargs['ae']
+        ae = self.letter_a()
 
         from_able = self.is_from_able()
 
         if kwargs.get('negative'):
             if not from_able:
-                self.word = concat(self.word, f'm{ae}')
-
-            self.word = concat(self.word, f'y')
+                self.concat(f'm{ae}')
         else:
-            self.word = VERBS_HARDEN.get(self.word, self.word)
+            self.harden_verb()
+            
+        self.concat_if_ends_with_vowel('y')
 
-            if kwargs['last_letter_is_vowel']:
-                self.word = concat(self.word, 'y')
-
-        self.word = concat(self.word, f'{ae}r{ae}k')
+        self.concat(f'{ae}r{ae}k')
 
         return self.common_return(**kwargs)
-
-    @proceed_letters
+    
     def adverb_since_action(self, **kwargs):
         """
             Gideli etc. (-eli)
@@ -1563,22 +1341,19 @@ class Turkish:
             Use this method without any conjuncting
         """
 
-        ae = kwargs['ae']
-        letter_i = kwargs['letter_i']
+        ae = self.letter_a()
+        letter_i = self.letter_i()
 
         from_able = self.is_from_able()
 
         if kwargs.get('negative'):
             if not from_able:
-                self.word = concat(self.word, f'm{ae}')
-
-            self.word = concat(self.word, f'y')
+                self.concat(f'm{ae}')
         else:
-            self.word = VERBS_HARDEN.get(self.word, self.word)
+            self.harden_verb()
 
-            if kwargs['last_letter_is_vowel']:
-                self.word = concat(self.word, 'y')
+        self.concat_if_ends_with_vowel('y')
 
-        self.word = concat(self.word, f'{ae}l{letter_i}')
+        self.concat(f'{ae}l{letter_i}')
 
         return self.common_return(**kwargs)

@@ -165,24 +165,6 @@ class Noun(unittest.TestCase):
             'Elif\'in Öküzü'
         )
 
-    def test_json_output(self):
-        self.assertEqual(
-            Turkish('çanta').plural().possessive(person=1).ablative().to_json(),
-            {
-                'result': 'çantalarımdan',
-                'stem': 'çanta',
-                'history': [
-                    {'action': 'plural', 'current': 'çantalar', 'kwargs': {}},
-                    {'action': 'possessive', 'current': 'çantalarım', 'kwargs': {'person': 1}},
-                    {'action': 'ablative', 'current': 'çantalarımdan',
-                        'kwargs': {'last_vowel': {'letter': 'ı', 'tone': 'front', 'vowel_count': 4}, 'ae': 'a',
-                         'letter_i': 'ı', 'last_letter': {'letter': 'm', 'consonant': True},
-                         'last_letter_is_vowel': False, 'lower_word': 'çantalarım'}
-                    }
-                ]
-            }
-        )
-
     def test_ordinal(self):
         self.assertEqual(
             Turkish('dört').ordinal().to_string(),
