@@ -399,6 +399,8 @@ class Turkish(TurkishClass):
 
                     self.concat('r')
 
+                minor = self.minor()
+
                 if not kwargs.get('plural', False):
                     if kwargs.get('person', 3) == 1:
                         self.concat(f' m{minor}y{minor}m')
@@ -420,6 +422,8 @@ class Turkish(TurkishClass):
                     self.concat(f'm{ae}')
 
                 self.concat(f'z')
+
+                minor = self.minor()
 
                 if not kwargs.get('plural', False):
                     if kwargs.get('person', 3) == 1:
