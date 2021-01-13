@@ -468,12 +468,11 @@ class Turkish(TurkishClass):
                     if kwargs.get('person', 3) == 1:
                         if not from_able:
                             self.concat(f'm{ae}')
-                        else:
-                            self.concat(f'm')
+
+                        self.concat(f'm')
                     elif kwargs.get('person', 3) == 2:
                         if not from_able:
-                            self.concat('m')
-                            self.concat(ae)
+                            self.concat(f'm{ae}')
                         self.concat('z')
                         self.concat('s')
                         self.concat(MINOR_HARMONY[minor_harmony_for_future])
@@ -491,7 +490,7 @@ class Turkish(TurkishClass):
                         self.concat('z')
                     elif kwargs.get('person', 3) == 2:
                         if not from_able:
-                            self.concat('m{ae}')
+                            self.concat(f'm{ae}')
                         self.concat('z')
                         self.concat('s')
                         self.concat(MINOR_HARMONY[ae])
