@@ -661,7 +661,9 @@ class Turkish:
         if kwargs.get('negative', False) and not from_able:
             self.word = concat(self.word, f'm{ae}')
 
-        if 'vowel' in kwargs['last_letter']:
+        last_letter_is_vowel = last_letter(self.word)['letter'] in VOWELS
+
+        if last_letter_is_vowel:
             self.word = VERBS_LOSING_VOWELS.get(self.word, self.word)
             self.word = concat(self.word, 'y')
 
