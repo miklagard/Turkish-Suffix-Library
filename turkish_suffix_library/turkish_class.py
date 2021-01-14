@@ -1,12 +1,12 @@
 import inspect
 
 from turkish_suffix_library.turkish_string import make_lower, \
-    make_upper, concat, from_upper_or_lower, \
+    concat, from_upper_or_lower, \
     last_vowel, last_letter, soften, exception_missing, change_last_letter
 
 from turkish_suffix_library.consonants import HARD_CONSONANTS, \
-    MINOR_HARMONY, VOWELS, MINOR_HARMONY_FOR_FUTURE, N_CONNECTOR, VERBS_LOSING_VOWELS, \
-    VERBS_HARDEN, PASSIVE_EXCEPTION, NK_G_CHANGE
+    MINOR_HARMONY, VOWELS, VERB_MINOR_HARMONY_EXCEPTIONS, N_CONNECTOR, VERBS_LOSING_VOWELS, \
+    VERBS_HARDEN, NK_G_CHANGE
 
 
 class TurkishClass:
@@ -112,11 +112,20 @@ class TurkishClass:
         if self.ends_with(old_letter):
             self.change_last_letter(new_letter)
 
+    def verb_in_minor_harmony_exception(self):
+        lower = self.lower()
+
+        for verb in VERB_MINOR_HARMONY_EXCEPTIONS:
+            if lower.endswith(verb):
+                return True
+
+        return False
+
     def harden_verb(self):
         lower = self.lower()
 
         for hard in VERBS_HARDEN:
-            if hard == lower[-len(hard):]:
+            if lower.endswith(hard):
                 self.word = concat(self.word[:-len(hard)], VERBS_HARDEN[hard])
 
         return self.word

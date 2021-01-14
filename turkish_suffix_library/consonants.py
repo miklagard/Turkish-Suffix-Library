@@ -296,3 +296,10 @@ NK_G_CHANGE = {
     'dink': 'ding',
     'gonk': 'gong',
 }
+
+# sererim, silerim (e)
+# veririm, gelirim, bilirim (i)
+VERB_MINOR_HARMONY_EXCEPTIONS = (
+    'ver', 'gel', 'bil',
+    'al', 'kal'
+)

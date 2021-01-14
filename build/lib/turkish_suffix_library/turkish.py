@@ -377,7 +377,6 @@ class Turkish(TurkishClass):
         minor_harmony_letter_for_future = MINOR_HARMONY_FOR_FUTURE[self.last_vowel()['letter']]
         minor_harmony_for_future = MINOR_HARMONY_FOR_FUTURE[minor]
 
-        ver_bil = self.word[-3:] in ('ver', 'bil')
         from_able = self.is_from_able()
 
         if not kwargs.get('negative', False):
@@ -388,16 +387,13 @@ class Turkish(TurkishClass):
         if kwargs.get('question', False):
             if not kwargs.get('negative', False):
 
-                if self.word in ['al', 'kal']:
-                    self.concat('ır')
-                else:
-                    if not self.last_letter_is_vowel():
-                        if ver_bil:
-                            self.concat('i')
-                        else:
-                            self.concat(minor_harmony_letter_for_future)
+                if not self.last_letter_is_vowel():
+                    if self.verb_in_minor_harmony_exception():
+                        self.concat(self.minor())
+                    else:
+                        self.concat(minor_harmony_letter_for_future)
 
-                    self.concat('r')
+                self.concat('r')
 
                 minor = self.minor()
 
@@ -442,16 +438,13 @@ class Turkish(TurkishClass):
                         self.concat(f' m{minor}')
         elif not kwargs.get('question', False):
             if not kwargs.get('negative', False):
-                if self.word in ['al', 'kal']:
-                    self.concat('ır')
-                else:
-                    if not self.last_letter_is_vowel():
-                        if self.word[-3:] in ('ver', 'bil'):
-                            self.concat('i')
-                        else:
-                            self.concat(minor_harmony_letter_for_future)
+                if not self.last_letter_is_vowel():
+                    if self.verb_in_minor_harmony_exception():
+                        self.concat(self.minor())
+                    else:
+                        self.concat(minor_harmony_letter_for_future)
 
-                    self.concat('r')
+                self.concat('r')
 
                 if not kwargs.get('plural', False):
                     if kwargs.get('person', 3) == 1:

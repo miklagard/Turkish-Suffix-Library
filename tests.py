@@ -185,5 +185,7 @@ class Verb(unittest.TestCase):
             'alınmıyorsun'
         )
 
+
 if __name__ == '__main__':
     unittest.main()
+
