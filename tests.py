@@ -5,12 +5,12 @@ import unittest
 class Adverb(unittest.TestCase):
     def test_adverb_during_action(self):
         self.assertEqual(
-            Turkish('it').present_continuous().adverb_during_action().to_string(),
+            Turkish('it').present_continuous_simple().adverb_during_action().to_string(),
             'itiyorken'
         )
 
         self.assertEqual(
-            Turkish('it').present_continuous(negative=True).adverb_during_action().to_string(),
+            Turkish('it').present_continuous_simple(negative=True).adverb_during_action().to_string(),
             'itmiyorken'
         )
 
@@ -181,7 +181,7 @@ class Noun(unittest.TestCase):
 class Verb(unittest.TestCase):
     def test_passive(self):
         self.assertEqual(
-            Turkish('al').passive().present_continuous(person=2, negative=True).to_string(),
+            Turkish('al').passive().present_continuous_simple(person=2, negative=True).to_string(),
             'alınılmıyorsun'
         )
 

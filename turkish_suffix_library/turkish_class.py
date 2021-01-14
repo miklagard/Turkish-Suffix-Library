@@ -15,6 +15,18 @@ class TurkishClass:
         self.stem = kwargs.get('stem', parameter_word)
         self.history = kwargs.get('history', [])
 
+    def plural(self):
+        self.concat(f'l{self.letter_a()}r')
+
+        return self.word
+
+    def apostrophes(self, **kwargs):
+        if kwargs.get('proper_noun'):
+            self.concat("'")
+            return True
+        else:
+            return False
+
     def last_vowel(self):
         return last_vowel(self.word)
 
@@ -39,14 +51,6 @@ class TurkishClass:
     def last_letter_is_vowel(self):
         return self.last_letter()['letter'] in VOWELS
 
-    def concat_if_ends_with_vowel(self, concat_text):
-        vowel = self.last_letter_is_vowel()
-
-        if vowel:
-            self.concat(concat_text)
-
-        return vowel
-
     def last_letter_is_hard(self):
         return self.last_letter()['letter'] in HARD_CONSONANTS
 
@@ -55,6 +59,10 @@ class TurkishClass:
             self.concat(concat_1)
         else:
             self.concat(concat_2)
+
+    def if_ends_with_vowel(self, concat_text):
+        if self.last_letter_is_vowel():
+            self.concat(concat_text)
 
     def lower(self):
         return make_lower(self.word)

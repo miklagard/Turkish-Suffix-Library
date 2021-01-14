@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: turkish-suffix-library
-Version: 0.6.3
+Version: 0.7.0
 Summary: Turkish suffix library
 Home-page: https://github.com/miklagard/Turkish-Suffix-Library
 Author: Cem Yildiz
@@ -63,72 +63,6 @@ Description: Turkish.py
             yedişer
             kediyle
         
-        
-        # Adverbs
-            Turkish('vur').adverb_repeatedly()
-            > vurdukça
-        
-            Turkish('ara').adverb_since_action()
-            > arayalı
-        
-            etc.
-        
-        ### Verbs
-            Parameters: person (1, 2, 3), negative (boolean), question (boolean), plural (boolean)
-        
-            Turkish('git').infinitive()
-            > gitmek 
-            
-            Turkish('git').infinitive(negative=True)
-            > gitmemek
-        
-            Turkish('al').future(person=2, plural=True)  # Second person plural
-            > alacaksınız
-        
-            Turkish('al').present_simple(person=1)  # First person single
-            > alırım
-            
-            Turkish('al').past(person=3, plural=True)
-            > aldılar
-            
-            Turkish('al').command(person=3, plural=True)
-            > alsınlar
-            
-            Turkish('ver').present_continuous(person=1)
-            > veriyorum
-            
-            Turkish('ver').present_continuous_alternative(person=1)
-            > vermekteyim
-            
-            Turkish('ver').must(person=2)
-            > vermelisin
-            
-            Turkish('anlat').wish_condition(person=3)
-            > anlatsa
-            
-            Turkish('sakla').wish(person=3, plural=True)
-            > saklayalar
-            
-            Turkish('anla').learned_past(person=3, question=True)
-            > anlamış mı
-            
-            Turkish('sat').past_learned_past(person=2, negative=True)
-            > satmamıştın
-            
-            Turkish('kork').learned_past_learned_past(person=3)
-            > korkmuşmuş
-            
-            Turkish('oyna').learned_past_future(person=2, negative=True)
-            > oynamayacakmışsın
-            
-            Turkish('oyna').past_future(person=2, negative=True, question=True)
-            > oynamayacak mıydın
-            
-            Turkish('oyna').past_past(person=2, negative=True)
-            > oynamadıydın
-            
-            Turkish('gül').past_condition(person=2)
-            > güldüysen
         
         ## Turkish Grammar
          * Turkish is a highly agglutinative language, i.e., Turkish words have many 
