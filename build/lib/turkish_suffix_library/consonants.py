@@ -259,12 +259,6 @@ VERBS_HARDEN = {
     'et': 'ed'
 }
 
-# Passive verbs exceptions
-PASSIVE_EXCEPTION = {
-    'öl': 'ölün',
-    'al': 'alın',
-}
-
 # K -> G change in some nouns ending with -nk (not all of them, for instance: link, bank)
 NK_G_CHANGE = {
     'renk': 'reng',

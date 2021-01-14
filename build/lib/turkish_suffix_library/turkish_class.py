@@ -97,6 +97,15 @@ class TurkishClass:
 
         return False
 
+    def is_from_passive(self):
+        if len(self.history):
+            action = self.history[-1]['action']
+
+            if action == 'passive':
+                return True
+
+        return False
+
     def ng_change(self):
         self.word = NK_G_CHANGE.get(self.lower(), self.word)
         return self.word
@@ -136,4 +145,3 @@ class TurkishClass:
 
     def n_connector(self):
         return self.lower() in N_CONNECTOR
-

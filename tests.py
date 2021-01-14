@@ -182,7 +182,7 @@ class Verb(unittest.TestCase):
     def test_passive(self):
         self.assertEqual(
             Turkish('al').passive().present_continuous(person=2, negative=True).to_string(),
-            'alınmıyorsun'
+            'alınılmıyorsun'
         )
 
 

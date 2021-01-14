@@ -2,7 +2,7 @@ import inspect
 
 from turkish_suffix_library.turkish_class import TurkishClass
 
-from turkish_suffix_library.consonants import MINOR_HARMONY, MINOR_HARMONY_FOR_FUTURE, PASSIVE_EXCEPTION
+from turkish_suffix_library.consonants import MINOR_HARMONY, MINOR_HARMONY_FOR_FUTURE
 
 
 class Turkish(TurkishClass):
@@ -378,6 +378,7 @@ class Turkish(TurkishClass):
         minor_harmony_for_future = MINOR_HARMONY_FOR_FUTURE[minor]
 
         from_able = self.is_from_able()
+        from_passive = self.is_from_passive()
 
         if not kwargs.get('negative', False):
             self.soften()
@@ -391,7 +392,10 @@ class Turkish(TurkishClass):
                     if self.verb_in_minor_harmony_exception():
                         self.concat(self.minor())
                     else:
-                        self.concat(minor_harmony_letter_for_future)
+                        if from_passive:
+                            self.concat(self.last_vowel()['letter'])
+                        else:
+                            self.concat(minor_harmony_letter_for_future)
 
                 self.concat('r')
 
@@ -410,6 +414,8 @@ class Turkish(TurkishClass):
                     elif kwargs.get('person', 3) == 2:
                         self.concat(f' m{minor}s{minor}n{minor}z')
                     elif kwargs.get('person', 3) == 3:
+                        self.word = self.plural().to_string()
+                        minor = self.minor()
                         self.concat(f' m{minor}')
             elif kwargs.get('negative', False):
                 ae = self.letter_a()
@@ -442,7 +448,10 @@ class Turkish(TurkishClass):
                     if self.verb_in_minor_harmony_exception():
                         self.concat(self.minor())
                     else:
-                        self.concat(minor_harmony_letter_for_future)
+                        if from_passive:
+                            self.concat(self.last_vowel()['letter'])
+                        else:
+                            self.concat(minor_harmony_letter_for_future)
 
                 self.concat('r')
 
@@ -1131,16 +1140,18 @@ class Turkish(TurkishClass):
         """
         self.harden_verb()
 
-        minor = self.minor()
         lower_word = self.lower()
 
-        if lower_word in PASSIVE_EXCEPTION:
-            self.from_upper_or_lower(PASSIVE_EXCEPTION.get(lower_word))
+        minor = self.minor()
+
+        if lower_word.endswith('l'):
+            self.concat(self.minor())
+            self.concat('n')
         else:
             if self.last_letter_is_vowel():
                 self.concat('n')
 
-            self.concat(f'{minor}l')
+        self.concat(f'{minor}l')
 
         return self.common_return(**kwargs)
     
