@@ -185,12 +185,6 @@ class Verb(unittest.TestCase):
             'alınılmıyorsun'
         )
 
-print(Turkish('oyna').past_future(negative=True, question=False, person=1, plural=False))
-print(Turkish('oyna').past_future(negative=True, question=False, person=2, plural=False))
-print(Turkish('oyna').past_future(negative=True, question=False, person=3, plural=False))
-print(Turkish('oyna').past_future(negative=True, question=False, person=1, plural=True))
-print(Turkish('oyna').past_future(negative=True, question=False, person=2, plural=True))
-print(Turkish('oyna').past_future(negative=True, question=False, person=3, plural=True))
 
 if __name__ == '__main__':
     unittest.main()

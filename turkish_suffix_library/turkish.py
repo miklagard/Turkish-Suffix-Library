@@ -296,7 +296,7 @@ class Turkish(TurkishClass):
             self.harden_verb()
 
             if self.last_letter_is_vowel():
-                self.word = self.word[:1]
+                self.word = self.word[:-1]
                 self.concat(self.minor())
             else:
                 self.concat(self.minor())
@@ -584,7 +584,12 @@ class Turkish(TurkishClass):
         elif person == 2:
             self.concat(f'{letter_d}{minor}n{minor}z')
         elif person == 3:
-            self.concat(f'd{self.minor()}')
+            if self.last_letter_is_vowel() or not self.last_letter_is_hard():
+                letter_d = 'd'
+            else:
+                letter_d = 't'
+
+            self.concat(f'{letter_d}{self.minor()}')
             self.plural()
 
         if kwargs.get('question', False):
@@ -1384,28 +1389,33 @@ class Turkish(TurkishClass):
             Example: It is heard by someone that somebody did something in the past
         """
 
-        if kwargs.get('person') == 3 and kwargs.get('plural', False) and kwargs.get('question', False):
+        person = kwargs.get('person')
+        plural = kwargs.get('plural', 3)
+        question = kwargs.get('question')
+        negative = kwargs.get('negative')
+
+        if person == 3 and plural and question:
             self.word = self.indefinite_past(
-                negative=kwargs.get('negative', False),
-                question=kwargs.get('question', False),
-                person=kwargs.get('person', 3),
-                plural=kwargs.get('plural', False)
+                negative=negative,
+                question=question,
+                person=3,
+                plural=plural
             ).to_string()
         else:
             self.word = self.indefinite_past(
-                negative=kwargs.get('negative', False),
-                question=kwargs.get('question', False),
+                negative=negative,
+                question=question,
+                person=3
             ).to_string()
 
-        if kwargs.get('question', False):
-            self.concat('y')
+        self.if_ends_with_vowel('y')
 
-        if kwargs.get('person') == 3 and kwargs.get('plural', False) and kwargs.get('question', False):
-            self.word = self.past_definite(person=kwargs.get('person', 3)).to_string()
+        if person == 3 and plural and question:
+            self.word = self.past_definite(person=person).to_string()
         else:
             self.word = self.past_definite(
-                person=kwargs.get('person', 3),
-                plural=kwargs.get('plural', False)
+                person=person,
+                plural=plural
             ).to_string()
 
         return self.common_return(**kwargs)
