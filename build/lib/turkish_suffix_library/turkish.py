@@ -438,23 +438,22 @@ class Turkish(TurkishClass):
                 self.concat('r')
 
                 minor = self.minor()
+                letter_i = self.letter_i()
 
-                if not plural:
-                    if person == 1:
-                        self.concat(f' m{minor}y{minor}m')
-                    elif person == 2:
-                        self.concat(f' m{minor}s{minor}n')
-                    elif person == 3:
-                        self.concat(f' m{minor}')
-                else:
-                    if person == 1:
-                        self.concat(f' m{minor}y{minor}z')
-                    elif person == 2:
-                        self.concat(f' m{minor}s{minor}n{minor}z')
-                    elif person == 3:
-                        self.plural()
-                        minor = self.minor()
-                        self.concat(f' m{minor}')
+                if person == 1 and not plural:
+                    self.concat(f' m{minor}y{minor}m')
+                elif person == 2 and not plural:
+                    self.concat(f' m{minor}s{letter_i}n')
+                elif person == 3 and not plural:
+                    self.concat(f' m{minor}')
+                elif person == 1:
+                    self.concat(f' m{minor}y{minor}z')
+                elif person == 2:
+                    self.concat(f' m{minor}s{letter_i}n{letter_i}z')
+                elif person == 3:
+                    self.plural()
+                    minor = self.minor()
+                    self.concat(f' m{minor}')
             elif negative:
                 ae = self.letter_a()
                 
@@ -464,24 +463,32 @@ class Turkish(TurkishClass):
                 self.concat(f'z')
 
                 minor = self.minor()
+                letter_i = self.letter_i()
 
                 if not plural:
                     if person == 1:
                         self.concat(f' m{minor}y{minor}m')
                     elif person == 2:
-                        self.concat(f' m{minor}s{minor}n')
+                        self.concat(f' m{minor}s{letter_i}n')
                     elif person == 3:
                         self.concat(f' m{minor}')
                 else:
                     if person == 1:
                         self.concat(f' m{minor}y{minor}z')
                     elif person == 2:
-                        self.concat(f' m{minor}s{minor}n{minor}z')
+                        self.concat(f' m{minor}s{letter_i}n{letter_i}z')
                     elif person == 3:
                         self.plural()
                         self.concat(f' m{minor}')
         else:  # not question
             if not negative:
+                letter_au = self.letter_a()
+                letter_iu = self.letter_i()
+
+                if self.last_vowel()['letter'] in ('ö', 'ü'):
+                    letter_au = 'ü'
+                    letter_iu = 'ü'
+
                 if not self.last_letter_is_vowel():
                     if self.verb_in_minor_harmony_exception():
                         self.concat(self.minor())
@@ -491,62 +498,52 @@ class Turkish(TurkishClass):
                         elif lower.endswith('l'):
                             self.concat(self.minor())
                         else:
-                            self.concat(minor_harmony_letter_for_future)
+                            self.concat(letter_au)
+
                 self.concat('r')
 
                 if not plural:
                     if person == 1:
-                        self.concat(f'{minor}m')
+                        self.concat(f'{letter_iu}m')
                     elif person == 2:
-                        self.concat(f's{minor}n')
+                        self.concat(f's{letter_iu}n')
                 else:
                     if person == 1:
-                        self.concat(f'{minor}z')
+                        self.concat(f'{letter_iu}z')
                     elif person == 2:
-                        self.concat(f's{minor}n{minor}z')
+                        self.concat(f's{letter_iu}n{letter_iu}z')
                     elif person == 3:
                         self.plural()
             else:  # negative
                 ae = self.letter_a()
+                letter_i = self.letter_i()
 
-                if not plural:
-                    if person == 1:
-                        if not from_able:
-                            self.concat(f'm{ae}')
+                if person == 1 and not plural:
+                    if not from_able:
+                        self.concat(f'm{ae}')
 
-                        self.concat(f'm')
-                    elif person == 2:
-                        if not from_able:
-                            self.concat(f'm{ae}')
-                        self.concat('z')
-                        self.concat('s')
-                        self.concat(MINOR_HARMONY[minor_harmony_for_future])
-                        self.concat('n')
-                    elif person == 3:
-                        if not from_able:
-                            self.concat(f'm{ae}')
-                        self.concat(f'z')
-                else:
-                    if person == 1:
-                        if not from_able:
-                            self.concat(f'm{ae}')
-                        self.concat('y')
-                        self.concat(MINOR_HARMONY[minor_harmony_for_future])
-                        self.concat('z')
-                    elif person == 2:
-                        if not from_able:
-                            self.concat(f'm{ae}')
-                        self.concat('z')
-                        self.concat('s')
-                        self.concat(MINOR_HARMONY[ae])
-                        self.concat('n')
-                        self.concat(MINOR_HARMONY[ae])
-                        self.concat('z')
-                    elif person == 3:
-                        if not from_able:
-                            self.concat(f'm{minor_harmony_letter_for_future}')
-                        self.concat(f'z')
-                        self.plural()
+                    self.concat(f'm')
+                elif person == 2 and not plural:
+                    if not from_able:
+                        self.concat(f'm{ae}')
+                    self.concat(f'zs{letter_i}n')
+                elif person == 3 and not plural:
+                    if not from_able:
+                        self.concat(f'm{ae}')
+                    self.concat(f'z')
+                elif person == 1:
+                    if not from_able:
+                        self.concat(f'm{ae}')
+                    self.concat(f'y{letter_i}z')
+                elif person == 2:
+                    if not from_able:
+                        self.concat(f'm{ae}')
+                    self.concat(f'zs{letter_i}n{letter_i}z')
+                elif person == 3:
+                    if not from_able:
+                        self.concat(f'm{ae}')
+                    self.concat(f'z')
+                    self.plural()
 
         return self.common_return(**kwargs)
 
