@@ -600,19 +600,29 @@ class Turkish(TurkishClass):
         return self.common_return(**kwargs)
 
     def past_progressive_dubitative(self, **kwargs):
+        person = kwargs.get('person')
+        negative = kwargs.get('negative')
+        plural = kwargs.get('plural')
+        question = kwargs.get('question')
+
         self.word = self.present_continuous_simple(
             person=3,
-            negative=kwargs.get('negative')
+            negative=negative,
         ).to_string()
 
-        if kwargs.get('person') == 3 and kwargs.get('plural'):
+        if person == 3 and plural:
             self.plural()
-            self.concat(f'm{self.letter_i()}ş')
-        else:
-            self.word = self.indefinite_past(
-                person=kwargs.get('person'),
-                plural=kwargs.get('plural')
-            ).to_string()
+            plural = False
+
+        if question:
+            self.concat(f' m{self.minor()}')
+
+        self.if_ends_with_vowel('y')
+
+        self.word = self.indefinite_past(
+            person=person,
+            plural=plural
+        ).to_string()
 
         return self.common_return(**kwargs)
 
@@ -1016,7 +1026,7 @@ class Turkish(TurkishClass):
             self.concat(f'n{letter_i}z')
 
         if kwargs.get('question'):
-            self.concat(' m{letter_i}')
+            self.concat(f' m{letter_i}')
 
         return self.common_return(**kwargs)
 
