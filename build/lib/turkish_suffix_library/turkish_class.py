@@ -1,12 +1,5 @@
-import inspect
-
-from turkish_suffix_library.turkish_string import make_lower, \
-    concat, from_upper_or_lower, \
-    last_vowel, last_letter, soften, exception_missing, change_last_letter
-
-from turkish_suffix_library.consonants import HARD_CONSONANTS, \
-    MINOR_HARMONY, VOWELS, VERB_MINOR_HARMONY_EXCEPTIONS, N_CONNECTOR, VERBS_LOSING_VOWELS, \
-    VERBS_HARDEN, NK_G_CHANGE, HARMONY_FOR_PRESENT
+import turkish_suffix_library.turkish_string as tr
+import turkish_suffix_library.consonants as con
 
 
 class TurkishClass:
@@ -28,7 +21,7 @@ class TurkishClass:
             return False
 
     def last_vowel(self):
-        return last_vowel(self.word)
+        return tr.last_vowel(self.word)
 
     def letter_a(self):
         if self.last_vowel()['tone'] == 'front':
@@ -37,7 +30,7 @@ class TurkishClass:
             return 'e'
 
     def minor(self):
-        return MINOR_HARMONY[self.last_vowel()['letter']]
+        return con.MINOR_HARMONY[self.last_vowel()['letter']]
 
     def letter_i(self):
         if self.last_vowel()['tone'] == 'front':
@@ -46,13 +39,13 @@ class TurkishClass:
             return 'i'
 
     def last_letter(self):
-        return last_letter(self.word)
+        return tr.last_letter(self.word)
 
     def last_letter_is_vowel(self):
-        return self.last_letter()['letter'] in VOWELS
+        return self.last_letter()['letter'] in con.VOWELS
 
     def last_letter_is_hard(self):
-        return self.last_letter()['letter'] in HARD_CONSONANTS
+        return self.last_letter()['letter'] in con.HARD_CONSONANTS
 
     def if_ends_with_hard(self, concat_1, concat_2):
         if self.last_letter_is_hard():
@@ -65,18 +58,18 @@ class TurkishClass:
             self.concat(concat_text)
 
     def lower(self):
-        return make_lower(self.word)
+        return tr.make_lower(self.word)
 
     def soften(self):
-        self.word = soften(self.word)
+        self.word = tr.soften(self.word)
         return self.word
 
     def concat(self, concat_string):
-        self.word = concat(self.word, concat_string)
-        return concat(self.word, concat_string)
+        self.word = tr.concat(self.word, concat_string)
+        return self.word
 
     def exception_missing(self, proper_noun):
-        return exception_missing(self.word, proper_noun)
+        return tr.exception_missing(self.word, proper_noun)
 
     def to_string(self):
         return self.word
@@ -92,7 +85,7 @@ class TurkishClass:
         return self.word
 
     def from_upper_or_lower(self, new_word):
-        self.word = from_upper_or_lower(new_word, self.word)
+        self.word = tr.from_upper_or_lower(new_word, self.word)
         return self.word
 
     def is_from_able(self):
@@ -115,11 +108,11 @@ class TurkishClass:
         return False
 
     def ng_change(self):
-        self.word = NK_G_CHANGE.get(self.lower(), self.word)
+        self.word = con.NK_G_CHANGE.get(self.lower(), self.word)
         return self.word
 
     def change_last_letter(self, letter):
-        self.word = change_last_letter(self.word, letter)
+        self.word = tr.change_last_letter(self.word, letter)
         return self.word
 
     def ends_with(self, letter):
@@ -132,7 +125,7 @@ class TurkishClass:
     def verb_in_minor_harmony_exception(self):
         lower = self.lower()
 
-        for verb in VERB_MINOR_HARMONY_EXCEPTIONS:
+        for verb in con.VERB_MINOR_HARMONY_EXCEPTIONS:
             if lower.endswith(verb):
                 return True
 
@@ -141,20 +134,29 @@ class TurkishClass:
     def harden_verb(self):
         lower = self.lower()
 
-        for hard in VERBS_HARDEN:
+        for hard in con.VERBS_HARDEN:
             if lower.endswith(hard):
-                self.word = concat(self.word[:-len(hard)], VERBS_HARDEN[hard])
+                self.word = tr.concat(
+                    self.word[:-len(hard)], con.VERBS_HARDEN[hard]
+                )
 
         return self.word
 
     def verbs_losing_vowels(self):
-        self.word = self.from_upper_or_lower(VERBS_LOSING_VOWELS.get(self.lower(), self.word))
+        self.word = self.from_upper_or_lower(
+            con.VERBS_LOSING_VOWELS.get(self.lower(), self.word)
+        )
         return self.word
 
     def n_connector(self):
-        return self.lower() in N_CONNECTOR
+        return self.lower() in con.N_CONNECTOR
 
     def harmony_for_present(self):
         vowel = self.last_vowel()['letter'].lower()
 
-        return HARMONY_FOR_PRESENT.get(vowel, vowel)
+        return con.HARMONY_FOR_PRESENT.get(vowel, vowel)
+
+    def count_syllable(self):
+        vowel = self.last_vowel()
+
+        return vowel['vowel_count']

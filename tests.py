@@ -178,12 +178,6 @@ class Noun(unittest.TestCase):
         )
 
 
-print(Turkish('uyu').subjunctive_mood_simple_tense(negative=True, question=False, person=1, plural=False))
-print(Turkish('uyu').subjunctive_mood_simple_tense(negative=True, question=False, person=2, plural=False))
-print(Turkish('uyu').subjunctive_mood_simple_tense(negative=True, question=False, person=3, plural=False))
-print(Turkish('uyu').subjunctive_mood_simple_tense(negative=True, question=False, person=1, plural=True))
-print(Turkish('uyu').subjunctive_mood_simple_tense(negative=True, question=False, person=2, plural=True))
-print(Turkish('uyu').subjunctive_mood_simple_tense(negative=True, question=False, person=3, plural=True))
 class Verb(unittest.TestCase):
     def test_passive(self):
         self.assertEqual(

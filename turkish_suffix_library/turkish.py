@@ -1,8 +1,5 @@
 import inspect
-
 from turkish_suffix_library.turkish_class import TurkishClass
-
-from turkish_suffix_library.consonants import MINOR_HARMONY, MINOR_HARMONY_FOR_FUTURE
 
 
 class Turkish(TurkishClass):
@@ -411,29 +408,27 @@ class Turkish(TurkishClass):
 
         from_able = self.is_from_able()
         from_passive = self.is_from_passive()
-
-        if not kwargs.get('negative', False):
-            self.soften()
-
-            self.harden_verb()
-
         question = kwargs.get('question')
         negative = kwargs.get('negative')
         plural = kwargs.get('plural')
         person = kwargs.get('person', 3)
+
+        if not negative:
+            self.soften()
+
+            self.harden_verb()
 
         if question:
             if not negative:
                 if not self.last_letter_is_vowel():
                     if self.verb_in_minor_harmony_exception():
                         self.concat(self.minor())
+                    elif lower.endswith('l'):
+                        self.concat(self.minor())
+                    elif self.count_syllable() > 1:
+                        self.concat(self.minor())
                     else:
-                        if from_passive:
-                            self.concat(self.last_vowel()['letter'])
-                        elif lower.endswith('l'):
-                            self.concat(self.minor())
-                        else:
-                            self.concat(self.harmony_for_present())
+                        self.concat(self.harmony_for_present())
 
                 self.concat('r')
 
@@ -481,40 +476,31 @@ class Turkish(TurkishClass):
                         self.plural()
                         self.concat(f' m{minor}')
         else:  # not question
+            harmony = self.harmony_for_present()
             if not negative:
-                letter_au = self.letter_a()
-                letter_iu = self.harmony_for_present()
-
-                if self.last_vowel()['letter'] in ('ö', 'ü'):
-                    letter_au = 'ü'
-                    letter_iu = 'ü'
-                elif self.last_vowel()['letter'] in ('ö', 'ü'):
-                    letter_au = 'u'
-                    letter_iu = 'u'
-
-                if not self.last_letter_is_vowel():
-                    if self.verb_in_minor_harmony_exception():
-                        self.concat(self.minor())
-                    else:
-                        if from_passive:
-                            self.concat(self.last_vowel()['letter'])
-                        elif lower.endswith('l'):
-                            self.concat(self.minor())
-                        else:
-                            self.concat(letter_au)
+                if self.verb_in_minor_harmony_exception():
+                    self.concat(self.minor())
+                elif lower.endswith('l'):
+                    self.concat(self.minor())
+                elif self.count_syllable() > 1:
+                    self.concat(self.minor())
+                else:
+                    self.concat(harmony)
 
                 self.concat('r')
 
+                harmony = self.minor()
+
                 if not plural:
                     if person == 1:
-                        self.concat(f'{letter_iu}m')
+                        self.concat(f'{harmony}m')
                     elif person == 2:
-                        self.concat(f's{letter_iu}n')
+                        self.concat(f's{harmony}n')
                 else:
                     if person == 1:
-                        self.concat(f'{letter_iu}z')
+                        self.concat(f'{harmony}z')
                     elif person == 2:
-                        self.concat(f's{letter_iu}n{letter_iu}z')
+                        self.concat(f's{harmony}n{harmony}z')
                     elif person == 3:
                         self.plural()
             else:  # negative
@@ -703,17 +689,28 @@ class Turkish(TurkishClass):
         return self.common_return(**kwargs)
 
     def past_progressive_narrative(self, **kwargs):
+        negative = kwargs.get('negative')
+        question = kwargs.get('question')
+        person = kwargs.get('person')
+        plural = kwargs.get('plural') and person == 3
+
         self.word = self.present_continuous_simple(
             person=3,
-            negative=kwargs.get('negative'),
-            question=kwargs.get('question')
+            negative=negative,
+            question=question,
+            plural=plural
         ).to_string()
 
         self.if_ends_with_vowel('y')
 
+        if person == 3 and kwargs.get('plural'):
+            plural = False
+        else:
+            plural = kwargs.get('plural')
+
         self.word = self.past_definite(
-            person=kwargs.get('person'),
-            plural=kwargs.get('plural')
+            person=person,
+            plural=plural
         ).to_string()
 
         return self.common_return(**kwargs)
