@@ -1302,7 +1302,8 @@ class Turkish(TurkishClass):
 
         if kwargs.get('negative', False):
             if not from_able:
-                self.concat(f'y{letter_a}')
+                self.concat(f'm{letter_a}')
+
             self.concat(f'y{letter_a}')
         else:
             self.verbs_losing_vowels()
