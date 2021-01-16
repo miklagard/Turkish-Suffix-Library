@@ -407,10 +407,7 @@ class Turkish(TurkishClass):
         """
             Geniş zaman (aorist)
         """
-        minor = self.minor()
         lower = self.lower()
-        minor_harmony_letter_for_future = MINOR_HARMONY_FOR_FUTURE[self.last_vowel()['letter']]
-        minor_harmony_for_future = MINOR_HARMONY_FOR_FUTURE[minor]
 
         from_able = self.is_from_able()
         from_passive = self.is_from_passive()
@@ -436,7 +433,7 @@ class Turkish(TurkishClass):
                         elif lower.endswith('l'):
                             self.concat(self.minor())
                         else:
-                            self.concat(minor_harmony_letter_for_future)
+                            self.concat(self.harmony_for_present())
 
                 self.concat('r')
 
@@ -486,11 +483,14 @@ class Turkish(TurkishClass):
         else:  # not question
             if not negative:
                 letter_au = self.letter_a()
-                letter_iu = self.letter_i()
+                letter_iu = self.harmony_for_present()
 
                 if self.last_vowel()['letter'] in ('ö', 'ü'):
                     letter_au = 'ü'
                     letter_iu = 'ü'
+                elif self.last_vowel()['letter'] in ('ö', 'ü'):
+                    letter_au = 'u'
+                    letter_iu = 'u'
 
                 if not self.last_letter_is_vowel():
                     if self.verb_in_minor_harmony_exception():
@@ -719,22 +719,31 @@ class Turkish(TurkishClass):
         return self.common_return(**kwargs)
 
     def past_progressive_alternative_narrative(self, **kwargs):
+        negative = kwargs.get('negative')
+        question = kwargs.get('question')
+        person = kwargs.get('person', 3)
+        plural = kwargs.get('plural')
+
+        plural = person == 3 and plural
+
         self.word = self.present_continuous_simple_alternative(
             person=3,
-            negative=kwargs.get('negative'),
-            question=kwargs.get('question')
+            negative=negative,
+            question=question,
+            plural=plural
         ).to_string()
+
+        plural = kwargs.get('plural')
+
+        if person == 3 and plural:
+            plural = False
 
         self.if_ends_with_vowel('y')
 
-        if kwargs.get('person') == 3 and kwargs.get('plural'):
-            self.concat(f'd{self.letter_i()}')
-            self.plural()
-        else:
-            self.word = self.past_definite(
-                person=kwargs.get('person'),
-                plural=kwargs.get('plural')
-            ).to_string()
+        self.word = self.past_definite(
+            person=person,
+            plural=plural
+        ).to_string()
 
         return self.common_return(**kwargs)
 

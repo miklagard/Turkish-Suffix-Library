@@ -6,7 +6,7 @@ from turkish_suffix_library.turkish_string import make_lower, \
 
 from turkish_suffix_library.consonants import HARD_CONSONANTS, \
     MINOR_HARMONY, VOWELS, VERB_MINOR_HARMONY_EXCEPTIONS, N_CONNECTOR, VERBS_LOSING_VOWELS, \
-    VERBS_HARDEN, NK_G_CHANGE
+    VERBS_HARDEN, NK_G_CHANGE, HARMONY_FOR_PRESENT
 
 
 class TurkishClass:
@@ -154,3 +154,7 @@ class TurkishClass:
     def n_connector(self):
         return self.lower() in N_CONNECTOR
 
+    def harmony_for_present(self):
+        vowel = self.last_vowel()['letter'].lower()
+
+        return HARMONY_FOR_PRESENT.get(vowel, vowel)

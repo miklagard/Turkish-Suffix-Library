@@ -32,6 +32,17 @@ MINOR_HARMONY_FOR_FUTURE = {
     'ü': 'e'
 }
 
+HARMONY_FOR_PRESENT = {
+    'e': 'i',
+    'i': 'e',
+    'ö': 'ü',
+    'ü': 'ü',
+    'a': 'ı',
+    'u': 'u',
+    'o': 'ı',
+    'ı': 'a',
+}
+
 # When a foreign word ends with b, c or d loaned to Turkish, the last letter transforms into p, ç or t.
 # eg. Standard (English) -> Standart (Turkish)
 #     Kabāb (Arabic) -> Kebap (Turkish)
