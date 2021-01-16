@@ -22,8 +22,10 @@ class Turkish(TurkishClass):
             (not finished yet)
         """
 
+        proper_noun = kwargs.get('proper_noun')
+
         if not self.apostrophes(**kwargs):
-            self.word = self.exception_missing(kwargs.get('proper_noun'))
+            self.word = self.exception_missing(proper_noun)
 
         if self.last_letter_is_vowel():
             if self.n_connector():
@@ -31,8 +33,9 @@ class Turkish(TurkishClass):
             else:
                 self.concat('y')
 
-        self.ng_change()
-        self.soften()
+        if not proper_noun:
+            self.ng_change()
+            self.soften()
 
         self.concat(self.minor())
 
@@ -46,16 +49,19 @@ class Turkish(TurkishClass):
         # firstly exceptions for ben (I) and you (sen)
 
         lower_word = self.lower()
+        letter_a = self.letter_a()
 
-        proper_noun = self.apostrophes(**kwargs)
+        self.apostrophes(**kwargs)
+        proper_noun = kwargs.get('proper_noun')
 
         if lower_word == 'ben' and not proper_noun:
             self.word = self.from_upper_or_lower('bana')
         elif lower_word == 'sen' and not proper_noun:
             self.word = self.from_upper_or_lower('sana')
         else:
-            self.ng_change()
-            self.word = self.exception_missing(proper_noun)
+            if not proper_noun:
+                self.ng_change()
+                self.word = self.exception_missing(proper_noun)
 
             if self.last_letter_is_vowel():
                 if self.n_connector():
@@ -63,9 +69,10 @@ class Turkish(TurkishClass):
                 else:
                     self.concat('y')
 
-            self.soften()
+            if not proper_noun:
+                self.soften()
 
-            self.concat(self.letter_a())
+            self.concat(letter_a)
 
         return self.common_return(**kwargs)
 
@@ -73,8 +80,8 @@ class Turkish(TurkishClass):
         """
             -den hali
         """
-        self.apostrophes(**kwargs)
         ae = self.letter_a()
+        self.apostrophes(**kwargs)
 
         if self.n_connector():
             self.concat('n')
@@ -89,6 +96,8 @@ class Turkish(TurkishClass):
         """
             -de hali
         """
+        letter_a = self.letter_a()
+
         self.apostrophes(**kwargs)
 
         if self.n_connector():
@@ -96,7 +105,7 @@ class Turkish(TurkishClass):
 
         self.if_ends_with_hard('t', 'd')
 
-        self.concat(self.letter_a())
+        self.concat(letter_a)
 
         return self.common_return(**kwargs)
 
@@ -108,8 +117,8 @@ class Turkish(TurkishClass):
         """
 
         last_letter_is_vowel = self.last_letter_is_vowel()
-        proper_noun = self.apostrophes(**kwargs)
         minor = self.minor()
+        proper_noun = self.apostrophes(**kwargs)
 
         if proper_noun:
             if last_letter_is_vowel:
@@ -133,8 +142,9 @@ class Turkish(TurkishClass):
             Ismin esitlik hali: -ce, -ca etc.
         """
 
+        letter_a = self.letter_a()
         self.if_ends_with_hard('ç', 'c')
-        self.concat(self.letter_a())
+        self.concat(letter_a)
 
         return self.common_return(**kwargs)
 
@@ -144,9 +154,9 @@ class Turkish(TurkishClass):
         """
         is_vowel = self.last_letter_is_vowel()
 
-        self.apostrophes(**kwargs)
-
         ae = self.letter_a()
+
+        self.apostrophes(**kwargs)
 
         if is_vowel:
             self.concat('y')
@@ -164,6 +174,8 @@ class Turkish(TurkishClass):
 
         plural = kwargs.get('plural', False)
 
+        minor = self.minor()
+
         proper_noun = self.apostrophes(**kwargs)
 
         if not (person == '3' and plural):
@@ -171,8 +183,6 @@ class Turkish(TurkishClass):
                 self.soften()
 
                 self.exception_missing(proper_noun)
-
-        minor = self.minor()
 
         if not plural:
             if person == '1':
@@ -221,6 +231,11 @@ class Turkish(TurkishClass):
                 self.plural()
                 self.concat(minor)
 
+        return self.common_return(**kwargs)
+
+    def privative(self, **kwargs):
+        minor = self.minor()
+        self.concat(f's{minor}z')
         return self.common_return(**kwargs)
 
     def ordinal(self, **kwargs):
