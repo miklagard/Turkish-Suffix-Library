@@ -177,12 +177,12 @@ class Noun(unittest.TestCase):
             'yedişer'
         )
 
-print(Turkish('kal').simple_tense(negative=False, question=False, person=1, plural=False))
-print(Turkish('kal').simple_tense(negative=False, question=False, person=2, plural=False))
-print(Turkish('kal').simple_tense(negative=False, question=False, person=3, plural=False))
-print(Turkish('kal').simple_tense(negative=False, question=False, person=1, plural=True))
-print(Turkish('kal').simple_tense(negative=False, question=False, person=2, plural=True))
-print(Turkish('kal').simple_tense(negative=False, question=False, person=3, plural=True))
+print(Turkish('ye').past_conditional_dubitative(negative=True, question=True, person=1, plural=False))
+print(Turkish('ye').past_conditional_dubitative(negative=True, question=True, person=2, plural=False))
+print(Turkish('ye').past_conditional_dubitative(negative=True, question=True, person=3, plural=False))
+print(Turkish('ye').past_conditional_dubitative(negative=True, question=True, person=1, plural=True))
+print(Turkish('ye').past_conditional_dubitative(negative=True, question=True, person=2, plural=True))
+print(Turkish('ye').past_conditional_dubitative(negative=True, question=True, person=3, plural=True))
 
 class Verb(unittest.TestCase):
     def test_passive(self):
