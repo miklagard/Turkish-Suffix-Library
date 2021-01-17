@@ -8,7 +8,20 @@ class TurkishClass:
         self.stem = kwargs.get('stem', parameter_word)
         self.history = kwargs.get('history', [])
 
-    def plural(self):
+    def __str__(self):
+        return self.word
+
+    def to_string(self):
+        return self.word
+
+    def to_json(self):
+        return {
+            'result': self.word,
+            'stem': self.stem,
+            'history': self.history
+        }
+
+    def make_plural(self):
         self.concat(f'l{self.letter_a()}r')
 
         return self.word
@@ -70,19 +83,6 @@ class TurkishClass:
 
     def exception_missing(self, proper_noun):
         return tr.exception_missing(self.word, proper_noun)
-
-    def to_string(self):
-        return self.word
-
-    def to_json(self):
-        return {
-            'result': self.word,
-            'stem': self.stem,
-            'history': self.history
-        }
-
-    def __str__(self):
-        return self.word
 
     def from_upper_or_lower(self, new_word):
         self.word = tr.from_upper_or_lower(new_word, self.word)

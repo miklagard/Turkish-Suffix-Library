@@ -109,7 +109,6 @@ VERBS = [
     'kıl',
     'konuş',
     'kork',
-    'kor',
     'koş',
     'koy',
     'kullan',
