@@ -55,6 +55,8 @@ ARABIC_T = (
     'cellat',
     'cirit',
     'ecdat',
+    'ferhat',
+    'feryat',
     'fesat',
     'hamit',
     'hasat',

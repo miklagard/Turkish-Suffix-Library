@@ -422,7 +422,6 @@ class Turkish(TurkishClass):
         lower = self.lower()
 
         from_able = self.is_from_able()
-        from_passive = self.is_from_passive()
         question = kwargs.get('question')
         negative = kwargs.get('negative')
         plural = kwargs.get('plural')
@@ -493,14 +492,15 @@ class Turkish(TurkishClass):
         else:  # not question
             harmony = self.harmony_for_present()
             if not negative:
-                if self.verb_in_minor_harmony_exception():
-                    self.concat(self.minor())
-                elif lower.endswith('l'):
-                    self.concat(self.minor())
-                elif self.count_syllable() > 1:
-                    self.concat(self.minor())
-                else:
-                    self.concat(harmony)
+                if not self.last_letter_is_vowel():
+                    if self.verb_in_minor_harmony_exception():
+                        self.concat(self.minor())
+                    elif lower.endswith('l'):
+                        self.concat(self.minor())
+                    elif self.count_syllable() > 1:
+                        self.concat(self.minor())
+                    else:
+                        self.concat(harmony)
 
                 self.concat('r')
 
