@@ -1081,35 +1081,27 @@ class Turkish(TurkishClass):
             Approach - Yaklaşma: (yaz) düzeyaz
         """
         self.verbs_losing_vowels()
-
-        minor = self.minor()
-
         self.if_ends_with_vowel('y')
-
         self.soften()
-        ae = self.letter_a()
-
         self.harden_verb()
 
         if not kwargs.get('negative', False):
             if kwargs.get('auxiliary') in ['ver', 'koy']:
-                self.concat(minor)
+                self.concat(self.minor())
             else:
-                self.concat(ae)
+                self.concat(self.letter_a())
 
             self.concat(kwargs.get('auxiliary'))
         if kwargs.get('negative', False):
             if kwargs.get('auxiliary') == 'bil':
-                self.concat(f'{ae}m{ae}')
+                self.concat(f'{self.letter_a()}m{self.letter_a()}')
             else:
                 if kwargs.get('auxiliary') in ['ver', 'koy']:
-                    self.concat(minor)
+                    self.concat(self.minor())
                 else:
-                    self.concat(ae)
+                    self.concat(self.letter_a())
 
                 self.concat(kwargs.get('auxiliary'))
-
-                self.concat(ae)
 
         return self.common_return(**kwargs)
 
