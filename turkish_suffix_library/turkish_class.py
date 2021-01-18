@@ -181,9 +181,9 @@ class TurkishClass:
 
     def if_condition(self, person, plural, *args):
         for arg in args:
-            person_param = next(arg)
-            plural_param = next(arg)
-            suffix = next(arg)
+            person_param = arg[0]
+            plural_param = arg[1]
+            suffix = arg[2]
 
             if person == person_param and plural_param == plural:
                 self.concat(suffix)

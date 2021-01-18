@@ -1197,10 +1197,10 @@ class Turkish(TurkishClass):
 
         self.if_condition(
             person, plural,
-            1, False, f'{letter_i}m',
-            2, False, f's{letter_i}n',
-            1, True, f'{letter_i}z',
-            2, True, f's{letter_i}n{letter_i}z'
+            [1, False, f'{letter_i}m'],
+            [2, False, f's{letter_i}n'],
+            [1, True, f'{letter_i}z'],
+            [2, True, f's{letter_i}n{letter_i}z']
         )
 
         return self.common_return(**kwargs)
@@ -1278,11 +1278,11 @@ class Turkish(TurkishClass):
 
         self.if_condition(
             person, plural,
-            1, False, 'm',
-            2, False, 'n',
-            1, True, 'k',
-            2, True, f'n{letter_i}z',
-            3, True, f'l{letter_a}r'
+            [1, False, 'm'],
+            [2, False, 'n'],
+            [1, True, 'k'],
+            [2, True, f'n{letter_i}z'],
+            [3, True, f'l{letter_a}r']
         )
 
         if kwargs.get('question', False):
@@ -1319,11 +1319,11 @@ class Turkish(TurkishClass):
 
         self.if_condition(
             person, plural,
-            1, False, f'y{letter_i}m',
-            2, False, f's{letter_i}n',
-            1, True, f'l{letter_i}m',
-            2, True, f's{letter_i}n{letter_i}z',
-            3, True, f'l{letter_a}r'
+            [1, False, f'y{letter_i}m'],
+            [2, False, f's{letter_i}n'],
+            [1, True, f'l{letter_i}m'],
+            [2, True, f's{letter_i}n{letter_i}z'],
+            [3, True, f'l{letter_a}r']
         )
 
         if kwargs.get('question', False):
@@ -1437,12 +1437,14 @@ class Turkish(TurkishClass):
         self.if_ends_with_vowel(f'y')
         self.concat(f'm{self.letter_i()}ş')
 
+        i = self.letter_i()
+
         self.if_condition(
             person, plural,
-            1, False, f'{self.letter_i()}m',
-            2, False, f's{self.letter_i()}n',
-            1, True, f'{self.letter_i()}z',
-            2, True, f's{self.letter_i()}n{self.letter_i()}z',
+            [1, False, f'{i}m'],
+            [2, False, f's{i}n'],
+            [1, True, f'{i}z'],
+            [2, True, f's{i}n{i}z']
         )
 
         return self.common_return(**kwargs)
@@ -1739,7 +1741,8 @@ class Turkish(TurkishClass):
         self.simple_tense(
             person=3,
             negative=negative,
-            plural=plural
+            plural=plural,
+            question=question
         )
 
         if plural:
@@ -1747,10 +1750,11 @@ class Turkish(TurkishClass):
         else:
             plural = kwargs.get('plural')
 
+        self.if_ends_with_vowel('y')
+
         self.past_definite(
             person=person,
             plural=plural,
-            question=question
         )
 
         return self.common_return(**kwargs)
@@ -1769,7 +1773,8 @@ class Turkish(TurkishClass):
         self.simple_tense(
             person=3,
             negative=negative,
-            plural=plural
+            plural=plural,
+            question=question
         )
 
         if plural:
@@ -1777,10 +1782,11 @@ class Turkish(TurkishClass):
         else:
             plural = kwargs.get('plural')
 
+        self.if_ends_with_vowel('y')
+
         self.indefinite_past(
             person=person,
             plural=plural,
-            question=question
         )
 
         return self.common_return(**kwargs)
