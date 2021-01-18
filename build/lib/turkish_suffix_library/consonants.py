@@ -307,6 +307,15 @@ NK_G_CHANGE = {
 # sererim, silerim (e)
 # veririm, gelirim, bilirim (i)
 VERB_MINOR_HARMONY_EXCEPTIONS = (
-    'ver', 'gel', 'bil',
-    'al', 'kal'
+    'al',
+    'bil',
+    'bul',
+    'dur',
+    'gel',
+    'gör',
+    'kal',
+    'ol',
+    'öl',
+    'var',
+    'ver',
 )

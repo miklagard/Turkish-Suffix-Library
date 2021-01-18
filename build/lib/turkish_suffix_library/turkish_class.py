@@ -136,13 +136,9 @@ class TurkishClass:
             self.change_last_letter(new_letter)
 
     def verb_in_minor_harmony_exception(self):
-        lower = self.last_word()
+        word = self.last_word()
 
-        for verb in con.VERB_MINOR_HARMONY_EXCEPTIONS:
-            if lower.endswith(verb):
-                return True
-
-        return False
+        return word in con.VERB_MINOR_HARMONY_EXCEPTIONS
 
     def harden_verb(self):
         lower = self.lower()

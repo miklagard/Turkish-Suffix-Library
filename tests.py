@@ -186,14 +186,6 @@ class Verb(unittest.TestCase):
         )
 
 
-
-print(Turkish('öt').indefinite_past_future(negative=False, question=True, person=1, plural=False))
-print(Turkish('öt').indefinite_past_future(negative=False, question=True, person=2, plural=False))
-print(Turkish('öt').indefinite_past_future(negative=False, question=True, person=3, plural=False))
-print(Turkish('öt').indefinite_past_future(negative=False, question=True, person=1, plural=True))
-print(Turkish('öt').indefinite_past_future(negative=False, question=True, person=2, plural=True))
-print(Turkish('öt').indefinite_past_future(negative=False, question=True, person=3, plural=True))
-
 if __name__ == '__main__':
     unittest.main()
 

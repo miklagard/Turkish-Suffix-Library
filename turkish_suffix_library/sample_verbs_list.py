@@ -115,7 +115,7 @@ VERBS = [
     'kur',
     'kurtar',
     'kurtul',
-    'ok',
+    'oku',
     'ol',
     'oluş',
     'otur',
