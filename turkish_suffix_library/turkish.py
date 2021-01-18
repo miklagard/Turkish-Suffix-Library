@@ -882,7 +882,9 @@ class Turkish(TurkishClass):
         if kwargs.get('question'):
             self.concat(f' m{letter_i}')
 
-        self.concat(f'ym{letter_i}ş')
+        self.if_ends_with_vowel('y')
+
+        self.concat(f'm{letter_i}ş')
 
         if person == 1 and not plural:
             self.concat(f'{letter_i}m')

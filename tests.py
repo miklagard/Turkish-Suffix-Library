@@ -185,20 +185,7 @@ class Verb(unittest.TestCase):
             'alınılmıyorsun'
         )
 
-print(Turkish('kahverenk').accusative(proper_noun=False))
-print(Turkish('kahverenk').dative(proper_noun=False))
-print(Turkish('kahverenk').ablative(proper_noun=False))
-print(Turkish('kahverenk').locative(proper_noun=False))
-print(Turkish('kahverenk').equalative(proper_noun=False))
-print(Turkish('kahverenk').instrumental(proper_noun=False))
-print(Turkish('kahverenk').privative(proper_noun=False))
-print(Turkish('kahverenk').genitive(proper_noun=False))
-print(Turkish('kahverenk').possessive(person=1, plural=False, proper_noun=False))
-print(Turkish('kahverenk').possessive(person=2, plural=False, proper_noun=False))
-print(Turkish('kahverenk').possessive(person=3, plural=False, proper_noun=False))
-print(Turkish('kahverenk').possessive(person=1, plural=True, proper_noun=False))
-print(Turkish('kahverenk').possessive(person=2, plural=True, proper_noun=False))
-print(Turkish('kahverenk').possessive(person=3, plural=True, proper_noun=False))
+
 if __name__ == '__main__':
     unittest.main()
 
