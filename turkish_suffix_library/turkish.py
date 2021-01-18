@@ -17,7 +17,7 @@ class Turkish(TurkishClass):
         )
 
     def plural(self, **kwargs):
-        self.set_plural()
+        self.make_plural()
 
         return self.common_return(**kwargs)
 
@@ -488,7 +488,6 @@ class Turkish(TurkishClass):
                         self.concat(f' m{minor}')
         else:  # not question
             harmony_first = self.harmony_for_present_first()
-
             if not negative:
                 if not self.last_letter_is_vowel():
                     if self.verb_in_minor_harmony_exception():
@@ -1081,7 +1080,7 @@ class Turkish(TurkishClass):
         self.harden_verb()
 
         if not kwargs.get('negative', False):
-            if kwargs.get('auxiliary') in ['ver', 'koy']:
+            if kwargs.get('auxiliary') in ('ver', 'koy'):
                 self.concat(self.minor())
             else:
                 self.concat(self.letter_a())
@@ -1196,14 +1195,13 @@ class Turkish(TurkishClass):
 
         self.concat(f'm{letter_i}ş')
 
-        if person == 1 and not plural:
-            self.concat(f'{letter_i}m')
-        elif person == 2 and not plural:
-            self.concat(f's{letter_i}n')
-        elif person == 1 and plural:
-            self.concat(f'{letter_i}z')
-        elif person == 2 and plural:
-            self.concat(f's{letter_i}n{letter_i}z')
+        self.if_condition(
+            person, plural,
+            1, False, f'{letter_i}m',
+            2, False, f's{letter_i}n',
+            1, True, f'{letter_i}z',
+            2, True, f's{letter_i}n{letter_i}z'
+        )
 
         return self.common_return(**kwargs)
 
@@ -1269,7 +1267,8 @@ class Turkish(TurkishClass):
         """
         letter_a = self.letter_a()
         letter_i = self.letter_i()
-
+        person = kwargs.get('person', 3)
+        plural = kwargs.get('plural')
         from_able = self.is_from_able()
 
         if kwargs.get('negative', False) and not from_able:
@@ -1277,18 +1276,14 @@ class Turkish(TurkishClass):
 
         self.concat(f's{letter_a}')
 
-        if not kwargs.get('plural', False):
-            if kwargs.get('person', 3) == 1:
-                self.concat('m')
-            elif kwargs.get('person', 3) == 2:
-                self.concat('n')
-        else:  # Plural
-            if kwargs.get('person', 3) == 1:
-                self.concat('k')
-            elif kwargs.get('person', 3) == 2:
-                self.concat(f'n{letter_i}z')
-            elif kwargs.get('person', 3) == 3:
-                self.make_plural()
+        self.if_condition(
+            person, plural,
+            1, False, 'm',
+            2, False, 'n',
+            1, True, 'k',
+            2, True, f'n{letter_i}z',
+            3, True, f'l{letter_a}r'
+        )
 
         if kwargs.get('question', False):
             self.concat(f' m{letter_i}')
@@ -1301,6 +1296,8 @@ class Turkish(TurkishClass):
         """
         letter_a = self.letter_a()
         letter_i = self.letter_i()
+        person = kwargs.get('person', 3)
+        plural = kwargs.get('plural')
 
         from_able = self.is_from_able()
 
@@ -1320,18 +1317,14 @@ class Turkish(TurkishClass):
 
             self.concat(letter_a)
 
-        if not kwargs.get('plural', False):
-            if kwargs.get('person', 3) == 1:
-                self.concat(f'y{letter_i}m')
-            elif kwargs.get('person', 3) == 2:
-                self.concat(f's{letter_i}n')
-        else:
-            if kwargs.get('person', 3) == 1:
-                self.concat(f'l{letter_i}m')
-            elif kwargs.get('person', 3) == 2:
-                self.concat(f's{letter_i}n{letter_i}z')
-            elif kwargs.get('person', 3) == 3:
-                self.make_plural()
+        self.if_condition(
+            person, plural,
+            1, False, f'y{letter_i}m',
+            2, False, f's{letter_i}n',
+            1, True, f'l{letter_i}m',
+            2, True, f's{letter_i}n{letter_i}z',
+            3, True, f'l{letter_a}r'
+        )
 
         if kwargs.get('question', False):
             self.concat(f' m{letter_i}')
@@ -1374,51 +1367,6 @@ class Turkish(TurkishClass):
             person=person,
             plural=plural
         ).to_string()
-
-        return self.common_return(**kwargs)
-
-    def past_condition(self, **kwargs):
-        """
-            Bilinen geçmiş zamanın şartı (
-                durduysam, durduysan, durduysa, durduysak, durduysanız, durdularsa
-                dursa mıydım, dursa mıydın, dursa mıydı, dursa mıydık, dursalar mıydı
-        """
-
-        if not kwargs.get('question', False):
-            self.word = self.past_definite(
-                person=3,
-                negative=kwargs.get('negative', False)
-            ).to_string()
-
-            self.concat('y')
-
-            self.word = self.wish_condition(
-                person=kwargs.get('person', 3),
-                plural=kwargs.get('plural', False)
-            ).to_string()
-        else:
-            self.word = self.wish_condition(
-                person=3,
-                negative=kwargs.get('negative', False)
-            ).to_string()
-
-            if kwargs.get('person', 3) == 3 and kwargs.get('plural', False):
-                self.make_plural()
-
-            letter_i = self.letter_i()
-
-            self.concat(f' m{letter_i}yd{letter_i}')
-
-            if not kwargs.get('plural', False):
-                if kwargs.get('person', 3) == 1:
-                    self.concat('m')
-                elif kwargs.get('person', 3) == 2:
-                    self.concat('n')
-            else:
-                if kwargs.get('person', 3) == 1:
-                    self.concat('k')
-                elif kwargs.get('person', 3) == 2:
-                    self.concat(f'n{letter_i}z')
 
         return self.common_return(**kwargs)
 
@@ -1489,14 +1437,13 @@ class Turkish(TurkishClass):
         self.if_ends_with_vowel(f'y')
         self.concat(f'm{self.letter_i()}ş')
 
-        if person == 1 and not plural:
-            self.concat(f'{self.letter_i()}m')
-        elif person == 2 and not plural:
-            self.concat(f's{self.letter_i()}n')
-        elif person == 1:
-            self.concat(f'{self.letter_i()}z')
-        elif person == 2:
-            self.concat(f's{self.letter_i()}n{self.letter_i()}z')
+        self.if_condition(
+            person, plural,
+            1, False, f'{self.letter_i()}m',
+            2, False, f's{self.letter_i()}n',
+            1, True, f'{self.letter_i()}z',
+            2, True, f's{self.letter_i()}n{self.letter_i()}z',
+        )
 
         return self.common_return(**kwargs)
 
@@ -1775,5 +1722,65 @@ class Turkish(TurkishClass):
         self.if_ends_with_vowel('y')
 
         self.concat(f'{ae}l{letter_i}')
+
+        return self.common_return(**kwargs)
+
+    def simple_tense_past_definite(self, **kwargs):
+        """
+            yapardim
+        """
+
+        person = kwargs.get('person')
+        negative = kwargs.get('negative')
+        question = kwargs.get('question')
+
+        plural = person == 3 and kwargs.get('plural')
+
+        self.simple_tense(
+            person=3,
+            negative=negative,
+            plural=plural
+        )
+
+        if plural:
+            plural = False
+        else:
+            plural = kwargs.get('plural')
+
+        self.past_definite(
+            person=person,
+            plural=plural,
+            question=question
+        )
+
+        return self.common_return(**kwargs)
+
+    def simple_tense_indefinite_past(self, **kwargs):
+        """
+            yaparmisim
+        """
+
+        person = kwargs.get('person')
+        negative = kwargs.get('negative')
+        question = kwargs.get('question')
+
+        plural = person == 3 and kwargs.get('plural')
+
+        self.simple_tense(
+            person=3,
+            negative=negative,
+            plural=plural
+        )
+
+        if plural:
+            plural = False
+        else:
+            plural = kwargs.get('plural')
+
+        self.indefinite_past(
+            person=person,
+            plural=plural,
+            question=question
+        )
 
         return self.common_return(**kwargs)

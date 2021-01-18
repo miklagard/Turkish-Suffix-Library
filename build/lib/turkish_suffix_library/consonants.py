@@ -24,11 +24,11 @@ MINOR_HARMONY = {
 HARMONY_FOR_PRESENT_FIRST = {
     'a': 'a',
     'e': 'e',
-    'ö': 'ü',
-    'o': 'u',
-    'ı': 'ı',
+    'ö': 'e',
+    'o': 'a',
+    'ı': 'a',
     'i': 'e',
-    'u': 'u',
+    'u': 'a',
     'ü': 'e'
 }
 

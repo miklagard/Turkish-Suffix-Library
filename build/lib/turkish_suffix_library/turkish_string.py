@@ -71,7 +71,7 @@ def last_vowel(word):
 
 
 def last_word(word):
-    return word.split(' ')[-1]
+    return word.split(' ')[-1].lower()
 
 
 def other_words_but_not_last(word):

@@ -43,16 +43,16 @@ class TurkishClass:
         return tr.last_vowel(self.word)
 
     def letter_a(self):
-        if self.last_vowel()['tone'] == 'front':
+        if self.last_vowel().get('tone') == 'front':
             return 'a'
         else:
             return 'e'
 
     def minor(self):
-        return con.MINOR_HARMONY[self.last_vowel()['letter']]
+        return con.MINOR_HARMONY.get(self.last_vowel().get('letter'), 'a')
 
     def letter_i(self):
-        if self.last_vowel()['tone'] == 'front':
+        if self.last_vowel().get('tone') == 'front':
             return 'ı'
         else:
             return 'i'
@@ -61,10 +61,10 @@ class TurkishClass:
         return tr.last_letter(self.last_word())
 
     def last_letter_is_vowel(self):
-        return self.last_letter()['letter'] in con.VOWELS
+        return self.last_letter().get('letter') in con.VOWELS
 
     def last_letter_is_hard(self):
-        return self.last_letter()['letter'] in con.HARD_CONSONANTS
+        return self.last_letter().get('letter') in con.HARD_CONSONANTS
 
     def if_ends_with_hard(self, concat_1, concat_2):
         if self.last_letter_is_hard():
@@ -96,8 +96,8 @@ class TurkishClass:
 
     def is_from_able(self):
         if len(self.history):
-            action = self.history[-1]['action']
-            auxiliary = self.history[-1]['kwargs'].get('auxiliary')
+            action = self.history[-1].get('action')
+            auxiliary = self.history[-1].get('kwargs', {}).get('auxiliary')
 
             if action == 'unify_verbs' and auxiliary == 'bil':
                 return True
@@ -106,7 +106,7 @@ class TurkishClass:
 
     def is_from_passive(self):
         if len(self.history):
-            action = self.history[-1]['action']
+            action = self.history[-1].get('action')
 
             if action == 'passive':
                 return True
@@ -179,6 +179,14 @@ class TurkishClass:
 
         return vowel['vowel_count']
 
+    def if_condition(self, person, plural, *args):
+        for arg in args:
+            person_param = next(arg)
+            plural_param = next(arg)
+            suffix = next(arg)
 
+            if person == person_param and plural_param == plural:
+                self.concat(suffix)
+                return self.word
 
-
+        return self.word
