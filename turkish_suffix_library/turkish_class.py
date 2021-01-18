@@ -21,6 +21,12 @@ class TurkishClass:
             'history': self.history
         }
 
+    def last_word(self):
+        return self.word.lower().split(' ')[-1]
+
+    def other_words_but_not_last(self):
+        return ' '.join(self.word.lower().split(' ')[:-1])
+
     def make_plural(self):
         self.concat(f'l{self.letter_a()}r')
 
@@ -52,7 +58,7 @@ class TurkishClass:
             return 'i'
 
     def last_letter(self):
-        return tr.last_letter(self.word)
+        return tr.last_letter(self.last_word())
 
     def last_letter_is_vowel(self):
         return self.last_letter()['letter'] in con.VOWELS
@@ -108,7 +114,14 @@ class TurkishClass:
         return False
 
     def ng_change(self):
-        self.word = con.NK_G_CHANGE.get(self.lower(), self.word)
+        word = self.lower()
+
+        for noun in con.NK_G_CHANGE:
+            if word.endswith(noun):
+                return self.from_upper_or_lower(
+                    word[:-len(noun)] + con.NK_G_CHANGE.get(noun, self.word)
+                )
+
         return self.word
 
     def change_last_letter(self, letter):
@@ -160,3 +173,7 @@ class TurkishClass:
         vowel = self.last_vowel()
 
         return vowel['vowel_count']
+
+
+
+

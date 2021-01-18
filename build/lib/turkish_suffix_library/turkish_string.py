@@ -39,7 +39,7 @@ def from_upper_or_lower(new_word, reference_word):
 
 
 def last_vowel(word):
-    word = make_lower(word)
+    word = last_word(word)
 
     vowel_count = 0
 
@@ -68,6 +68,14 @@ def last_vowel(word):
     return_data['vowel_count'] = vowel_count
 
     return return_data
+
+
+def last_word(word):
+    return word.split(' ')[-1]
+
+
+def other_words_but_not_last(word):
+    return ' '.join(word.split(' ')[:-1])
 
 
 def change_last_letter(word, new_last_letter):
@@ -137,13 +145,21 @@ def soften(parameter_word):
 
 
 def exception_missing(parameter_word, proper_noun=False):
-    word = parameter_word
-
     if not proper_noun:
-        if make_lower(word) in consonants.EXCEPTION_MISSING:
-            word = from_upper_or_lower(
-                consonants.EXCEPTION_MISSING[make_lower(word)],
-                word
+        last = last_word(parameter_word)
+
+        if last in consonants.EXCEPTION_MISSING:
+            word = consonants.EXCEPTION_MISSING[last],
+
+            last = from_upper_or_lower(
+                concat(
+                    other_words_but_not_last(parameter_word),
+                    word
+                ),
+                parameter_word
             )
 
-    return word
+            return last
+
+    return parameter_word
+

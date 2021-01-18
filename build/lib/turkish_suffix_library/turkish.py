@@ -185,46 +185,38 @@ class Turkish(TurkishClass):
 
         if not (person == '3' and plural):
             if not proper_noun:
+                self.ng_change()
+
                 self.soften()
 
                 self.exception_missing(proper_noun)
 
         if not plural:
             if person == '1':
-                self.ng_change()
-
                 if not self.last_letter_is_vowel():
                     self.concat(minor)
 
                 self.concat('m')
 
             elif person == '2':
-                self.ng_change()
-
                 if not self.last_letter_is_vowel():
                     self.concat(minor)
 
                 self.concat('n')
 
             elif person == '3':
-                self.ng_change()
-
                 if self.last_letter_is_vowel():
                     self.concat('s')
 
                 self.concat(minor)
         else:
             if person == '1':
-                self.ng_change()
-
                 if not self.last_letter_is_vowel():
                     self.concat(minor)
 
                 self.concat(f'm{minor}z')
 
             elif person == '2':
-                self.ng_change()
-
                 if not self.last_letter_is_vowel():
                     self.concat(minor)
 
