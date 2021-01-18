@@ -185,6 +185,12 @@ class Verb(unittest.TestCase):
             'alınılmıyorsun'
         )
 
+print(Turkish('et').simple_tense(negative=False, question=True, person=1, plural=False))
+print(Turkish('et').simple_tense(negative=False, question=True, person=2, plural=False))
+print(Turkish('et').simple_tense(negative=False, question=True, person=3, plural=False))
+print(Turkish('et').simple_tense(negative=False, question=True, person=1, plural=True))
+print(Turkish('et').simple_tense(negative=False, question=True, person=2, plural=True))
+print(Turkish('et').simple_tense(negative=False, question=True, person=3, plural=True))
 
 if __name__ == '__main__':
     unittest.main()

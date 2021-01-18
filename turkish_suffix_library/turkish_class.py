@@ -136,7 +136,7 @@ class TurkishClass:
             self.change_last_letter(new_letter)
 
     def verb_in_minor_harmony_exception(self):
-        lower = self.lower()
+        lower = self.last_word()
 
         for verb in con.VERB_MINOR_HARMONY_EXCEPTIONS:
             if lower.endswith(verb):
@@ -168,6 +168,11 @@ class TurkishClass:
         vowel = self.last_vowel()['letter'].lower()
 
         return con.HARMONY_FOR_PRESENT.get(vowel, vowel)
+
+    def harmony_for_present_first(self):
+        vowel = self.last_vowel()['letter'].lower()
+
+        return con.HARMONY_FOR_PRESENT_FIRST.get(vowel, vowel)
 
     def count_syllable(self):
         vowel = self.last_vowel()

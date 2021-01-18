@@ -21,7 +21,7 @@ MINOR_HARMONY = {
     'ü': 'ü'
 }
 
-MINOR_HARMONY_FOR_FUTURE = {
+HARMONY_FOR_PRESENT_FIRST = {
     'a': 'a',
     'e': 'e',
     'ö': 'ü',

@@ -439,7 +439,7 @@ class Turkish(TurkishClass):
                     elif self.count_syllable() > 1:
                         self.concat(self.minor())
                     else:
-                        self.concat(self.harmony_for_present())
+                        self.concat(self.harmony_for_present_first())
 
                 self.concat('r')
 
@@ -487,7 +487,8 @@ class Turkish(TurkishClass):
                         self.make_plural()
                         self.concat(f' m{minor}')
         else:  # not question
-            harmony = self.harmony_for_present()
+            harmony_first = self.harmony_for_present_first()
+
             if not negative:
                 if not self.last_letter_is_vowel():
                     if self.verb_in_minor_harmony_exception():
@@ -497,7 +498,7 @@ class Turkish(TurkishClass):
                     elif self.count_syllable() > 1:
                         self.concat(self.minor())
                     else:
-                        self.concat(harmony)
+                        self.concat(harmony_first)
 
                 self.concat('r')
 
