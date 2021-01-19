@@ -750,29 +750,27 @@ class Turkish(TurkishClass):
         return self.common_return(**kwargs)
 
     def past_conditional_narrative(self, **kwargs):
-        letter_a = self.letter_a()
-        letter_i = self.letter_i()
         person = kwargs.get('person', 3)
         negative = kwargs.get('negative', False)
         plural = kwargs.get('plural', False)
 
         if negative:
-            self.concat(f'm{letter_a}')
+            self.concat(f'm{self.letter_a()}')
 
-        self.concat(f's{letter_a}')
+        self.concat(f's{self.letter_a()}')
 
         if person == 3 and plural:
             self.concat(f'l{self.letter_a()}r')
 
         if kwargs.get('question', False):
-            self.concat(f' m{letter_i}yd{letter_i}')
+            self.concat(f' m{self.letter_i()}yd{self.letter_i()}')
 
         self.if_condition(
             person, plural,
-            [1, False, self.concat('m')],
-            [2, False, self.concat('n')],
-            [1, True, self.concat('k')],
-            [2, True, self.concat(f'n{letter_i}z')],
+            [1, False, 'm'],
+            [2, False, 'n'],
+            [1, True, 'k'],
+            [2, True, f'n{self.letter_i()}z'],
         )
 
         return self.common_return(**kwargs)

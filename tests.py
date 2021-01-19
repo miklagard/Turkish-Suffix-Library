@@ -188,7 +188,7 @@ class Verb(unittest.TestCase):
 negative = False
 verb = 'et'
 question = True
-tense = 'indefinite_past_reportative'
+tense = 'past_conditional_narrative'
 print(Turkish('git').__getattribute__(tense)(negative=negative, question=question, person=1, plural=False))
 print(Turkish('git').__getattribute__(tense)(negative=negative, question=question, person=2, plural=False))
 print(Turkish('git').__getattribute__(tense)(negative=negative, question=question, person=3, plural=False))
