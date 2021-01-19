@@ -1289,7 +1289,11 @@ class Turkish(TurkishClass):
             self.if_ends_with_vowel('y')
             self.concat(self.letter_a())
 
-            self.concat('y')
+            if person == 3 and plural:
+                self.concat(f'l{self.letter_a()}r')
+                plural = False
+            else:
+                self.concat('y')
 
         if question:
             self.indefinite_past(
@@ -1303,7 +1307,6 @@ class Turkish(TurkishClass):
                 [3, False, f' m{self.letter_i()}'],
                 [1, True, f' m{self.letter_i()}y{self.letter_i()}z'],
                 [2, True, f' m{self.letter_i()}s{self.letter_i()}n{self.letter_i()}z'],
-                [3, True, f'l{self.letter_a()}r m{self.letter_i()}'],
             )
         else:
             self.indefinite_past(
@@ -1325,6 +1328,8 @@ class Turkish(TurkishClass):
             if person == 3 and plural:
                 self.concat(f'l{self.letter_a()}r')
                 plural = False
+            elif not question:
+                self.concat('y')
 
             if question:
                 self.concat(f' m{self.minor()}y')
@@ -1334,7 +1339,7 @@ class Turkish(TurkishClass):
             self.if_ends_with_vowel('y')
             self.concat(self.letter_a())
 
-            if person == 3 and plural:
+            if person == 3 and plural and question:
                 self.concat(f'l{self.letter_a()}r')
                 plural = False
 
