@@ -870,7 +870,7 @@ class Turkish(TurkishClass):
         plural = kwargs.get('plural', False)
         negative = kwargs.get('negative', False)
 
-        self.future_simple(negative)
+        self.future_simple(negative=negative)
 
         if person == 3 and plural:
             self.concat(f'l{self.letter_a()}r')
@@ -1270,6 +1270,86 @@ class Turkish(TurkishClass):
         ).to_string()
 
         return self.common_return(**kwargs)
+
+    def indefinite_past_reportative(self, **kwargs):
+        person = kwargs.get('person', 3)
+        plural = kwargs.get('plural', False)
+        question = kwargs.get('question', False)
+        negative = kwargs.get('negative', False)
+
+        if negative:
+            self.concat(f'm{self.letter_a()}y{self.letter_a()}')
+
+            if person == 3 and plural:
+                self.concat(f'l{self.letter_a()}r')
+                plural = False
+        else:
+            self.soften()
+            self.harden_verb()
+            self.if_ends_with_vowel('y')
+            self.concat(self.letter_a())
+
+            self.concat('y')
+
+        if question:
+            self.indefinite_past(
+                person=3
+            )
+
+            self.if_condition(
+                person, plural,
+                [1, False, f' m{self.letter_i()}y{self.letter_i()}m'],
+                [2, False, f' m{self.letter_i()}s{self.letter_i()}n'],
+                [3, False, f' m{self.letter_i()}'],
+                [1, True, f' m{self.letter_i()}y{self.letter_i()}z'],
+                [2, True, f' m{self.letter_i()}s{self.letter_i()}n{self.letter_i()}z'],
+                [3, True, f'l{self.letter_a()}r m{self.letter_i()}'],
+            )
+        else:
+            self.indefinite_past(
+                person=person,
+                plural=plural
+            )
+
+        return self.common_return(**kwargs)
+
+    def definite_past_reportative(self, **kwargs):
+        person = kwargs.get('person', 3)
+        plural = kwargs.get('plural', False)
+        question = kwargs.get('question', False)
+        negative = kwargs.get('negative', False)
+
+        if negative:
+            self.concat(f'm{self.letter_a()}y{self.letter_a()}')
+
+            if person == 3 and plural:
+                self.concat(f'l{self.letter_a()}r')
+                plural = False
+
+            if question:
+                self.concat(f' m{self.minor()}y')
+        else:
+            self.soften()
+            self.harden_verb()
+            self.if_ends_with_vowel('y')
+            self.concat(self.letter_a())
+
+            if person == 3 and plural:
+                self.concat(f'l{self.letter_a()}r')
+                plural = False
+
+            if question:
+                self.concat(f' m{self.minor()}')
+
+            self.concat('y')
+
+        self.past_definite(
+            person=person,
+            plural=plural,
+        )
+
+        return self.common_return(**kwargs)
+
 
     def past_indefinite_past(self, **kwargs):
         """
