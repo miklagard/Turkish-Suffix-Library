@@ -42,6 +42,12 @@ class TurkishClass:
     def last_vowel(self):
         return tr.last_vowel(self.word)
 
+    def letter_d(self):
+        if self.last_letter_is_vowel() or not self.last_letter_is_hard():
+            return 'd'
+        else:
+            return 't'
+
     def letter_a(self):
         if self.last_vowel().get('tone') == 'front':
             return 'a'

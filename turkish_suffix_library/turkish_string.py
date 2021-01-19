@@ -83,7 +83,7 @@ def change_last_letter(word, new_last_letter):
 
 
 def last_letter(word):
-    word = make_lower(word)
+    word = make_lower(word.replace('\'', ''))
     return_data = {}
     actual_last_letter = word[len(word) - 1]
 

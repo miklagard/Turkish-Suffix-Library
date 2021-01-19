@@ -133,6 +133,12 @@ class Noun(unittest.TestCase):
             'kediyle'
         )
 
+    def test_relative_pronoun(self):
+        self.assertEqual(
+            Turkish('kedi').relative_pronoun().to_string(),
+            'kedininki'
+        )
+
     def test_possessive(self):
         self.assertEqual(
             Turkish('aparat').possessive(person=2).to_string(),
@@ -195,6 +201,9 @@ print(Turkish('git').__getattribute__(tense)(negative=negative, question=questio
 print(Turkish('git').__getattribute__(tense)(negative=negative, question=question, person=1, plural=True))
 print(Turkish('git').__getattribute__(tense)(negative=negative, question=question, person=2, plural=True))
 print(Turkish('git').__getattribute__(tense)(negative=negative, question=question, person=3, plural=True))
+
+
+print(Turkish('arap').copula_indefinite_past(question=True, proper_noun=True))
 
 if __name__ == '__main__':
     unittest.main()

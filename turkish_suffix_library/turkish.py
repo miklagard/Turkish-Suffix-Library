@@ -229,6 +229,13 @@ class Turkish(TurkishClass):
 
         return self.common_return(**kwargs)
 
+    def relative_pronoun(self, **kwargs):
+        proper_noun = kwargs.get('proper_noun', False)
+        self.genitive(proper_noun=proper_noun)
+        self.concat('ki')
+
+        return self.common_return(**kwargs)
+
     def privative(self, **kwargs):
         minor = self.minor()
         self.concat(f's{minor}z')
@@ -271,6 +278,94 @@ class Turkish(TurkishClass):
             self.concat('ş')
 
         self.concat(f'{ae}r')
+
+        return self.common_return(**kwargs)
+
+    def copula_simple(self, **kwargs):
+        negative = kwargs.get('negative', False)
+        question = kwargs.get('question', False)
+
+        if negative:
+            self.concat(' değil')
+
+        if question:
+            self.concat(f' m{self.minor()}')
+
+        return self.common_return(**kwargs)
+
+    def copula_present(self, **kwargs):
+        """
+            kedidir
+            kedi degildir
+        """
+
+        negative = kwargs.get('negative')
+        question = kwargs.get('question')
+
+        if negative:
+            if question:
+                self.concat(' değil midir')
+            else:
+                self.concat(' değildir')
+        else:
+            if question:
+                self.concat(f' {self.minor()}')
+            else:
+                self.apostrophes(**kwargs)
+
+            self.concat(f'{self.letter_d()}{self.letter_i()}r')
+
+        return self.common_return(**kwargs)
+
+    def copula_definite_past(self, **kwargs):
+        """
+            kediydi
+            kedi degildi
+        """
+
+        negative = kwargs.get('negative')
+        question = kwargs.get('question')
+
+        if negative:
+            if question:
+                self.concat(' değil miydi')
+            else:
+                self.concat(' değildi')
+        else:
+            if question:
+                self.concat(f' m{self.minor()}')
+            else:
+                self.apostrophes(**kwargs)
+
+            self.if_ends_with_vowel('y')
+
+            self.concat(f'{self.letter_d()}{self.minor()}')
+
+        return self.common_return(**kwargs)
+
+    def copula_indefinite_past(self, **kwargs):
+        """
+            kediymis
+            kedi degilmis
+        """
+
+        negative = kwargs.get('negative')
+        question = kwargs.get('question')
+
+        if negative:
+            if question:
+                self.concat(' değil miymiş')
+            else:
+                self.concat(' değilmiş')
+        else:
+            if question:
+                self.concat(f' m{self.minor()}')
+            else:
+                self.apostrophes(**kwargs)
+
+            self.if_ends_with_vowel('y')
+
+            self.concat(f'm{self.minor()}ş')
 
         return self.common_return(**kwargs)
 
