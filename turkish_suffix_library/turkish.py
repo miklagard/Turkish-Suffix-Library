@@ -17,7 +17,7 @@ class Turkish(TurkishClass):
         )
 
     def plural(self, **kwargs):
-        self.make_plural()
+        self.concat(f'l{self.letter_a()}r')
 
         return self.common_return(**kwargs)
 
@@ -224,7 +224,7 @@ class Turkish(TurkishClass):
                 if self.lower() == 'ism':
                     self.from_upper_or_lower('isim')
 
-                self.make_plural()
+                self.concat(f'l{self.letter_a()}r')
                 self.concat(self.minor())
 
         return self.common_return(**kwargs)
@@ -530,7 +530,7 @@ class Turkish(TurkishClass):
         ).to_string()
 
         if person == 3 and plural:
-            self.make_plural()
+            self.concat(f'l{self.letter_a()}r')
             plural = False
 
         if question:
@@ -593,29 +593,24 @@ class Turkish(TurkishClass):
         person = kwargs.get('person', 3)
 
         if not question:
-            if person == 1 and not plural:
-                self.concat(f'{minor}m')
-            elif person == 2 and not plural:
-                self.concat(f's{minor}n')
-            elif person == 1:
-                self.concat(f'{minor}z')
-            elif person == 2:
-                self.concat(f's{minor}n{minor}z')
-            elif person == 3 and plural:
-                self.concat(f'l{letter_a}r')
+            self.if_condition(
+                person, plural,
+                [1, False, f'{minor}m'],
+                [2, False, f's{minor}n'],
+                [1, True, f'{minor}z'],
+                [2, True, f's{minor}n{minor}z'],
+                [3, True, f'l{letter_a}r']
+            )
         else:
-            if person == 1 and not plural:
-                self.concat(f' m{minor}y{minor}m')
-            elif person == 2 and not plural:
-                self.concat(f' m{minor}s{minor}n')
-            elif person == 3 and not plural:
-                self.concat(f' m{minor}')
-            elif person == 1:
-                self.concat(f' m{minor}y{minor}z')
-            elif person == 2:
-                self.concat(f' m{minor}s{minor}n{minor}z')
-            elif person == 3:
-                self.concat(f'l{letter_a}r m{minor}')
+            self.if_condition(
+                person, plural,
+                [1, False, f' m{minor}y{minor}m'],
+                [2, False, f' m{minor}s{minor}n'],
+                [3, False, f' m{minor}'],
+                [1, True, f'{minor}z'],
+                [2, True, f' m{minor}y{minor}z'],
+                [3, True, f'l{letter_a}r m{minor}']
+            )
 
         return self.common_return(**kwargs)
 
@@ -724,7 +719,7 @@ class Turkish(TurkishClass):
             ).to_string()
         else:
             if kwargs.get('person', 3) == 3 and kwargs.get('plural', False):
-                self.make_plural()
+                self.concat(f'l{self.letter_a()}r')
                 minor = self.minor()
 
                 self.concat(f' m{minor}ym{minor}ş')
@@ -767,19 +762,18 @@ class Turkish(TurkishClass):
         self.concat(f's{letter_a}')
 
         if person == 3 and plural:
-            self.make_plural()
+            self.concat(f'l{self.letter_a()}r')
 
         if kwargs.get('question', False):
             self.concat(f' m{letter_i}yd{letter_i}')
 
-        if person == 1 and not plural:
-            self.concat('m')
-        elif person == 2 and not plural:
-            self.concat('n')
-        elif person == 1 and plural:
-            self.concat('k')
-        elif person == 2 and plural:
-            self.concat(f'n{letter_i}z')
+        self.if_condition(
+            person, plural,
+            [1, False, self.concat('m')],
+            [2, False, self.concat('n')],
+            [1, True, self.concat('k')],
+            [2, True, self.concat(f'n{letter_i}z')],
+        )
 
         return self.common_return(**kwargs)
 
@@ -796,7 +790,7 @@ class Turkish(TurkishClass):
         self.concat(f's{letter_a}')
 
         if person == 3 and plural:
-            self.make_plural()
+            self.concat(f'l{self.letter_a()}r')
 
         if kwargs.get('question', False):
             self.concat(f' m{letter_i}')
@@ -805,14 +799,13 @@ class Turkish(TurkishClass):
 
         self.concat(f'm{letter_i}ş')
 
-        if person == 1 and not plural:
-            self.concat(f'{letter_i}m')
-        elif person == 2 and not plural:
-            self.concat(f's{letter_i}n')
-        elif person == 1 and plural:
-            self.concat(f'{letter_i}z')
-        elif person == 2 and plural:
-            self.concat(f's{letter_i}n{letter_i}z')
+        self.if_condition(
+            person, plural,
+            [1, False, f'{letter_i}m'],
+            [2, False, f's{letter_i}n'],
+            [1, True, f'{letter_i}z'],
+            [2, True, f's{letter_i}n{letter_i}z'],
+        )
 
         return self.common_return(**kwargs)
 
@@ -838,6 +831,8 @@ class Turkish(TurkishClass):
         
         letter_a = self.letter_a()
         letter_i = self.letter_i()
+        person = kwargs.get('person', 3)
+        plural = kwargs.get('plural', False)
 
         if kwargs.get('question', False):
             if kwargs.get('person', 3) == 3 and kwargs.get('plural', False):
@@ -845,36 +840,25 @@ class Turkish(TurkishClass):
             else:
                 self.concat(f'{letter_a}c{letter_a}k ')
 
-            if not kwargs.get('plural', False):
-                if kwargs.get('person', 3) == 1:
-                    self.concat(f'm{letter_i}y{letter_i}m')
-                elif kwargs.get('person', 3) == 2:
-                    self.concat(f'm{letter_i}s{letter_i}n')
-                elif kwargs.get('person', 3) == 3:
-                    self.concat(f'm{letter_i}')
-            else:
-                if kwargs.get('person', 3) == 1:
-                    self.concat(f'm{letter_i}y{letter_i}z')
-                elif kwargs.get('person', 3) == 2:
-                    self.concat(f'm{letter_i}s{letter_i}n{letter_i}z')
-                elif kwargs.get('person', 3) == 3:
-                    self.concat(f'm{letter_i}')
-
+            self.if_condition(
+                person, plural,
+                [1, False, f'm{letter_i}y{letter_i}m'],
+                [2, False, f'm{letter_i}s{letter_i}n'],
+                [3, False, f'm{letter_i}'],
+                [1, True, f'm{letter_i}y{letter_i}z'],
+                [2, True, f'm{letter_i}s{letter_i}n{letter_i}z'],
+                [3, True, f'm{letter_i}']
+            )
         elif not kwargs.get('question', False):
-            if not kwargs.get('plural', False):
-                if kwargs.get('person', 3) == 1:
-                    self.concat(f'{letter_a}c{letter_a}ğ{letter_i}m')
-                elif kwargs.get('person', 3) == 2:
-                    self.concat(f'{letter_a}c{letter_a}ks{letter_i}n')
-                elif kwargs.get('person', 3) == 3:
-                    self.concat(f'{letter_a}c{letter_a}k')
-            else:
-                if kwargs.get('person', 3) == 1:
-                    self.concat(f'{letter_a}c{letter_a}ğ{letter_i}z')
-                elif kwargs.get('person', 3) == 2:
-                    self.concat(f'{letter_a}c{letter_a}ks{letter_i}n{letter_i}z')
-                elif kwargs.get('person', 3) == 3:
-                    self.concat(f'{letter_a}c{letter_a}kl{letter_a}r')
+            self.if_condition(
+                person, plural,
+                [1, False, f'{letter_a}c{letter_a}ğ{letter_i}m'],
+                [2, False, f'{letter_a}c{letter_a}ks{letter_i}n'],
+                [3, False, f'{letter_a}c{letter_a}k'],
+                [1, True, f'{letter_a}c{letter_a}ğ{letter_i}z'],
+                [2, True, f'{letter_a}c{letter_a}ks{letter_i}n{letter_i}z'],
+                [3, True, f'{letter_a}c{letter_a}kl{letter_a}r']
+            )
 
         return self.common_return(**kwargs)
 
@@ -882,15 +866,17 @@ class Turkish(TurkishClass):
         """
             süzecektim
         """
-        self.word = self.future_simple(negative=kwargs.get('negative', False)).to_string()
-
         person = kwargs.get('person', 3)
         plural = kwargs.get('plural', False)
+        negative = kwargs.get('negative', False)
+
+        self.future_simple(negative)
 
         if person == 3 and plural:
-            self.make_plural()
+            self.concat(f'l{self.letter_a()}r')
 
         letter_i = self.letter_i()
+        
         if self.last_letter_is_hard():
             letter_d = 't'
         else:
@@ -905,18 +891,15 @@ class Turkish(TurkishClass):
 
         self.concat(f'{letter_d}')
 
-        if person == 1 and not plural:
-            self.concat(f'{letter_i}m')
-        elif person == 2 and not plural:
-            self.concat(f'{letter_i}n')
-        elif person == 3 and not plural:
-            self.concat(f'{letter_i}')
-        elif person == 1 and plural:
-            self.concat(f'{letter_i}k')
-        elif person == 2 and plural:
-            self.concat(f'{letter_i}n{letter_i}z')
-        elif person == 3 and plural:
-            self.concat(f'{letter_i}')
+        self.if_condition(
+            person, plural,
+            [1, False, f'{letter_i}m'],
+            [2, False, f'{letter_i}n'],
+            [3, False, f'{letter_i}'],
+            [1, True, f'{letter_i}k'],
+            [2, True, f'{letter_i}n{letter_i}z'],
+            [3, True, f'{letter_i}']
+        )
 
         return self.common_return(**kwargs)
 
@@ -930,7 +913,7 @@ class Turkish(TurkishClass):
         plural = kwargs.get('plural', False)
 
         if person == 3 and plural:
-            self.make_plural()
+            self.concat(f'l{self.letter_a()}r')
 
         letter_i = self.letter_i()
 
@@ -938,47 +921,47 @@ class Turkish(TurkishClass):
 
         if kwargs.get('question', False):
             self.concat(f' m{letter_i}')
-            if person == 1 and not plural:
-                self.concat('y')
-            elif person == 2 and not plural:
-                self.concat(f's')
-            elif person == 1 and plural:
-                self.concat(f'y')
-            elif person == 2 and plural:
-                self.concat(f's')
 
-        if person == 1 and not plural:
-            self.concat(f'{letter_i}m')
-        elif person == 2 and not plural:
-            self.concat(f'{letter_i}n')
-        elif person == 1 and plural:
-            self.concat(f'{letter_i}z')
-        elif person == 2 and plural:
-            self.concat(f'{letter_i}n{letter_i}z')
+            self.if_condition(
+                person, plural,
+                [1, False, 'y'],
+                [2, False, 's'],
+                [1, True, 'y'],
+                [2, True, 's'],
+            )
+
+        self.if_condition(
+            person, plural,
+            [1, False, f'{letter_i}m'],
+            [2, False, f'{letter_i}n'],
+            [1, True, f'{letter_i}z'],
+            [2, True, f'{letter_i}n{letter_i}z'],
+        )
 
         return self.common_return(**kwargs)
 
     def future_conditional(self, **kwargs):
-        self.word = self.future_simple(person=3, negative=kwargs.get('negative', False)).to_string()
+        person = kwargs.get('person', 3)
+        plural = kwargs.get('plural', False)
+        negative = kwargs.get('negative', False)
+        
+        self.future_simple(person=3, negative=negative)
 
         letter_a = self.letter_a()
         letter_i = self.letter_i()
 
-        person = kwargs.get('person', 3)
-        plural = kwargs.get('plural', False)
-
         if person == 3 and plural:
-            self.make_plural()
+            self.concat(f'l{letter_a}r')
+            
         self.concat(f's{letter_a}')
 
-        if person == 1 and not plural:
-            self.concat(f'm')
-        elif person == 2 and not plural:
-            self.concat(f'n')
-        elif person == 1 and plural:
-            self.concat(f'k')
-        elif person == 2 and plural:
-            self.concat(f'n{letter_i}z')
+        self.if_condition(
+            person, plural,
+            [1, False, 'm'],
+            [2, False, 'n'],
+            [1, True, 'k'],
+            [2, True, f'n{letter_i}z'],
+        )
 
         if kwargs.get('question', False):
             self.concat(f' m{letter_i}')
@@ -1040,7 +1023,7 @@ class Turkish(TurkishClass):
         self.necessitative_mood()
 
         if kwargs.get('person', 3) == 3 and kwargs.get('plural'):
-            self.make_plural()
+            self.concat(f'l{self.letter_a()}r')
 
         if kwargs.get('question', False):
             self.concat(f' m{letter_i}')
@@ -1048,14 +1031,13 @@ class Turkish(TurkishClass):
         person = kwargs.get('person', 3)
         plural = kwargs.get('plural', False)
 
-        if person == 1 and not plural:
-            self.concat(f'y{letter_i}m')
-        elif person == 2 and not plural:
-            self.concat(f's{letter_i}n')
-        elif person == 1 and plural:
-            self.concat(f'y{letter_i}z')
-        elif person == 2 and plural:
-            self.concat(f's{letter_i}n{letter_i}z')
+        self.if_condition(
+            person, plural,
+            [1, False, f'y{letter_i}m'],
+            [2, False, f's{letter_i}n'],
+            [1, True, f'y{letter_i}z'],
+            [2, True, f's{letter_i}n{letter_i}z'],
+        )
 
         return self.common_return(**kwargs)
 
@@ -1071,7 +1053,7 @@ class Turkish(TurkishClass):
         self.necessitative_mood(negative=negative)
 
         if kwargs.get('person', 3) == 3 and kwargs.get('plural'):
-            self.make_plural()
+            self.concat(f'l{self.letter_a()}r')
 
         if kwargs.get('question', False):
             self.concat(f' m{letter_i}')
@@ -1105,7 +1087,7 @@ class Turkish(TurkishClass):
         self.necessitative_mood(negative=negative)
 
         if person == 3 and plural:
-            self.make_plural()
+            self.concat(f'l{self.letter_a()}r')
 
         if kwargs.get('question', False):
             self.concat(f' m{letter_i}')
@@ -1173,7 +1155,7 @@ class Turkish(TurkishClass):
 
         elif person == 3 and plural:
             self.concat(f's{minor}n')
-            self.make_plural()
+            self.concat(f'l{self.letter_a()}r')
 
             if question:
                 self.concat(f' m{self.minor()}')
@@ -1272,7 +1254,7 @@ class Turkish(TurkishClass):
         ).to_string()
 
         if person == 3 and plural:
-            self.make_plural()
+            self.concat(f'l{self.letter_a()}r')
 
         if question:
             self.concat(f' m{self.minor()}')
@@ -1348,7 +1330,7 @@ class Turkish(TurkishClass):
         ).to_string()
 
         if person == 3 and plural:
-            self.make_plural()
+            self.concat(f'l{self.letter_a()}r')
 
         if question:
             self.concat(f' m{self.minor()}')
