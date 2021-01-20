@@ -191,16 +191,19 @@ class Verb(unittest.TestCase):
             'alınılmıyorsun'
         )
 
+
 negative = False
 verb = 'et'
-question = True
-tense = 'past_conditional_narrative'
-print(Turkish('git').__getattribute__(tense)(negative=negative, question=question, person=1, plural=False))
-print(Turkish('git').__getattribute__(tense)(negative=negative, question=question, person=2, plural=False))
-print(Turkish('git').__getattribute__(tense)(negative=negative, question=question, person=3, plural=False))
-print(Turkish('git').__getattribute__(tense)(negative=negative, question=question, person=1, plural=True))
-print(Turkish('git').__getattribute__(tense)(negative=negative, question=question, person=2, plural=True))
-print(Turkish('git').__getattribute__(tense)(negative=negative, question=question, person=3, plural=True))
+question = False
+tense = 'copula_present'
+print(Turkish(verb).__getattribute__(tense)(negative=negative, question=question, person=1, plural=False))
+print(Turkish(verb).__getattribute__(tense)(negative=negative, question=question, person=2, plural=False))
+print(Turkish(verb).__getattribute__(tense)(negative=negative, question=question, person=3, plural=False))
+print(Turkish(verb).__getattribute__(tense)(negative=negative, question=question, person=1, plural=True))
+print(Turkish(verb).__getattribute__(tense)(negative=negative, question=question, person=2, plural=True))
+print(Turkish(verb).__getattribute__(tense)(negative=negative, question=question, person=3, plural=True))
+
+
 
 if __name__ == '__main__':
     unittest.main()

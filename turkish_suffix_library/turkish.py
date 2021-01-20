@@ -281,18 +281,6 @@ class Turkish(TurkishClass):
 
         return self.common_return(**kwargs)
 
-    def copula_simple(self, **kwargs):
-        negative = kwargs.get('negative', False)
-        question = kwargs.get('question', False)
-
-        if negative:
-            self.concat(' değil')
-
-        if question:
-            self.concat(f' m{self.minor()}')
-
-        return self.common_return(**kwargs)
-
     def copula_present(self, **kwargs):
         """
             kedidir
@@ -332,7 +320,6 @@ class Turkish(TurkishClass):
                         self.soften()
                     elif person == 1 and plural:
                         self.soften()
-                    self.harden_verb()
 
             letter_y = ''
 
@@ -386,6 +373,14 @@ class Turkish(TurkishClass):
             self.if_ends_with_vowel('y')
 
             self.concat(f'{self.letter_d()}{self.minor()}')
+
+            self.if_condition(
+                person, plural,
+                [1, False, 'm'],
+                [2, False, 'n'],
+                [1, True, 'z'],
+                [2, True, 'niz'],
+            )
 
         return self.common_return(**kwargs)
 
