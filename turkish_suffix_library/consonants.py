@@ -50,6 +50,7 @@ HARMONY_FOR_PRESENT = {
 # and it gets a suffix starting with a vowel, -t turns into -d again.
 # Source: Sevan Nisanyan
 ARABIC_T = (
+    'armut',
     'ait',
     'cedit',
     'cellat',
