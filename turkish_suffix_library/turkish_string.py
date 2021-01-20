@@ -128,14 +128,15 @@ def last_letter(word):
 
 def soften(parameter_word):
     word = parameter_word
+    lower = make_lower(parameter_word)
 
     actual_last_letter = last_letter(word)
     actual_last_vowel = last_vowel(word)
 
     if 'discontinuous_hard_consonant' in actual_last_letter:
         if actual_last_vowel['vowel_count'] > 1:
-            if word not in consonants.ARABIC_K or actual_last_letter.get('letter') != 'k':
-                if word in consonants.ARABIC_T or actual_last_letter.get('letter') != 't':
+            if lower not in consonants.ARABIC_K or actual_last_letter.get('letter') != 'k':
+                if lower in consonants.ARABIC_T or actual_last_letter.get('letter') != 't':
                     word = concat(
                         word[0:len(word) - 1],
                         actual_last_letter['soften_consonant']
