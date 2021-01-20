@@ -299,21 +299,55 @@ class Turkish(TurkishClass):
             kedi degildir
         """
 
-        negative = kwargs.get('negative')
-        question = kwargs.get('question')
+        person = kwargs.get('person', 3)
+        plural = kwargs.get('plural', False)
+        negative = kwargs.get('negative', False)
+        question = kwargs.get('question', False)
 
         if negative:
+            self.concat(' değil')
+
             if question:
-                self.concat(' değil midir')
-            else:
-                self.concat(' değildir')
+                self.concat(' mi')
+
+            letter_y = ''
+            if self.last_letter_is_vowel():
+                letter_y = 'y'
+
+            self.if_condition(
+                person, plural,
+                [1, False, f'{letter_y}im'],
+                [2, False, 'sin'],
+                [3, False, 'dir'],
+                [1, True, f'{letter_y}iz'],
+                [2, True, 'siniz'],
+                [3, True, 'ler'],
+            )
         else:
             if question:
-                self.concat(f' {self.minor()}')
+                self.concat(f' m{self.minor()}')
             else:
-                self.apostrophes(**kwargs)
+                if not self.apostrophes(**kwargs):
+                    if person == 1 and not plural:
+                        self.soften()
+                    elif person == 1 and plural:
+                        self.soften()
+                    self.harden_verb()
 
-            self.concat(f'{self.letter_d()}{self.letter_i()}r')
+            letter_y = ''
+
+            if self.last_letter_is_vowel():
+                letter_y = 'y'
+
+            self.if_condition(
+                person, plural,
+                [1, False, f'{letter_y}{self.minor()}m'],
+                [2, False, f's{self.minor()}n'],
+                [3, False, f'{self.letter_d()}{self.minor()}r'],
+                [1, True, f'{letter_y}{self.minor()}z'],
+                [2, True, f's{self.minor()}n{self.minor()}z'],
+                [3, True, f'{self.letter_d()}{self.minor()}r'],
+            )
 
         return self.common_return(**kwargs)
 
@@ -323,14 +357,26 @@ class Turkish(TurkishClass):
             kedi degildi
         """
 
-        negative = kwargs.get('negative')
-        question = kwargs.get('question')
+        negative = kwargs.get('negative', False)
+        question = kwargs.get('question', False)
+        person = kwargs.get('person', 3)
+        plural = kwargs.get('plural', False)
 
         if negative:
+            self.concat(' değil')
+
             if question:
-                self.concat(' değil miydi')
-            else:
-                self.concat(' değildi')
+                self.concat('miy')
+
+            self.if_condition(
+                person, plural,
+                [1, False, 'dim'],
+                [2, False, 'din'],
+                [3, False, 'di'],
+                [1, True, 'dik'],
+                [2, True, 'diniz'],
+                [3, True, 'di'],
+            )
         else:
             if question:
                 self.concat(f' m{self.minor()}')

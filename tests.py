@@ -202,9 +202,6 @@ print(Turkish('git').__getattribute__(tense)(negative=negative, question=questio
 print(Turkish('git').__getattribute__(tense)(negative=negative, question=question, person=2, plural=True))
 print(Turkish('git').__getattribute__(tense)(negative=negative, question=question, person=3, plural=True))
 
-
-print(Turkish('arap').copula_indefinite_past(question=True, proper_noun=True))
-
 if __name__ == '__main__':
     unittest.main()
 
