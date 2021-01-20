@@ -193,9 +193,9 @@ class Verb(unittest.TestCase):
 
 
 negative = False
-verb = 'et'
-question = False
-tense = 'copula_present'
+verb = 'bak'
+question = True
+tense = 'past_perfect_narrative'
 print(Turkish(verb).__getattribute__(tense)(negative=negative, question=question, person=1, plural=False))
 print(Turkish(verb).__getattribute__(tense)(negative=negative, question=question, person=2, plural=False))
 print(Turkish(verb).__getattribute__(tense)(negative=negative, question=question, person=3, plural=False))

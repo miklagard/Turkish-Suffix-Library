@@ -331,7 +331,7 @@ class Turkish(TurkishClass):
                 [1, False, f'{letter_y}{self.minor()}m'],
                 [2, False, f's{self.minor()}n'],
                 [3, False, f'{self.letter_d()}{self.minor()}r'],
-                [1, True, f'{letter_y}{self.minor()}z'],
+                [1, True, f'{letter_y}{self.minor()}k'],
                 [2, True, f's{self.minor()}n{self.minor()}z'],
                 [3, True, f'{self.letter_d()}{self.minor()}r'],
             )
@@ -353,7 +353,7 @@ class Turkish(TurkishClass):
             self.concat(' değil')
 
             if question:
-                self.concat('miy')
+                self.concat(' miy')
 
             self.if_condition(
                 person, plural,
@@ -392,6 +392,8 @@ class Turkish(TurkishClass):
 
         negative = kwargs.get('negative')
         question = kwargs.get('question')
+        person = kwargs.get('person', 3)
+        plural = kwargs.get('plural', False)
 
         if negative:
             if question:
@@ -408,6 +410,13 @@ class Turkish(TurkishClass):
 
             self.concat(f'm{self.minor()}ş')
 
+        self.if_condition(
+            person, plural,
+            [1, False, 'im'],
+            [2, False, 'sin'],
+            [1, True, 'iz'],
+            [2, True, 'tiniz'],
+        )
         return self.common_return(**kwargs)
 
     def infinitive(self, **kwargs):
