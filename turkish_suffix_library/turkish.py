@@ -331,7 +331,7 @@ class Turkish(TurkishClass):
                 [1, False, f'{letter_y}{self.minor()}m'],
                 [2, False, f's{self.minor()}n'],
                 [3, False, f'{self.letter_d()}{self.minor()}r'],
-                [1, True, f'{letter_y}{self.minor()}k'],
+                [1, True, f'{letter_y}{self.minor()}z'],
                 [2, True, f's{self.minor()}n{self.minor()}z'],
                 [3, True, f'{self.letter_d()}{self.minor()}r'],
             )
@@ -354,16 +354,6 @@ class Turkish(TurkishClass):
 
             if question:
                 self.concat(' miy')
-
-            self.if_condition(
-                person, plural,
-                [1, False, 'dim'],
-                [2, False, 'din'],
-                [3, False, 'di'],
-                [1, True, 'dik'],
-                [2, True, 'diniz'],
-                [3, True, 'di'],
-            )
         else:
             if question:
                 self.concat(f' m{self.minor()}')
@@ -372,14 +362,14 @@ class Turkish(TurkishClass):
 
             self.if_ends_with_vowel('y')
 
-            self.concat(f'{self.letter_d()}{self.minor()}')
+        self.concat(f'{self.letter_d()}{self.minor()}')
 
-            self.if_condition(
-                person, plural,
-                [1, False, 'm'],
-                [2, False, 'n'],
-                [1, True, 'z'],
-                [2, True, 'niz'],
+        self.if_condition(
+            person, plural,
+            [1, False, 'm'],
+            [2, False, 'n'],
+            [1, True, 'k'],
+            [2, True, f'n{self.minor()}z'],
             )
 
         return self.common_return(**kwargs)
